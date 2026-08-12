@@ -85,7 +85,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
           </TouchableOpacity>
         </View>
 
-        {/* Welcome Header */}
+        {/* Welcome Header (Matching Browse Screen Bold Airbnb Cereal Typography) */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
         {/* 2x2 Grid of Liquid White Glass Gradient Cards with Blue Accents */}
@@ -198,7 +198,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
             <TextInput
               placeholder={placeholderText}
-              placeholderTextColor="#777777"
+              placeholderTextColor="#888888"
               value={chatInput}
               onChangeText={setChatInput}
               style={styles.inputField}
@@ -249,11 +249,11 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     color: '#ffffff',
-    fontSize: 30,
+    fontSize: 32,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    letterSpacing: -0.6,
+    letterSpacing: -0.8,
     marginBottom: 24,
+    includeFontPadding: false,
   },
   gridContainer: {
     flexDirection: 'row',
@@ -282,12 +282,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
   cardHeaderLabel: {
-    color: 'rgba(255, 255, 255, 0.65)',
+    color: '#888888',
     fontSize: 11,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
+    includeFontPadding: false,
   },
   cardBottomSection: {
     justifyContent: 'flex-end',
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 34,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
+    includeFontPadding: false,
   },
   upNextSection: {
     justifyContent: 'flex-end',
@@ -316,20 +316,21 @@ const styles = StyleSheet.create({
     color: '#60A5FA',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
     letterSpacing: 0.5,
+    includeFontPadding: false,
   },
   dateDayTextWhite: {
     color: '#ffffff',
     fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
     marginTop: -2,
+    includeFontPadding: false,
   },
   calendarSubtext: {
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: '#888888',
     fontSize: 13,
-    fontFamily: 'AirbnbCereal-Book',
+    fontFamily: 'AirbnbCereal-Medium',
+    includeFontPadding: false,
   },
   browseSection: {
     justifyContent: 'flex-end',
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 32,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
+    includeFontPadding: false,
   },
   profileSection: {
     flexDirection: 'row',
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
+    includeFontPadding: false,
   },
   profileNameContainer: {
     flex: 1,
@@ -382,8 +383,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 17,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
     lineHeight: 22,
+    includeFontPadding: false,
   },
   bottomBarContainer: {
     paddingHorizontal: 20,
@@ -411,6 +412,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
+    includeFontPadding: false,
   },
   micBtnBlue: {
     width: 38,
