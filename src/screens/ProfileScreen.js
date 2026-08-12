@@ -259,31 +259,46 @@ export default function ProfileScreen({ onBackHome }) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.galleryScrollContainer}
               >
-                {/* Close-Up */}
-                <View style={styles.galleryEditorialItem}>
+                {/* Close-Up Card */}
+                <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryEditorialImage} 
+                    style={styles.galleryCardImage} 
                   />
-                  <Text style={styles.galleryCaptionText}>Close-Up</Text>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Close-Up</Text>
+                  </LinearGradient>
                 </View>
 
-                {/* Full-Body */}
-                <View style={styles.galleryEditorialItem}>
+                {/* Full-Body Card */}
+                <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryEditorialImage} 
+                    style={styles.galleryCardImage} 
                   />
-                  <Text style={styles.galleryCaptionText}>Full-Body</Text>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Full-Body</Text>
+                  </LinearGradient>
                 </View>
 
-                {/* Mid-Shot */}
-                <View style={styles.galleryEditorialItem}>
+                {/* Mid-Shot Card */}
+                <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryEditorialImage} 
+                    style={styles.galleryCardImage} 
                   />
-                  <Text style={styles.galleryCaptionText}>Mid-Shot</Text>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Mid-Shot</Text>
+                  </LinearGradient>
                 </View>
               </ScrollView>
             </BlurView>
@@ -706,28 +721,40 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 
-  /* Editorial Gallery Layout */
+  /* Gallery Layout matching Screenshot */
   galleryScrollContainer: {
     paddingRight: 10,
+    gap: 12,
   },
-  galleryEditorialItem: {
-    alignItems: 'center',
-    marginRight: 14,
-  },
-  galleryEditorialImage: {
+  galleryCardItem: {
     width: 110,
     height: 150,
     borderRadius: 16,
-    resizeMode: 'cover',
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },
-  galleryCaptionText: {
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Book',
-    color: '#929292',
-    textAlign: 'center',
-    marginTop: 8,
+  galleryCardImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  galleryCardGradientOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 20,
+    paddingBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  galleryCardLabelText: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#ffffff',
   },
 
   /* Work Experience & Training Specifics */
