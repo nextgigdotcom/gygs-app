@@ -28,20 +28,27 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         
         {/* Top Header Bar */}
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.8} style={styles.appGridBtnWrapper}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.04)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.appGridBtn}
-            >
-              <Ionicons name="grid-outline" size={22} color="#ffffff" />
-            </LinearGradient>
+          {/* Left: Plain grid icon — no box */}
+          <TouchableOpacity activeOpacity={0.8}>
+            <Ionicons name="grid-outline" size={26} color="#ffffff" />
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.menuBtn}>
-            <Ionicons name="menu-outline" size={28} color="#ffffff" />
-          </TouchableOpacity>
+          {/* Right: Notification, Chat & Menu icons */}
+          <View style={styles.headerRightIcons}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+              <Ionicons name="notifications-outline" size={22} color="#ffffff" />
+              {/* Notification unread badge */}
+              <View style={styles.notifDot} />
+            </TouchableOpacity>
+
+            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+              <Ionicons name="chatbubble-ellipses-outline" size={21} color="#ffffff" />
+            </TouchableOpacity>
+
+            <TouchableOpacity activeOpacity={0.8}>
+              <Ionicons name="menu-outline" size={26} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Welcome Header */}
@@ -190,21 +197,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  appGridBtnWrapper: {
-    borderRadius: 16,
-    overflow: 'hidden',
-  },
-  appGridBtn: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-    justifyContent: 'center',
+  headerRightIcons: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 18,
   },
-  menuBtn: {
-    padding: 6,
+  headerIconBtn: {
+    position: 'relative',
+  },
+  notifDot: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#ef4444',
+    borderWidth: 1,
+    borderColor: '#050505',
   },
   welcomeTitle: {
     color: '#ffffff',
