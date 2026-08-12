@@ -12,39 +12,40 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
-const cardWidth = (width - 40 - 14) / 2; // 2-column grid with 20px padding and 14px gap
+// Generous 20px screen padding and 16px gap between cards
+const cardWidth = (width - 40 - 16) / 2; 
 
 export default function DashboardScreen({ onNavigateBrowse }) {
   const [chatInput, setChatInput] = useState('');
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
-      <StatusBar barStyle="light-content" backgroundColor="#000000" />
+      <StatusBar barStyle="light-content" backgroundColor="#050505" />
 
-      {/* Main Content Area */}
+      {/* Main Content Container */}
       <View style={styles.content}>
         
-        {/* 1. Top Header Navigation (Grid Icon Left, Menu Icon Right) */}
+        {/* Top Header Bar */}
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+          <TouchableOpacity activeOpacity={0.8} style={styles.appGridBtn}>
             <Ionicons name="grid-outline" size={22} color="#ffffff" />
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.headerMenuBtn}>
-            <Ionicons name="menu-outline" size={26} color="#ffffff" />
+          <TouchableOpacity activeOpacity={0.8} style={styles.menuBtn}>
+            <Ionicons name="menu-outline" size={28} color="#ffffff" />
           </TouchableOpacity>
         </View>
 
-        {/* 2. Welcome Title */}
+        {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 3. 2x2 Dashboard Cards Grid */}
+        {/* 2x2 Grid of Rounded Cards */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
           <View style={styles.card}>
             <Text style={styles.cardHeaderLabel}>TOTAL EARNINGS</Text>
-            <View style={styles.cardBottomContent}>
+            <View style={styles.cardBottomSection}>
               <Text style={styles.earningsValue}>₹0</Text>
             </View>
           </View>
@@ -52,40 +53,44 @@ export default function DashboardScreen({ onNavigateBrowse }) {
           {/* Card 2: UP NEXT */}
           <View style={styles.card}>
             <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
-            <View style={styles.upNextBody}>
+            <View style={styles.upNextSection}>
               <View style={styles.dateBadge}>
                 <Text style={styles.dateMonthText}>AUG</Text>
                 <Text style={styles.dateDayText}>12</Text>
               </View>
-              <Text style={styles.upNextSubtext}>Your calendar is clear</Text>
+              <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
             </View>
           </View>
 
-          {/* Card 3: BROWSE GYGS (Interactive -> Navigates to Browse Gygs Page) */}
+          {/* Card 3: BROWSE GYGS (Interactive -> Navigates to Browse Gygs Screen) */}
           <TouchableOpacity 
             activeOpacity={0.85}
             onPress={onNavigateBrowse}
-            style={[styles.card, styles.browseCardHighlight]}
+            style={styles.card}
           >
             <Text style={styles.cardHeaderLabel}>BROWSE</Text>
-            <View style={styles.browseDotsRow}>
-              <View style={[styles.dot, styles.dotActive]} />
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+            <View style={styles.browseSection}>
+              <View style={styles.dotsRow}>
+                <View style={[styles.dot, styles.dotBlue]} />
+                <View style={styles.dot} />
+                <View style={styles.dot} />
+              </View>
+              <Text style={styles.browseTitle}>Gygs</Text>
             </View>
-            <Text style={styles.browseTitle}>Gygs</Text>
           </TouchableOpacity>
 
           {/* Card 4: MY PROFILE */}
           <View style={styles.card}>
             <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
-            <View style={styles.profileRow}>
+            <View style={styles.profileSection}>
               <View style={styles.profileAvatar}>
                 <Text style={styles.profileAvatarText}>A</Text>
               </View>
-              <Text style={styles.profileNameText} numberOfLines={2}>
-                Akash Tiwari
-              </Text>
+              <View style={styles.profileNameContainer}>
+                <Text style={styles.profileNameText} numberOfLines={2}>
+                  Akash{'\n'}Tiwari
+                </Text>
+              </View>
             </View>
           </View>
 
@@ -93,11 +98,11 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
       </View>
 
-      {/* 4. Bottom AI Chat Input Bar */}
-      <View style={styles.bottomBarWrapper}>
+      {/* Bottom Fixed AI Input Bar */}
+      <View style={styles.bottomBarContainer}>
         <View style={styles.bottomBar}>
-          <TouchableOpacity style={styles.attachBtn}>
-            <Ionicons name="attach" size={22} color="#888888" />
+          <TouchableOpacity activeOpacity={0.7} style={styles.attachBtn}>
+            <Ionicons name="attach" size={24} color="#888888" />
           </TouchableOpacity>
 
           <TextInput
@@ -105,10 +110,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             placeholderTextColor="#666666"
             value={chatInput}
             onChangeText={setChatInput}
-            style={styles.chatInputText}
+            style={styles.inputField}
           />
 
-          <TouchableOpacity style={styles.micBtn}>
+          <TouchableOpacity activeOpacity={0.8} style={styles.micBtn}>
             <Ionicons name="mic" size={18} color="#ffffff" />
           </TouchableOpacity>
         </View>
@@ -121,7 +126,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#050505',
   },
   content: {
     flex: 1,
@@ -132,94 +137,102 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 28,
+    marginBottom: 32,
   },
-  headerIconBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  appGridBtn: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: '#161616',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  headerMenuBtn: {
+  menuBtn: {
     padding: 6,
   },
   welcomeTitle: {
     color: '#ffffff',
-    fontSize: 28,
+    fontSize: 30,
     fontFamily: 'AirbnbCereal-Bold',
-    letterSpacing: -0.5,
-    marginBottom: 20,
+    fontWeight: '700',
+    letterSpacing: -0.6,
+    marginBottom: 24,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 14,
+    gap: 16,
   },
   card: {
     width: cardWidth,
-    height: 165,
-    borderRadius: 22,
-    backgroundColor: '#121212',
+    height: 180,
+    borderRadius: 24,
+    backgroundColor: '#141414',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    padding: 16,
+    borderColor: 'rgba(255, 255, 255, 0.06)',
+    padding: 20,
     justifyContent: 'space-between',
   },
-  browseCardHighlight: {
-    borderColor: 'rgba(29, 78, 216, 0.4)',
-    backgroundColor: 'rgba(18, 18, 18, 0.95)',
-  },
   cardHeaderLabel: {
-    color: '#888888',
+    color: '#777777',
     fontSize: 11,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  cardBottomSection: {
+    justifyContent: 'flex-end',
   },
   earningsValue: {
     color: '#ffffff',
-    fontSize: 32,
+    fontSize: 34,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
   },
-  upNextBody: {
-    flex: 1,
-    justifyContent: 'center',
+  upNextSection: {
+    justifyContent: 'flex-end',
   },
   dateBadge: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: 'rgba(29, 78, 216, 0.2)',
+    width: 54,
+    height: 54,
+    borderRadius: 16,
+    backgroundColor: '#19253b',
     borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.4)',
+    borderColor: 'rgba(96, 165, 250, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   dateMonthText: {
     color: '#60A5FA',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   dateDayText: {
     color: '#ffffff',
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     marginTop: -2,
   },
-  upNextSubtext: {
-    color: '#888888',
-    fontSize: 12,
+  calendarSubtext: {
+    color: '#777777',
+    fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
   },
-  browseDotsRow: {
+  browseSection: {
+    justifyContent: 'flex-end',
+  },
+  dotsRow: {
     flexDirection: 'row',
-    gap: 5,
-    marginTop: 20,
-    marginBottom: 4,
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 12,
   },
   dot: {
     width: 6,
@@ -227,26 +240,25 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#444444',
   },
-  dotActive: {
-    backgroundColor: '#1D4ED8',
-    width: 14,
+  dotBlue: {
+    backgroundColor: '#2563EB',
   },
   browseTitle: {
     color: '#ffffff',
-    fontSize: 28,
+    fontSize: 32,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
   },
-  profileRow: {
+  profileSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 20,
+    gap: 12,
   },
   profileAvatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
-    backgroundColor: '#1D4ED8',
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: '#2563EB',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -254,43 +266,47 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+  },
+  profileNameContainer: {
+    flex: 1,
   },
   profileNameText: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: 'AirbnbCereal-Bold',
-    flex: 1,
-    lineHeight: 20,
+    fontWeight: '700',
+    lineHeight: 22,
   },
-  bottomBarWrapper: {
+  bottomBarContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 16,
+    paddingBottom: 20,
     paddingTop: 10,
   },
   bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#141414',
-    borderRadius: 28,
-    height: 54,
+    borderRadius: 30,
+    height: 56,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   attachBtn: {
     marginRight: 10,
   },
-  chatInputText: {
+  inputField: {
     flex: 1,
     color: '#ffffff',
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
   micBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#1D4ED8',
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#2563EB',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
