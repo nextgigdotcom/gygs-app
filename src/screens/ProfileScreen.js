@@ -17,8 +17,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const { width } = Dimensions.get('window');
 
 export default function ProfileScreen({ onBackHome }) {
-  const artistTypes = ['Solo Vocalist', 'Acoustic Performer'];
-  const categories = ['Bollywood', 'Classical', 'Commercial', 'Acoustic'];
+  const artistTypes = ['Dance'];
+  const categories = ['Performer', 'Trainer'];
 
   const handleShareProfile = () => {
     Alert.alert('Profile Link Copied!', 'https://gygs.in/artist/profile/akashtiwari has been copied to your clipboard.');
@@ -133,57 +133,50 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 2. Side-by-Side 'Artist Type' and 'Categories' Liquid Glass Double Cards Row */}
-        <View style={styles.doubleCardRow}>
-          
-          {/* Card A: Artist Type */}
-          <View style={styles.halfCardWrapper}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.cardGradient}
-            >
-              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
-                <View style={styles.cardHeaderRow}>
-                  <Text style={styles.cardHeaderLabel}>ARTIST TYPE</Text>
+        {/* 2. Combined Single Liquid Glass Card for Artist Type & Categories */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              
+              {/* Artist Type Section */}
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>ARTIST TYPE</Text>
+                <TouchableOpacity activeOpacity={0.7}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
-                </View>
-                <View style={styles.tagContainer}>
-                  {artistTypes.map((type, idx) => (
-                    <View key={idx} style={styles.tagPill}>
-                      <Text style={styles.tagPillText}>{type}</Text>
-                    </View>
-                  ))}
-                </View>
-              </BlurView>
-            </LinearGradient>
-          </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.tagContainer}>
+                {artistTypes.map((type, idx) => (
+                  <View key={idx} style={styles.tagPill}>
+                    <Text style={styles.tagPillText}>{type}</Text>
+                  </View>
+                ))}
+              </View>
 
-          {/* Card B: Categories */}
-          <View style={styles.halfCardWrapper}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.cardGradient}
-            >
-              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
-                <View style={styles.cardHeaderRow}>
-                  <Text style={styles.cardHeaderLabel}>CATEGORIES</Text>
+              <View style={[styles.horizontalDivider, { marginVertical: 14 }]} />
+
+              {/* Categories Section */}
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>CATEGORIES</Text>
+                <TouchableOpacity activeOpacity={0.7}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
-                </View>
-                <View style={styles.tagContainer}>
-                  {categories.map((cat, idx) => (
-                    <View key={idx} style={styles.tagPill}>
-                      <Text style={styles.tagPillText}>{cat}</Text>
-                    </View>
-                  ))}
-                </View>
-              </BlurView>
-            </LinearGradient>
-          </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.tagContainer}>
+                {categories.map((cat, idx) => (
+                  <View key={idx} style={styles.tagPill}>
+                    <Text style={styles.tagPillText}>{cat}</Text>
+                  </View>
+                ))}
+              </View>
 
+            </BlurView>
+          </LinearGradient>
         </View>
 
         {/* 3. Demographics Liquid Glass 2-Column Grid */}
