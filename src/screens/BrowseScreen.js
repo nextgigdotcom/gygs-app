@@ -19,10 +19,10 @@ import GigCard, { currencyConverter } from '../components/GigCard';
 // Exact User Category Bar List
 const CATEGORIES = ['All', 'Dance', 'Acting', 'Yoga', 'Fitness', 'Video Editor', 'Videographer'];
 
-const SEARCH_PLACEHOLDER_PHRASES = [
-  'Search by title...',
-  'Search by location...',
-  'Search by skill...',
+const SEARCH_DYNAMIC_WORDS = [
+  'title...',
+  'location...',
+  'skill...',
 ];
 
 export default function BrowseScreen({ onBackHome }) {
@@ -31,22 +31,22 @@ export default function BrowseScreen({ onBackHome }) {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedGigModal, setSelectedGigModal] = useState(null);
 
-  // Search Bar Typewriter State
+  // Search Bar Typewriter State (Constant "Search by " + Dynamic Word)
   const [placeholderText, setPlaceholderText] = useState('');
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Typewriter animation loop for Search Bar placeholder
   useEffect(() => {
-    const currentPhrase = SEARCH_PLACEHOLDER_PHRASES[phraseIndex];
+    const currentWord = SEARCH_DYNAMIC_WORDS[phraseIndex];
 
     const timer = setTimeout(() => {
       if (!isDeleting) {
         // Typing forward
-        if (placeholderText.length < currentPhrase.length) {
-          setPlaceholderText(currentPhrase.slice(0, placeholderText.length + 1));
+        if (placeholderText.length < currentWord.length) {
+          setPlaceholderText(currentWord.slice(0, placeholderText.length + 1));
         } else {
-          // Pause when phrase is fully typed before deleting
+          // Pause when word is fully typed before deleting
           const pauseTimer = setTimeout(() => {
             setIsDeleting(true);
           }, 1800);
@@ -55,11 +55,11 @@ export default function BrowseScreen({ onBackHome }) {
       } else {
         // Erasing backward
         if (placeholderText.length > 0) {
-          setPlaceholderText(currentPhrase.slice(0, placeholderText.length - 1));
+          setPlaceholderText(currentWord.slice(0, placeholderText.length - 1));
         } else {
-          // Advance to next phrase once completely erased
+          // Advance to next word once completely erased
           setIsDeleting(false);
-          setPhraseIndex((prevIndex) => (prevIndex + 1) % SEARCH_PLACEHOLDER_PHRASES.length);
+          setPhraseIndex((prevIndex) => (prevIndex + 1) % SEARCH_DYNAMIC_WORDS.length);
         }
       }
     }, isDeleting ? 40 : 70);
@@ -144,7 +144,7 @@ export default function BrowseScreen({ onBackHome }) {
         </View>
       </View>
 
-      {/* Glass Search Bar Container with Animated Typewriter Placeholder */}
+      {/* Glass Search Bar Container with Constant "Search by " + Dynamic Typewriter Placeholder */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search-outline"
@@ -153,7 +153,7 @@ export default function BrowseScreen({ onBackHome }) {
           style={styles.searchIcon}
         />
         <TextInput
-          placeholder={placeholderText}
+          placeholder={`Search by ${placeholderText}`}
           placeholderTextColor="#888888"
           value={searchQuery}
           onChangeText={setSearchQuery}
