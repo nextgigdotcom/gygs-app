@@ -261,12 +261,7 @@ export default function ProfileScreen({ onBackHome }) {
               
               {/* Header */}
               <View style={styles.cardHeaderRow}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.cardHeaderLabel}>GALLERY</Text>
-                  <View style={styles.galleryCountBadge}>
-                    <Text style={styles.galleryCountBadgeText}>6 Items</Text>
-                  </View>
-                </View>
+                <Text style={styles.cardHeaderLabel}>GALLERY</Text>
                 <TouchableOpacity activeOpacity={0.7}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
