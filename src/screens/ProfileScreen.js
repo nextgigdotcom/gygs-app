@@ -7,7 +7,8 @@ import {
   TouchableOpacity, 
   StatusBar,
   Alert,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -237,7 +238,7 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 4. Gallery Liquid Glass Card */}
+        {/* 4. Gallery Liquid Glass Card (Replicated 100% from Production Screenshot) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -248,7 +249,9 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>GALLERY</Text>
-                <Ionicons name="create-outline" size={14} color="#888888" />
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
               </View>
 
               <ScrollView 
@@ -256,14 +259,37 @@ export default function ProfileScreen({ onBackHome }) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.galleryScrollContainer}
               >
-                <View style={styles.galleryImageBlock}>
-                  <Ionicons name="image-outline" size={24} color="#60A5FA" />
+                {/* Close-Up Card */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.galleryCardLabelOverlay}>
+                    <Text style={styles.galleryCardLabelText}>Close-Up</Text>
+                  </View>
                 </View>
-                <View style={styles.galleryImageBlock}>
-                  <Ionicons name="image-outline" size={24} color="#60A5FA" />
+
+                {/* Full-Body Card */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.galleryCardLabelOverlay}>
+                    <Text style={styles.galleryCardLabelText}>Full-Body</Text>
+                  </View>
                 </View>
-                <View style={styles.galleryImageBlock}>
-                  <Ionicons name="image-outline" size={24} color="#60A5FA" />
+
+                {/* Mid-Shot Card */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.galleryCardLabelOverlay}>
+                    <Text style={styles.galleryCardLabelText}>Mid-Shot</Text>
+                  </View>
                 </View>
               </ScrollView>
             </BlurView>
@@ -281,7 +307,9 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>ABOUT ME</Text>
-                <Ionicons name="create-outline" size={14} color="#888888" />
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
               </View>
               <Text style={styles.aboutText}>
                 Passionate vocalist and music producer in pursuit of creating unforgettable live show experiences. Specialized in Bollywood, Acoustic, and Commercial set ups.
@@ -301,7 +329,9 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>SHOW RATES</Text>
-                <Ionicons name="create-outline" size={14} color="#888888" />
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
               </View>
 
               <View style={styles.rateRow}>
@@ -599,20 +629,36 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 
-  /* Gallery Horizontal Scroll */
+  /* Gallery Layout matching Screenshot */
   galleryScrollContainer: {
     paddingRight: 10,
+    gap: 12,
   },
-  galleryImageBlock: {
-    width: 90,
-    height: 90,
+  galleryCardItem: {
+    width: 105,
+    height: 130,
     borderRadius: 16,
-    marginRight: 10,
+    overflow: 'hidden',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  galleryCardImage: {
+    width: '100%',
+    height: 96,
+    resizeMode: 'cover',
+  },
+  galleryCardLabelOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 15, 15, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    paddingVertical: 4,
+  },
+  galleryCardLabelText: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#ffffff',
   },
 
   /* About Text */
