@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -19,11 +19,53 @@ import GigCard, { currencyConverter } from '../components/GigCard';
 // Exact User Category Bar List
 const CATEGORIES = ['All', 'Dance', 'Acting', 'Yoga', 'Fitness', 'Video Editor', 'Videographer'];
 
+const SEARCH_PLACEHOLDER_PHRASES = [
+  'Search by title...',
+  'Search by location...',
+  'Search by skill...',
+];
+
 export default function BrowseScreen({ onBackHome }) {
   const [gigs, setGigs] = useState(MOCK_GIGS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedGigModal, setSelectedGigModal] = useState(null);
+
+  // Search Bar Typewriter State
+  const [placeholderText, setPlaceholderText] = useState('');
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Typewriter animation loop for Search Bar placeholder
+  useEffect(() => {
+    const currentPhrase = SEARCH_PLACEHOLDER_PHRASES[phraseIndex];
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        // Typing forward
+        if (placeholderText.length < currentPhrase.length) {
+          setPlaceholderText(currentPhrase.slice(0, placeholderText.length + 1));
+        } else {
+          // Pause when phrase is fully typed before deleting
+          const pauseTimer = setTimeout(() => {
+            setIsDeleting(true);
+          }, 1800);
+          return () => clearTimeout(pauseTimer);
+        }
+      } else {
+        // Erasing backward
+        if (placeholderText.length > 0) {
+          setPlaceholderText(currentPhrase.slice(0, placeholderText.length - 1));
+        } else {
+          // Advance to next phrase once completely erased
+          setIsDeleting(false);
+          setPhraseIndex((prevIndex) => (prevIndex + 1) % SEARCH_PLACEHOLDER_PHRASES.length);
+        }
+      }
+    }, isDeleting ? 40 : 70);
+
+    return () => clearTimeout(timer);
+  }, [placeholderText, phraseIndex, isDeleting]);
 
   const activeGigsCount = useMemo(() => {
     return gigs.filter((g) => g.active).length;
@@ -102,7 +144,7 @@ export default function BrowseScreen({ onBackHome }) {
         </View>
       </View>
 
-      {/* Glass Search Bar Container */}
+      {/* Glass Search Bar Container with Animated Typewriter Placeholder */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search-outline"
@@ -111,7 +153,7 @@ export default function BrowseScreen({ onBackHome }) {
           style={styles.searchIcon}
         />
         <TextInput
-          placeholder="Search by title, location, skill..."
+          placeholder={placeholderText}
           placeholderTextColor="#888888"
           value={searchQuery}
           onChangeText={setSearchQuery}

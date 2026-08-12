@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const KNOWN_STATES_COUNTRIES = [
@@ -103,123 +102,116 @@ export default function GigCard({ gig, onPress, onWithdraw, onContact }) {
       onPress={() => onPress && onPress(gig)}
       style={styles.cardWrapper}
     >
-      <LinearGradient
-        colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.03)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.cardGradient}
-      >
-        <BlurView intensity={40} tint="dark" style={styles.card}>
-          
-          {/* 1. Job Title (18px, 600 weight, #FFFFFF) */}
-          <View style={styles.headerRow}>
-            <Text style={styles.title} numberOfLines={2}>{gig.title}</Text>
-            {isClosed && (
-              <Text style={styles.closedText}>Closed</Text>
+      <BlurView intensity={40} tint="dark" style={styles.card}>
+        
+        {/* 1. Job Title (18px, 600 weight, #FFFFFF) */}
+        <View style={styles.headerRow}>
+          <Text style={styles.title} numberOfLines={2}>{gig.title}</Text>
+          {isClosed && (
+            <Text style={styles.closedText}>Closed</Text>
+          )}
+        </View>
+
+        {/* 2. Single Category Tag Badge (Translucent Royal Blue Fill & Bright #60A5FA Text) */}
+        {categoriesList.length > 0 && (
+          <View style={styles.categoryContainer}>
+            {categoriesList.slice(0, 1).map((cat, idx) => (
+              <View key={idx} style={styles.categoryGlassPill}>
+                <Text style={styles.categoryGlassPillText}>{cat}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* 3. Details Row: Location/Date & Price */}
+        <View style={styles.detailsRow}>
+          <View style={styles.detailsLeft}>
+            {gig.event_location && (
+              <View style={styles.infoLine}>
+                <Ionicons name="location-outline" size={14} color="#929292" style={styles.infoIcon} />
+                <Text style={styles.infoText} numberOfLines={1}>
+                  {getCityOnly(gig.event_location)}
+                </Text>
+              </View>
+            )}
+            {gig.event_dates && (
+              <View style={styles.infoLine}>
+                <Ionicons name="calendar-outline" size={14} color="#929292" style={styles.infoIcon} />
+                <Text style={styles.infoText} numberOfLines={1}>
+                  {formatDateConcise(gig.event_dates)}
+                </Text>
+              </View>
             )}
           </View>
 
-          {/* 2. Single Category Tag Badge (Translucent Royal Blue Fill & Bright #60A5FA Text) */}
-          {categoriesList.length > 0 && (
-            <View style={styles.categoryContainer}>
-              {categoriesList.slice(0, 1).map((cat, idx) => (
-                <View key={idx} style={styles.categoryGlassPill}>
-                  <Text style={styles.categoryGlassPillText}>{cat}</Text>
-                </View>
-              ))}
-            </View>
-          )}
-
-          {/* 3. Details Row: Location/Date & Price */}
-          <View style={styles.detailsRow}>
-            <View style={styles.detailsLeft}>
-              {gig.event_location && (
-                <View style={styles.infoLine}>
-                  <Ionicons name="location-outline" size={14} color="#929292" style={styles.infoIcon} />
-                  <Text style={styles.infoText} numberOfLines={1}>
-                    {getCityOnly(gig.event_location)}
-                  </Text>
-                </View>
-              )}
-              {gig.event_dates && (
-                <View style={styles.infoLine}>
-                  <Ionicons name="calendar-outline" size={14} color="#929292" style={styles.infoIcon} />
-                  <Text style={styles.infoText} numberOfLines={1}>
-                    {formatDateConcise(gig.event_dates)}
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            {/* Price / Earnings Display */}
-            <View style={styles.earningsContainer}>
-              <Text style={styles.earningsLabel}>
-                Earn{gig.gig_duration_type === 1 ? ' per month' : ''}
-              </Text>
-              <Text style={styles.earningsValue}>
-                ₹{currencyConverter(gig.budget)}
-              </Text>
-            </View>
+          {/* Price / Earnings Display */}
+          <View style={styles.earningsContainer}>
+            <Text style={styles.earningsLabel}>
+              Earn{gig.gig_duration_type === 1 ? ' per month' : ''}
+            </Text>
+            <Text style={styles.earningsValue}>
+              ₹{currencyConverter(gig.budget)}
+            </Text>
           </View>
+        </View>
 
-          {/* Single Thin Glass Divider Line */}
-          <View style={styles.dividerLine} />
+        {/* Single Thin Glass Divider Line */}
+        <View style={styles.dividerLine} />
 
-          {/* Footer Section: 2-Line Employer Name Layout */}
-          <View style={styles.footerRow}>
-            <View style={styles.postedByContainer}>
-              <View style={styles.employerAvatar}>
-                <Text style={styles.employerAvatarText}>{employerInitial}</Text>
-              </View>
-              <Text 
-                style={styles.employerNameText} 
-                numberOfLines={2}
-              >
-                {employerName}
-              </Text>
+        {/* Footer Section: 2-Line Employer Name Layout */}
+        <View style={styles.footerRow}>
+          <View style={styles.postedByContainer}>
+            <View style={styles.employerAvatar}>
+              <Text style={styles.employerAvatarText}>{employerInitial}</Text>
             </View>
-
-            <Text style={styles.postedDateText}>
-              Posted {timeAgo(gig.created_at)}
+            <Text 
+              style={styles.employerNameText} 
+              numberOfLines={2}
+            >
+              {employerName}
             </Text>
           </View>
 
-          {/* Application Status Action Items */}
-          {status && (
-            <View style={styles.actionsContainer}>
-              {(status === 'APPLIED' || status === 'MAYBE') && !isClosed && (
+          <Text style={styles.postedDateText}>
+            Posted {timeAgo(gig.created_at)}
+          </Text>
+        </View>
+
+        {/* Application Status Action Items */}
+        {status && (
+          <View style={styles.actionsContainer}>
+            {(status === 'APPLIED' || status === 'MAYBE') && !isClosed && (
+              <TouchableOpacity
+                onPress={() => onWithdraw && onWithdraw(gig)}
+                style={styles.buttonWithdraw}
+              >
+                <Text style={styles.buttonTextWithdraw}>Withdraw Application</Text>
+              </TouchableOpacity>
+            )}
+
+            {status === 'SHORTLISTED' && !isClosed && (
+              <View style={styles.buttonGroup}>
                 <TouchableOpacity
-                  onPress={() => onWithdraw && onWithdraw(gig)}
-                  style={styles.buttonWithdraw}
+                  onPress={() => onContact && onContact(gig, 'whatsapp')}
+                  style={[styles.buttonGreen, { marginRight: 8 }]}
                 >
-                  <Text style={styles.buttonTextWithdraw}>Withdraw Application</Text>
+                  <Ionicons name="logo-whatsapp" size={14} color="#ffffff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonTextWhite}>Message</Text>
                 </TouchableOpacity>
-              )}
 
-              {status === 'SHORTLISTED' && !isClosed && (
-                <View style={styles.buttonGroup}>
-                  <TouchableOpacity
-                    onPress={() => onContact && onContact(gig, 'whatsapp')}
-                    style={[styles.buttonGreen, { marginRight: 8 }]}
-                  >
-                    <Ionicons name="logo-whatsapp" size={14} color="#ffffff" style={styles.buttonIcon} />
-                    <Text style={styles.buttonTextWhite}>Message</Text>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onContact && onContact(gig, 'call')}
+                  style={styles.buttonGreen}
+                >
+                  <Ionicons name="call" size={14} color="#ffffff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonTextWhite}>Call</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        )}
 
-                  <TouchableOpacity
-                    onPress={() => onContact && onContact(gig, 'call')}
-                    style={styles.buttonGreen}
-                  >
-                    <Ionicons name="call" size={14} color="#ffffff" style={styles.buttonIcon} />
-                    <Text style={styles.buttonTextWhite}>Call</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          )}
-
-        </BlurView>
-      </LinearGradient>
+      </BlurView>
     </TouchableOpacity>
   );
 }
@@ -230,15 +222,12 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     overflow: 'hidden',
   },
-  cardGradient: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
-  },
   card: {
     padding: 20,
     borderRadius: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   headerRow: {
     flexDirection: 'row',
@@ -268,15 +257,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   categoryGlassPill: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+    backgroundColor: 'rgba(29, 78, 216, 0.15)', // Translucent Royal Blue fill
     borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.3)',
+    borderColor: 'rgba(29, 78, 216, 0.3)', // Translucent Royal Blue border
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 9999,
   },
   categoryGlassPillText: {
-    color: '#60A5FA',
+    color: '#60A5FA', // Bright legible blue text
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Medium',
   },
