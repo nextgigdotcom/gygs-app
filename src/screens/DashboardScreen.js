@@ -47,7 +47,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 2x2 Grid of Liquid White Glass Gradient Cards */}
+        {/* 2x2 Grid of Liquid White Glass Gradient Cards with Blue Accents */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
@@ -67,7 +67,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </View>
 
-          {/* Card 2: UP NEXT */}
+          {/* Card 2: UP NEXT (Royal Blue Date Badge Accent) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -78,9 +78,9 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
                 <View style={styles.upNextSection}>
-                  <View style={styles.dateBadge}>
-                    <Text style={styles.dateMonthText}>AUG</Text>
-                    <Text style={styles.dateDayText}>12</Text>
+                  <View style={styles.dateBadgeBlue}>
+                    <Text style={styles.dateMonthTextBlue}>AUG</Text>
+                    <Text style={styles.dateDayTextWhite}>12</Text>
                   </View>
                   <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
                 </View>
@@ -88,7 +88,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </View>
 
-          {/* Card 3: BROWSE GYGS (Interactive -> Navigates to Browse Gygs Screen) */}
+          {/* Card 3: BROWSE GYGS (Royal Blue Active Indicator & Interactive Navigation) */}
           <TouchableOpacity 
             activeOpacity={0.85}
             onPress={onNavigateBrowse}
@@ -104,7 +104,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
                 <Text style={styles.cardHeaderLabel}>BROWSE</Text>
                 <View style={styles.browseSection}>
                   <View style={styles.dotsRow}>
-                    <View style={[styles.dot, styles.dotWhiteGlow]} />
+                    <View style={[styles.dot, styles.dotRoyalBlue]} />
                     <View style={styles.dot} />
                     <View style={styles.dot} />
                   </View>
@@ -114,7 +114,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Card 4: MY PROFILE */}
+          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -125,8 +125,8 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
                 <View style={styles.profileSection}>
-                  <View style={styles.profileAvatar}>
-                    <Text style={styles.profileAvatarText}>A</Text>
+                  <View style={styles.profileAvatarBlue}>
+                    <Text style={styles.profileAvatarTextWhite}>A</Text>
                   </View>
                   <View style={styles.profileNameContainer}>
                     <Text style={styles.profileNameText} numberOfLines={2}>
@@ -142,7 +142,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
       </View>
 
-      {/* Bottom Fixed AI Input Bar */}
+      {/* Bottom Fixed AI Input Bar (Royal Blue Mic Button Accent) */}
       <View style={styles.bottomBarContainer}>
         <LinearGradient
           colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.04)']}
@@ -163,7 +163,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               style={styles.inputField}
             />
 
-            <TouchableOpacity activeOpacity={0.8} style={styles.micBtn}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnBlue}>
               <Ionicons name="mic" size={18} color="#ffffff" />
             </TouchableOpacity>
           </BlurView>
@@ -260,26 +260,25 @@ const styles = StyleSheet.create({
   upNextSection: {
     justifyContent: 'flex-end',
   },
-  dateBadge: {
+  dateBadgeBlue: {
     width: 54,
     height: 54,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: 'rgba(29, 78, 216, 0.22)', // Translucent Royal Blue fill
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+    borderColor: 'rgba(96, 165, 250, 0.4)', // Legible Royal Blue edge
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
   },
-  dateMonthText: {
-    color: '#ffffff',
+  dateMonthTextBlue: {
+    color: '#60A5FA', // Bright legible blue
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     letterSpacing: 0.5,
-    opacity: 0.8,
   },
-  dateDayText: {
+  dateDayTextWhite: {
     color: '#ffffff',
     fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
@@ -306,8 +305,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
-  dotWhiteGlow: {
-    backgroundColor: '#ffffff',
+  dotRoyalBlue: {
+    backgroundColor: '#1D4ED8', // Royal Blue active dot accent
     width: 16,
   },
   browseTitle: {
@@ -321,17 +320,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  profileAvatar: {
+  profileAvatarBlue: {
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#1D4ED8', // Solid Deep Royal Blue avatar fill
     justifyContent: 'center',
     alignItems: 'center',
   },
-  profileAvatarText: {
+  profileAvatarTextWhite: {
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
@@ -374,13 +371,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
-  micBtn: {
+  micBtnBlue: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.35)',
+    backgroundColor: '#1D4ED8', // Solid Deep Royal Blue mic button
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
