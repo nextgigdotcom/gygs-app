@@ -69,7 +69,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         
         {/* Top Header Bar (No square box on left, 3 icon buttons on right: Chats, Notifications, Menu) */}
         <View style={styles.header}>
-          <View /> {/* Empty left side */}
+          <View style={{ width: 1 }} />
 
           <View style={styles.headerRightRow}>
             {/* Direct Chats Button */}
