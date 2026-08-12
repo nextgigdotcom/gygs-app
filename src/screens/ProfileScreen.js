@@ -73,7 +73,7 @@ export default function ProfileScreen({ onBackHome }) {
                   </View>
 
                   <Text style={styles.airbnbNameText}>Akash Tiwari</Text>
-                  <Text style={styles.airbnbSubtitleText}>Artist & Host</Text>
+                  <Text style={styles.airbnbSubtitleText}>Lives in Mumbai</Text>
                 </View>
 
                 {/* Vertical Divider Line between Left & Right */}
@@ -123,19 +123,6 @@ export default function ProfileScreen({ onBackHome }) {
 
             </BlurView>
           </LinearGradient>
-        </View>
-
-        {/* 2. Airbnb Location & Verified Info Rows */}
-        <View style={styles.airbnbInfoRowsContainer}>
-          <View style={styles.airbnbInfoRow}>
-            <Ionicons name="globe-outline" size={20} color="#ffffff" style={styles.airbnbInfoIcon} />
-            <Text style={styles.airbnbInfoText}>Lives in Mumbai, India</Text>
-          </View>
-
-          <View style={styles.airbnbInfoRow}>
-            <Ionicons name="shield-checkmark-outline" size={20} color="#ffffff" style={styles.airbnbInfoIcon} />
-            <Text style={[styles.airbnbInfoText, styles.underlineText]}>Identity verified</Text>
-          </View>
         </View>
 
         {/* 3. Side-by-Side 'Artist Type' and 'Categories' Double Cards Row */}
