@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function ProfileScreen({ onBackHome }) {
-  const jobTypes = ['Solo Vocalist', 'Acoustic Performer', 'Music Producer'];
+  const artistTypes = ['Solo Vocalist', 'Acoustic Performer'];
   const categories = ['Bollywood', 'Classical', 'Commercial', 'Acoustic'];
 
   const handleShareProfile = () => {
@@ -33,7 +33,9 @@ export default function ProfileScreen({ onBackHome }) {
           My Profile
         </Text>
 
-        <View style={{ width: 36 }} />
+        <TouchableOpacity activeOpacity={0.7} style={styles.backButton}>
+          <Ionicons name="create-outline" size={18} color="#60A5FA" />
+        </TouchableOpacity>
       </View>
 
       {/* Global Canvas: Deep Black Background #0A0A0A & >40px Bottom Padding */}
@@ -43,9 +45,8 @@ export default function ProfileScreen({ onBackHome }) {
         showsVerticalScrollIndicator={false}
       >
         
-        {/* SECTION 1: The Header Card */}
+        {/* 1. Header Card: Name + Stacked Contact Top Row & Solid #1D4ED8 Share Button Bottom Row */}
         <View style={styles.masterCard}>
-          {/* Top Row: Flex row space-between */}
           <View style={styles.headerTopRow}>
             <Text style={styles.nameText}>Akash Tiwari</Text>
 
@@ -55,9 +56,8 @@ export default function ProfileScreen({ onBackHome }) {
             </View>
           </View>
 
-          {/* Bottom Row: Full-width Solid Royal Blue Share Profile Button */}
           <TouchableOpacity
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             onPress={handleShareProfile}
             style={styles.shareProfileButton}
           >
@@ -66,71 +66,47 @@ export default function ProfileScreen({ onBackHome }) {
           </TouchableOpacity>
         </View>
 
-        {/* SECTION 2: Tag-Based Card - Job Type (Full-Width, Stacked Vertically) */}
-        <View style={styles.masterCard}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardTitle}>Job Type</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="create-outline" size={16} color="#929292" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.tagContainer}>
-            {jobTypes.map((type, idx) => (
-              <View key={idx} style={styles.tagPill}>
-                <Text style={styles.tagPillText}>{type}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* SECTION 3: Tag-Based Card - Categories (Full-Width, Stacked Vertically) */}
-        <View style={styles.masterCard}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardTitle}>Categories</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="create-outline" size={16} color="#929292" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.tagContainer}>
-            {categories.map((cat, idx) => (
-              <View key={idx} style={styles.tagPill}>
-                <Text style={styles.tagPillText}>{cat}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* SECTION 4: The Gallery Card */}
-        <View style={styles.masterCard}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardTitle}>Gallery</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="create-outline" size={16} color="#929292" />
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView 
-            horizontal={true} 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.galleryScrollContainer}
-          >
-            <View style={styles.galleryImageBlock}>
-              <Ionicons name="image-outline" size={24} color="#555555" />
-            </View>
-            <View style={styles.galleryImageBlock}>
-              <Ionicons name="image-outline" size={24} color="#555555" />
-            </View>
-            <View style={styles.galleryImageBlock}>
-              <Ionicons name="image-outline" size={24} color="#555555" />
-            </View>
-          </ScrollView>
-        </View>
-
-        {/* SECTION 5: Demographics Grid (Age, Height, Gender - 2-Column Grid) */}
-        <View style={styles.demographicsContainer}>
+        {/* 2. Side-by-Side 'Artist Type' and 'Categories' Double Cards Row */}
+        <View style={styles.doubleCardRow}>
           
+          {/* Card A: Artist Type */}
+          <View style={styles.halfMasterCard}>
+            <View style={styles.cardHeaderRow}>
+              <Text style={styles.cardTitleSmall}>Artist Type</Text>
+              <TouchableOpacity activeOpacity={0.7}>
+                <Ionicons name="create-outline" size={14} color="#929292" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tagContainer}>
+              {artistTypes.map((type, idx) => (
+                <View key={idx} style={styles.tagPill}>
+                  <Text style={styles.tagPillText}>{type}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          {/* Card B: Categories */}
+          <View style={styles.halfMasterCard}>
+            <View style={styles.cardHeaderRow}>
+              <Text style={styles.cardTitleSmall}>Categories</Text>
+              <TouchableOpacity activeOpacity={0.7}>
+                <Ionicons name="create-outline" size={14} color="#929292" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tagContainer}>
+              {categories.map((cat, idx) => (
+                <View key={idx} style={styles.tagPill}>
+                  <Text style={styles.tagPillText}>{cat}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+        </View>
+
+        {/* 3. Demographics Grid (Age, Height, Gender, City) - 2-Column Grid */}
+        <View style={styles.demographicsContainer}>
           <View style={styles.demographicCard}>
             <Text style={styles.demoLabel}>AGE</Text>
             <Text style={styles.demoValue}>24 Years</Text>
@@ -150,7 +126,90 @@ export default function ProfileScreen({ onBackHome }) {
             <Text style={styles.demoLabel}>CITY</Text>
             <Text style={styles.demoValue}>Mumbai</Text>
           </View>
+        </View>
 
+        {/* 4. Gallery Card */}
+        <View style={styles.masterCard}>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardTitle}>Gallery</Text>
+            <TouchableOpacity activeOpacity={0.7}>
+              <Ionicons name="create-outline" size={16} color="#929292" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView 
+            horizontal={true} 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.galleryScrollContainer}
+          >
+            <View style={styles.galleryImageBlock}>
+              <Ionicons name="image-outline" size={24} color="#60A5FA" />
+            </View>
+            <View style={styles.galleryImageBlock}>
+              <Ionicons name="image-outline" size={24} color="#60A5FA" />
+            </View>
+            <View style={styles.galleryImageBlock}>
+              <Ionicons name="image-outline" size={24} color="#60A5FA" />
+            </View>
+          </ScrollView>
+        </View>
+
+        {/* 5. About Me Card */}
+        <View style={styles.masterCard}>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardTitle}>About Me</Text>
+            <TouchableOpacity activeOpacity={0.7}>
+              <Ionicons name="create-outline" size={16} color="#929292" />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.aboutText}>
+            Passionate vocalist and music producer with over 5 years of live performance experience across Bollywood, Acoustic, and Commercial live show setups.
+          </Text>
+        </View>
+
+        {/* 6. Show Rates Card (Strict Royal Blue & White accents - NO GREEN) */}
+        <View style={styles.masterCard}>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardTitle}>Show Rates</Text>
+            <TouchableOpacity activeOpacity={0.7}>
+              <Ionicons name="create-outline" size={16} color="#929292" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.rateRow}>
+            <View>
+              <Text style={styles.rateTitle}>Standard Live Performance</Text>
+              <Text style={styles.rateSubtitle}>2-Hour set with PA sound setup</Text>
+            </View>
+            <Text style={styles.rateAmount}>₹15,000</Text>
+          </View>
+        </View>
+
+        {/* 7. Connected Accounts Card (Royal Blue Accents - NO GREEN) */}
+        <View style={styles.masterCard}>
+          <Text style={[styles.cardTitle, { marginBottom: 12 }]}>Connected Accounts</Text>
+
+          <View style={styles.socialRow}>
+            <View style={styles.socialLeft}>
+              <Ionicons name="logo-instagram" size={18} color="#E1306C" />
+              <Text style={styles.socialHandle}>@akashtiwari.music</Text>
+            </View>
+            <View style={styles.connectedBadgeBlue}>
+              <Text style={styles.connectedBadgeBlueText}>Connected</Text>
+            </View>
+          </View>
+
+          <View style={styles.socialDivider} />
+
+          <View style={styles.socialRow}>
+            <View style={styles.socialLeft}>
+              <Ionicons name="logo-youtube" size={18} color="#FF0000" />
+              <Text style={styles.socialHandle}>Akash Tiwari Official</Text>
+            </View>
+            <View style={styles.connectedBadgeBlue}>
+              <Text style={styles.connectedBadgeBlueText}>Connected</Text>
+            </View>
+          </View>
         </View>
 
       </ScrollView>
@@ -199,7 +258,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   
-  /* Reusable Master Card Style */
+  /* Master Card Styling */
   masterCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderRadius: 16,
@@ -248,6 +307,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  /* Side-by-Side Double Cards Row */
+  doubleCardRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  halfMasterCard: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  cardTitleSmall: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+
   /* Card Header Rows */
   cardHeaderRow: {
     flexDirection: 'row',
@@ -266,37 +346,21 @@ const styles = StyleSheet.create({
   tagContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 6,
   },
   tagPill: {
     backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
     borderColor: '#1D4ED8',
     borderRadius: 9999,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   tagPillText: {
     color: '#60A5FA',
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'AirbnbCereal-Medium',
     fontWeight: '600',
-  },
-
-  /* Gallery Horizontal Scroll */
-  galleryScrollContainer: {
-    paddingRight: 10,
-  },
-  galleryImageBlock: {
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-    marginRight: 10,
-    backgroundColor: '#1A1A1A',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
 
   /* Demographics 2-Column Grid Layout */
@@ -327,5 +391,89 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#ffffff',
     marginTop: 6,
+  },
+
+  /* Gallery Horizontal Scroll */
+  galleryScrollContainer: {
+    paddingRight: 10,
+  },
+  galleryImageBlock: {
+    width: 90,
+    height: 90,
+    borderRadius: 12,
+    marginRight: 10,
+    backgroundColor: '#1A1A1A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+  },
+
+  /* About Text */
+  aboutText: {
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Book',
+    color: '#d4d4d4',
+    lineHeight: 22,
+  },
+
+  /* Show Rates Row */
+  rateRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  rateTitle: {
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Bold',
+    color: '#ffffff',
+  },
+  rateSubtitle: {
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Book',
+    color: '#929292',
+    marginTop: 2,
+  },
+  rateAmount: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+
+  /* Connected Accounts Social Row */
+  socialRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 2,
+  },
+  socialLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  socialHandle: {
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#ffffff',
+  },
+  connectedBadgeBlue: {
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+    borderWidth: 1,
+    borderColor: '#1D4ED8',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 9999,
+  },
+  connectedBadgeBlueText: {
+    color: '#60A5FA',
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Bold',
+  },
+  socialDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    marginVertical: 10,
   },
 });
