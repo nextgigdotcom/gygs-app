@@ -238,7 +238,7 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 4. Gallery Liquid Glass Card (Replicated 100% from Production Screenshot) */}
+        {/* 4. Gallery Liquid Glass Card (Replicated from Production Screenshot) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -259,7 +259,6 @@ export default function ProfileScreen({ onBackHome }) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.galleryScrollContainer}
               >
-                {/* Close-Up Card */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
@@ -270,7 +269,6 @@ export default function ProfileScreen({ onBackHome }) {
                   </View>
                 </View>
 
-                {/* Full-Body Card */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
@@ -281,7 +279,6 @@ export default function ProfileScreen({ onBackHome }) {
                   </View>
                 </View>
 
-                {/* Mid-Shot Card */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
@@ -296,7 +293,183 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 5. About Me Liquid Glass Card */}
+        {/* 5. Work Experience Liquid Glass Card (Replicated from Production Screenshot) */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>WORK EXPERIENCE</Text>
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Experience Item 1: Performer */}
+              <View style={styles.experienceBlock}>
+                <View style={styles.expHeaderRow}>
+                  <Text style={styles.expRoleTitle}>Performer & Choreographer</Text>
+                  <View style={styles.tagPill}>
+                    <Text style={styles.tagPillText}>2021 - Present</Text>
+                  </View>
+                </View>
+                
+                <View style={styles.expBulletRow}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.expBulletText}>Led 50+ live dance shows and high-energy stage performances across major venues.</Text>
+                </View>
+                <View style={styles.expBulletRow}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.expBulletText}>Choreographed commercial sequences for corporate events and brand launches.</Text>
+                </View>
+              </View>
+
+              <View style={styles.socialDivider} />
+
+              {/* Experience Item 2: Dance Trainer */}
+              <View style={styles.experienceBlock}>
+                <View style={styles.expHeaderRow}>
+                  <Text style={styles.expRoleTitle}>Senior Dance Trainer</Text>
+                  <View style={styles.tagPill}>
+                    <Text style={styles.tagPillText}>2022 - 2024</Text>
+                  </View>
+                </View>
+                
+                <View style={styles.expBulletRow}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.expBulletText}>Conducted intensive masterclasses in Contemporary, Hip-Hop, and Bollywood styles.</Text>
+                </View>
+                <View style={styles.expBulletRow}>
+                  <Text style={styles.bulletDot}>•</Text>
+                  <Text style={styles.expBulletText}>Mentored over 200+ aspiring dancers for professional auditions and competitions.</Text>
+                </View>
+              </View>
+            </BlurView>
+          </LinearGradient>
+        </View>
+
+        {/* 6. Training & Certification Liquid Glass Card (Replicated from Production Screenshot) */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>TRAINING & CERTIFICATION</Text>
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.experienceBlock}>
+                <View style={styles.expHeaderRow}>
+                  <Text style={styles.expRoleTitle}>Diploma in Performing Arts</Text>
+                  <View style={styles.tagPill}>
+                    <Text style={styles.tagPillText}>Certified</Text>
+                  </View>
+                </View>
+                <Text style={styles.institutionText}>National Academy of Dance & Performing Arts (Mumbai)</Text>
+                
+                <View style={[styles.expBulletRow, { marginTop: 6 }]}>
+                  <Text style={bulletDot}>•</Text>
+                  <Text style={styles.expBulletText}>Specialized in classical rhythm, contemporary execution, and stage expression.</Text>
+                </View>
+              </View>
+            </BlurView>
+          </LinearGradient>
+        </View>
+
+        {/* 7. Instagram Insights & Reels Card (Replicated from Production Screenshot) */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              
+              {/* Instagram Card Header */}
+              <View style={styles.socialHeaderRow}>
+                <View style={styles.socialLeft}>
+                  <Ionicons name="logo-instagram" size={20} color="#E1306C" />
+                  <View>
+                    <Text style={styles.socialHandle}>@akashtiwari.official</Text>
+                    <Text style={styles.socialSubText}>12.5k Followers</Text>
+                  </View>
+                </View>
+                <View style={styles.connectedBadgeBlue}>
+                  <Text style={styles.connectedBadgeBlueText}>Connected</Text>
+                </View>
+              </View>
+
+              {/* Metrics 4-Box Grid */}
+              <View style={styles.instaMetricsGrid}>
+                <View style={styles.instaMetricBox}>
+                  <Text style={styles.instaMetricLabel}>Followers</Text>
+                  <Text style={styles.instaMetricVal}>12.5k</Text>
+                </View>
+                <View style={styles.instaMetricBox}>
+                  <Text style={styles.instaMetricLabel}>Engagement</Text>
+                  <Text style={styles.instaMetricVal}>4.8%</Text>
+                </View>
+                <View style={styles.instaMetricBox}>
+                  <Text style={styles.instaMetricLabel}>Avg Likes</Text>
+                  <Text style={styles.instaMetricVal}>1.2k</Text>
+                </View>
+                <View style={styles.instaMetricBox}>
+                  <Text style={styles.instaMetricLabel}>Reel Views</Text>
+                  <Text style={styles.instaMetricVal}>45.0k</Text>
+                </View>
+              </View>
+
+              {/* Reel Grid Previews */}
+              <Text style={[styles.cardHeaderLabel, { marginTop: 16, marginBottom: 10 }]}>TOP REELS & POSTS</Text>
+              
+              <View style={styles.reelsGridContainer}>
+                <View style={styles.reelThumbnailCard}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.reelImage} 
+                  />
+                  <View style={styles.playIconBadge}>
+                    <Ionicons name="play" size={12} color="#ffffff" />
+                  </View>
+                </View>
+
+                <View style={styles.reelThumbnailCard}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.reelImage} 
+                  />
+                  <View style={styles.playIconBadge}>
+                    <Ionicons name="play" size={12} color="#ffffff" />
+                  </View>
+                </View>
+
+                <View style={styles.reelThumbnailCard}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.reelImage} 
+                  />
+                  <View style={styles.playIconBadge}>
+                    <Ionicons name="play" size={12} color="#ffffff" />
+                  </View>
+                </View>
+              </View>
+
+            </BlurView>
+          </LinearGradient>
+        </View>
+
+        {/* 8. About Me Liquid Glass Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -312,13 +485,13 @@ export default function ProfileScreen({ onBackHome }) {
                 </TouchableOpacity>
               </View>
               <Text style={styles.aboutText}>
-                Passionate vocalist and music producer in pursuit of creating unforgettable live show experiences. Specialized in Bollywood, Acoustic, and Commercial set ups.
+                Passionate artist and performer in pursuit of creating unforgettable live show experiences. Specialized in Dance, Choreography, and High-Energy Stage acts.
               </Text>
             </BlurView>
           </LinearGradient>
         </View>
 
-        {/* 6. Show Rates Liquid Glass Card */}
+        {/* 9. Show Rates Liquid Glass Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -337,45 +510,9 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.rateRow}>
                 <View>
                   <Text style={styles.rateTitle}>Standard Live Performance</Text>
-                  <Text style={styles.rateSubtitle}>2-Hour set with PA sound setup</Text>
+                  <Text style={styles.rateSubtitle}>2-Hour set with full choreography</Text>
                 </View>
                 <Text style={styles.rateAmount}>₹15,000</Text>
-              </View>
-            </BlurView>
-          </LinearGradient>
-        </View>
-
-        {/* 7. Connected Accounts Liquid Glass Card */}
-        <View style={styles.cardWrapper}>
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.cardGradient}
-          >
-            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
-              <Text style={[styles.cardHeaderLabel, { marginBottom: 12 }]}>CONNECTED ACCOUNTS</Text>
-
-              <View style={styles.socialRow}>
-                <View style={styles.socialLeft}>
-                  <Ionicons name="logo-instagram" size={18} color="#E1306C" />
-                  <Text style={styles.socialHandle}>@akashtiwari.music</Text>
-                </View>
-                <View style={styles.connectedBadgeBlue}>
-                  <Text style={styles.connectedBadgeBlueText}>Connected</Text>
-                </View>
-              </View>
-
-              <View style={styles.socialDivider} />
-
-              <View style={styles.socialRow}>
-                <View style={styles.socialLeft}>
-                  <Ionicons name="logo-youtube" size={18} color="#FF0000" />
-                  <Text style={styles.socialHandle}>Akash Tiwari Official</Text>
-                </View>
-                <View style={styles.connectedBadgeBlue}>
-                  <Text style={styles.connectedBadgeBlueText}>Connected</Text>
-                </View>
               </View>
             </BlurView>
           </LinearGradient>
@@ -385,6 +522,13 @@ export default function ProfileScreen({ onBackHome }) {
     </SafeAreaView>
   );
 }
+
+const bulletDot = {
+  color: '#60A5FA',
+  fontSize: 14,
+  marginRight: 6,
+  marginTop: 1,
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -661,6 +805,125 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
 
+  /* Work Experience & Training Specifics */
+  experienceBlock: {
+    marginVertical: 4,
+  },
+  expHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  expRoleTitle: {
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  expBulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 4,
+  },
+  bulletDotText: {
+    color: '#60A5FA',
+    fontSize: 14,
+    marginRight: 6,
+    marginTop: 1,
+  },
+  expBulletText: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Book',
+    color: 'rgba(255, 255, 255, 0.75)',
+    lineHeight: 18,
+  },
+  institutionText: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#60A5FA',
+    marginTop: 2,
+  },
+
+  /* Instagram Insights Layout */
+  socialHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  socialLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  socialHandle: {
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Bold',
+    color: '#ffffff',
+  },
+  socialSubText: {
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Book',
+    color: 'rgba(255, 255, 255, 0.6)',
+    marginTop: 1,
+  },
+  instaMetricsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  instaMetricBox: {
+    width: (width - 40 - 40 - 10) / 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 14,
+    padding: 12,
+  },
+  instaMetricLabel: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: 'rgba(255, 255, 255, 0.6)',
+  },
+  instaMetricVal: {
+    fontSize: 17,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginTop: 4,
+  },
+  reelsGridContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  reelThumbnailCard: {
+    flex: 1,
+    height: 110,
+    borderRadius: 14,
+    overflow: 'hidden',
+    position: 'relative',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  reelImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  playIconBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   /* About Text */
   aboutText: {
     fontSize: 14,
@@ -694,22 +957,6 @@ const styles = StyleSheet.create({
   },
 
   /* Connected Accounts Social Row */
-  socialRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 2,
-  },
-  socialLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  socialHandle: {
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Medium',
-    color: '#ffffff',
-  },
   connectedBadgeBlue: {
     backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
@@ -726,6 +973,6 @@ const styles = StyleSheet.create({
   socialDivider: {
     height: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    marginVertical: 10,
+    marginVertical: 12,
   },
 });
