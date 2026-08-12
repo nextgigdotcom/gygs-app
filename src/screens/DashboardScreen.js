@@ -23,7 +23,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-      {/* Ambient Background Gradient Glows */}
+      {/* Luminous White Ambient Background Glows */}
       <View style={styles.ambientGlowTopRight} pointerEvents="none" />
       <View style={styles.ambientGlowBottomLeft} pointerEvents="none" />
 
@@ -34,7 +34,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         <View style={styles.header}>
           <TouchableOpacity activeOpacity={0.8} style={styles.appGridWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.04)']}
+              colors={['rgba(255, 255, 255, 0.16)', 'rgba(255, 255, 255, 0.04)']}
               style={styles.appGridGradient}
             >
               <BlurView intensity={40} tint="dark" style={styles.appGridBlur}>
@@ -51,13 +51,13 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 2x2 Grid of Liquid Glass Cards */}
+        {/* 2x2 Grid of White Liquid Glass Cards */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.03)']}
               style={styles.cardGradient}
             >
               <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
@@ -72,14 +72,14 @@ export default function DashboardScreen({ onNavigateBrowse }) {
           {/* Card 2: UP NEXT */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.03)']}
               style={styles.cardGradient}
             >
               <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
                 <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
                 <View style={styles.upNextSection}>
                   <LinearGradient
-                    colors={['rgba(29, 78, 216, 0.35)', 'rgba(29, 78, 216, 0.15)']}
+                    colors={['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.06)']}
                     style={styles.dateBadgeGradient}
                   >
                     <Text style={styles.dateMonthText}>AUG</Text>
@@ -98,14 +98,14 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             style={styles.cardWrapper}
           >
             <LinearGradient
-              colors={['rgba(29, 78, 216, 0.22)', 'rgba(255, 255, 255, 0.03)']}
+              colors={['rgba(255, 255, 255, 0.18)', 'rgba(255, 255, 255, 0.05)']}
               style={[styles.cardGradient, styles.browseCardBorder]}
             >
               <BlurView intensity={50} tint="dark" style={styles.cardBlur}>
                 <Text style={styles.cardHeaderLabel}>BROWSE</Text>
                 <View style={styles.browseSection}>
                   <View style={styles.dotsRow}>
-                    <View style={[styles.dot, styles.dotBlue]} />
+                    <View style={[styles.dot, styles.dotWhite]} />
                     <View style={styles.dot} />
                     <View style={styles.dot} />
                   </View>
@@ -118,14 +118,14 @@ export default function DashboardScreen({ onNavigateBrowse }) {
           {/* Card 4: MY PROFILE */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.03)']}
               style={styles.cardGradient}
             >
               <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
                 <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
                 <View style={styles.profileSection}>
                   <LinearGradient
-                    colors={['#1D4ED8', '#2563EB']}
+                    colors={['#ffffff', '#d4d4d4']}
                     style={styles.profileAvatar}
                   >
                     <Text style={styles.profileAvatarText}>A</Text>
@@ -144,10 +144,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
       </View>
 
-      {/* Bottom Fixed Liquid Glass AI Input Bar */}
+      {/* Bottom Fixed White Liquid Glass AI Input Bar */}
       <View style={styles.bottomBarContainer}>
         <LinearGradient
-          colors={['rgba(255, 255, 255, 0.09)', 'rgba(255, 255, 255, 0.03)']}
+          colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.04)']}
           style={styles.bottomBarGradient}
         >
           <BlurView intensity={50} tint="dark" style={styles.bottomBarBlur}>
@@ -165,10 +165,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
             <TouchableOpacity activeOpacity={0.8} style={styles.micBtnWrapper}>
               <LinearGradient
-                colors={['#2563EB', '#1D4ED8']}
+                colors={['#ffffff', '#e5e5e5']}
                 style={styles.micBtn}
               >
-                <Ionicons name="mic" size={18} color="#ffffff" />
+                <Ionicons name="mic" size={18} color="#000000" />
               </LinearGradient>
             </TouchableOpacity>
           </BlurView>
@@ -188,21 +188,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -100,
     right: -100,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: 'rgba(29, 78, 216, 0.18)',
-    filter: 'blur(60px)',
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    filter: 'blur(70px)',
   },
   ambientGlowBottomLeft: {
     position: 'absolute',
     bottom: -100,
     left: -100,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    filter: 'blur(60px)',
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    filter: 'blur(70px)',
   },
   content: {
     flex: 1,
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -259,10 +259,10 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   browseCardBorder: {
-    borderColor: 'rgba(29, 78, 216, 0.5)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   cardBlur: {
     flex: 1,
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardHeaderLabel: {
-    color: '#777777',
+    color: '#888888',
     fontSize: 11,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
@@ -296,13 +296,13 @@ const styles = StyleSheet.create({
     height: 54,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)',
+    borderColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
   },
   dateMonthText: {
-    color: '#60A5FA',
+    color: '#ffffff',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     marginTop: -2,
   },
   calendarSubtext: {
-    color: '#777777',
+    color: '#888888',
     fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
   },
@@ -335,8 +335,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: '#444444',
   },
-  dotBlue: {
-    backgroundColor: '#60A5FA',
+  dotWhite: {
+    backgroundColor: '#ffffff',
   },
   browseTitle: {
     color: '#ffffff',
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileAvatarText: {
-    color: '#ffffff',
+    color: '#000000',
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   bottomBarGradient: {
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     overflow: 'hidden',
   },
   bottomBarBlur: {

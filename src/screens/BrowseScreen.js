@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { MOCK_GIGS } from '../data/mockGigs';
 import GigCard, { currencyConverter } from '../components/GigCard';
@@ -87,7 +86,7 @@ export default function BrowseScreen({ onBackHome }) {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-      {/* Ambient Background Glows matching DashboardScreen Theme */}
+      {/* Luminous White Ambient Background Glows */}
       <View style={styles.ambientGlowTopRight} pointerEvents="none" />
       <View style={styles.ambientGlowBottomLeft} pointerEvents="none" />
 
@@ -129,7 +128,7 @@ export default function BrowseScreen({ onBackHome }) {
         )}
       </View>
 
-      {/* Category Filter Bar with Deep Royal Blue #1D4ED8 Active Fill */}
+      {/* Category Filter Bar with White Active Fill */}
       <View style={styles.categoryBarContainer}>
         <ScrollView 
           horizontal 
@@ -293,21 +292,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -100,
     right: -100,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: 'rgba(29, 78, 216, 0.18)',
-    filter: 'blur(60px)',
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    filter: 'blur(70px)',
   },
   ambientGlowBottomLeft: {
     position: 'absolute',
     bottom: -100,
     left: -100,
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    filter: 'blur(60px)',
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    filter: 'blur(70px)',
   },
   header: {
     flexDirection: 'row',
@@ -325,7 +324,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   headerTitleContainer: {
     flex: 1,
@@ -367,7 +366,7 @@ const styles = StyleSheet.create({
     height: 52,
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   searchIcon: {
     marginRight: 8,
@@ -394,7 +393,7 @@ const styles = StyleSheet.create({
   categoryPillInactive: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   categoryPillInactiveText: {
     color: '#ffffff',
@@ -402,11 +401,11 @@ const styles = StyleSheet.create({
     fontFamily: 'AirbnbCereal-Medium',
   },
   categoryPillActive: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: '#ffffff', // Pure White Fill
     borderWidth: 0,
   },
   categoryPillActiveText: {
-    color: '#ffffff',
+    color: '#000000', // Black text for high contrast
     fontSize: 14,
     fontFamily: 'AirbnbCereal-Bold',
   },
@@ -447,7 +446,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     overflow: 'hidden',
   },
   modalHeaderRow: {
@@ -481,15 +480,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalGlassPill: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.25)',
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 9999,
   },
   modalGlassPillText: {
-    color: '#60A5FA',
+    color: '#ffffff',
     fontSize: 11,
     fontFamily: 'AirbnbCereal-Bold',
   },
@@ -500,7 +499,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   modalEarningsLabel: {
     color: '#888888',
@@ -547,21 +546,21 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   modalApplyBtn: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: '#ffffff',
     borderWidth: 0,
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',
   },
   modalApplyText: {
-    color: '#ffffff',
+    color: '#000000',
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Bold',
   },
   modalWithdrawBtn: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',
