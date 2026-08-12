@@ -401,9 +401,8 @@ export default function ProfileScreen({ onBackHome }) {
                 <Text style={styles.instaHeaderTitle}>Instagram Insights</Text>
               </View>
 
-              {/* 2-Column Flex Grid with Generous Spacing */}
-              <View style={styles.instaMetricsGrid}>
-                
+              {/* 3 Explicit Side-by-Side Rows */}
+              <View style={styles.instaRow}>
                 {/* Box 1: Followers */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Followers</Text>
@@ -417,7 +416,9 @@ export default function ProfileScreen({ onBackHome }) {
                   <Text style={styles.instaMetricVal}>1.7K accounts</Text>
                   <Text style={styles.instaMetricSub}>This Month</Text>
                 </View>
+              </View>
 
+              <View style={styles.instaRow}>
                 {/* Box 3: Partnerships */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Partnerships</Text>
@@ -431,7 +432,9 @@ export default function ProfileScreen({ onBackHome }) {
                   <Text style={styles.instaMetricVal}>53.1%</Text>
                   <Text style={styles.instaMetricSub}>Last 90 days</Text>
                 </View>
+              </View>
 
+              <View style={[styles.instaRow, { marginBottom: 0 }]}>
                 {/* Box 5: Interaction */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Interaction</Text>
@@ -445,7 +448,6 @@ export default function ProfileScreen({ onBackHome }) {
                   <Text style={styles.instaMetricVal}>44K accounts</Text>
                   <Text style={styles.instaMetricSub}>This Month</Text>
                 </View>
-
               </View>
 
             </BlurView>
@@ -803,7 +805,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.6)',
     marginTop: 1,
   },
-  /* Instagram Insights 2-Column Flex Grid (100% Screenshot Replica) */
+  /* Instagram Insights 2-Column Side-by-Side Rows (100% Screenshot Replica) */
   instaHeaderRow: {
     marginBottom: 16,
   },
@@ -813,14 +815,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
-  instaMetricsGrid: {
+  instaRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
     gap: 16,
+    marginBottom: 16,
   },
   instaMetricBox: {
-    width: (width - 40 - 40 - 16) / 2,
+    flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
