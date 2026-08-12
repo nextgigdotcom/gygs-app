@@ -238,7 +238,7 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 4. Gallery Liquid Glass Card (Replicated from Production Screenshot) */}
+        {/* 4. Gallery & Media Kit Card (6 Swipeable Items: 3 Photos + 3 Videos) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -248,7 +248,12 @@ export default function ProfileScreen({ onBackHome }) {
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderLabel}>GALLERY</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.cardHeaderLabel}>GALLERY & MEDIA KIT</Text>
+                  <View style={styles.mediaCountBadge}>
+                    <Text style={styles.mediaCountBadgeText}>6 ITEMS</Text>
+                  </View>
+                </View>
                 <TouchableOpacity activeOpacity={0.7}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
@@ -258,8 +263,10 @@ export default function ProfileScreen({ onBackHome }) {
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.galleryScrollContainer}
+                decelerationRate="fast"
+                snapToInterval={122}
               >
-                {/* Close-Up Card */}
+                {/* Photo 1: Close-Up */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
@@ -273,7 +280,7 @@ export default function ProfileScreen({ onBackHome }) {
                   </LinearGradient>
                 </View>
 
-                {/* Full-Body Card */}
+                {/* Photo 2: Full-Body */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
@@ -287,7 +294,7 @@ export default function ProfileScreen({ onBackHome }) {
                   </LinearGradient>
                 </View>
 
-                {/* Mid-Shot Card */}
+                {/* Photo 3: Mid-Shot */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
@@ -298,6 +305,57 @@ export default function ProfileScreen({ onBackHome }) {
                     style={styles.galleryCardGradientOverlay}
                   >
                     <Text style={styles.galleryCardLabelText}>Mid-Shot</Text>
+                  </LinearGradient>
+                </View>
+
+                {/* Video 1: Live Show Reel */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.centerPlayButton}>
+                    <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
+                  </View>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Live Show</Text>
+                  </LinearGradient>
+                </View>
+
+                {/* Video 2: Rehearsal Reel */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.centerPlayButton}>
+                    <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
+                  </View>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Rehearsal</Text>
+                  </LinearGradient>
+                </View>
+
+                {/* Video 3: Promo Reel */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.centerPlayButton}>
+                    <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
+                  </View>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Promo Reel</Text>
                   </LinearGradient>
                 </View>
               </ScrollView>
@@ -713,12 +771,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
-  demoValueSmall: {
-    fontSize: 15,
+  mediaCountBadge: {
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+    borderRadius: 9999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginLeft: 8,
+  },
+  mediaCountBadgeText: {
+    color: '#60A5FA',
+    fontSize: 9,
     fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    color: '#ffffff',
-    marginTop: 6,
+    fontWeight: 'bold',
+  },
+  centerPlayButton: {
+    position: 'absolute',
+    top: '38%',
+    left: '35%',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    zIndex: 5,
   },
 
   /* Gallery Layout matching Screenshot */
