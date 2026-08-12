@@ -102,7 +102,7 @@ export default function GigCard({ gig, onPress, onWithdraw, onContact }) {
       onPress={() => onPress && onPress(gig)}
       style={styles.cardWrapper}
     >
-      <BlurView intensity={45} tint="dark" style={styles.card}>
+      <BlurView intensity={40} tint="dark" style={styles.card}>
         
         {/* 1. Job Title (18px, 600 weight, #FFFFFF) */}
         <View style={styles.headerRow}>
@@ -112,7 +112,7 @@ export default function GigCard({ gig, onPress, onWithdraw, onContact }) {
           )}
         </View>
 
-        {/* 2. Single Category Tag Badge (White Translucent Liquid Glass Fill & Crisp #FFFFFF Text) */}
+        {/* 2. Single Category Tag Badge (Translucent Royal Blue Fill & Bright #60A5FA Text) */}
         {categoriesList.length > 0 && (
           <View style={styles.categoryContainer}>
             {categoriesList.slice(0, 1).map((cat, idx) => (
@@ -226,8 +226,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   headerRow: {
     flexDirection: 'row',
@@ -257,15 +257,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   categoryGlassPill: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)', // White Translucent Glass fill
+    backgroundColor: 'rgba(29, 78, 216, 0.15)', // Translucent Royal Blue fill
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)', // White Specular Glass border
+    borderColor: 'rgba(29, 78, 216, 0.3)', // Translucent Royal Blue border
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 9999,
   },
   categoryGlassPillText: {
-    color: '#FFFFFF', // Crisp White Text
+    color: '#60A5FA', // Bright legible blue text
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Medium',
   },
