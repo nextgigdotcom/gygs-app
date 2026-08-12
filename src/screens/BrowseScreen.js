@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { MOCK_GIGS } from '../data/mockGigs';
 import GigCard, { currencyConverter } from '../components/GigCard';
@@ -86,13 +87,17 @@ export default function BrowseScreen({ onBackHome }) {
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
+      {/* Ambient Background Glows matching DashboardScreen Theme */}
+      <View style={styles.ambientGlowTopRight} pointerEvents="none" />
+      <View style={styles.ambientGlowBottomLeft} pointerEvents="none" />
+
       {/* Header Section */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={onBackHome}
           style={styles.backButton}
         >
-          <Ionicons name="chevron-back" size={20} color="#d7d7d7" />
+          <Ionicons name="chevron-back" size={20} color="#ffffff" />
         </TouchableOpacity>
 
         {/* Pixel-Perfect Flush Left Aligned Title & Subtitle Container */}
@@ -284,6 +289,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
   },
+  ambientGlowTopRight: {
+    position: 'absolute',
+    top: -100,
+    right: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(29, 78, 216, 0.18)',
+    filter: 'blur(60px)',
+  },
+  ambientGlowBottomLeft: {
+    position: 'absolute',
+    bottom: -100,
+    left: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    filter: 'blur(60px)',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -293,26 +318,27 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   headerTitleContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 14,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: 32,
+    fontSize: 30,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     color: '#ffffff',
-    letterSpacing: 0,
+    letterSpacing: -0.6,
     textAlign: 'left',
     alignSelf: 'flex-start',
     paddingLeft: 0,
@@ -339,9 +365,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 30,
     height: 52,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   searchIcon: {
     marginRight: 8,
@@ -366,9 +392,9 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
   },
   categoryPillInactive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   categoryPillInactiveText: {
     color: '#ffffff',
