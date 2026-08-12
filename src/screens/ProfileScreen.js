@@ -267,139 +267,138 @@ export default function ProfileScreen({ onBackHome }) {
                 </TouchableOpacity>
               </View>
 
-              {/* Swipeable ScrollView */}
-              <ScrollView 
-                ref={galleryScrollRef}
-                horizontal={true} 
-                showsHorizontalScrollIndicator={false}
-                onScroll={handleGalleryScroll}
-                scrollEventThrottle={16}
-                contentContainerStyle={styles.galleryScrollContainer}
-              >
-                {/* Item 1 (Image): Close-Up */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
+              {/* Swipeable ScrollView Container with Floating Extreme Left/Right Overlay Arrows */}
+              <View style={styles.galleryViewportContainer}>
+                
+                {/* Floating Extreme Left Arrow Button */}
+                {galleryPage > 0 && (
+                  <TouchableOpacity 
+                    activeOpacity={0.8}
+                    onPress={() => galleryScrollRef.current?.scrollTo({ x: 0, animated: true })}
+                    style={[styles.floatingArrowBtn, styles.floatingArrowLeft]}
                   >
-                    <Text style={styles.galleryCardLabelText}>Close-Up</Text>
-                  </LinearGradient>
-                </View>
+                    <Ionicons name="chevron-back" size={16} color="#ffffff" />
+                  </TouchableOpacity>
+                )}
 
-                {/* Item 2 (Image): Full-Body */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
+                {/* Floating Extreme Right Arrow Button */}
+                {galleryPage === 0 && (
+                  <TouchableOpacity 
+                    activeOpacity={0.8}
+                    onPress={() => galleryScrollRef.current?.scrollTo({ x: 380, animated: true })}
+                    style={[styles.floatingArrowBtn, styles.floatingArrowRight]}
                   >
-                    <Text style={styles.galleryCardLabelText}>Full-Body</Text>
-                  </LinearGradient>
-                </View>
+                    <Ionicons name="chevron-forward" size={16} color="#ffffff" />
+                  </TouchableOpacity>
+                )}
 
-                {/* Item 3 (Image): Stage Act */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Stage Act</Text>
-                  </LinearGradient>
-                </View>
-
-                {/* Item 4 (Video): Live Show */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <View style={styles.galleryPlayBadge}>
-                    <Ionicons name="play" size={12} color="#ffffff" />
-                  </View>
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Live Show</Text>
-                  </LinearGradient>
-                </View>
-
-                {/* Item 5 (Video): Acoustic Set */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <View style={styles.galleryPlayBadge}>
-                    <Ionicons name="play" size={12} color="#ffffff" />
-                  </View>
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Acoustic Set</Text>
-                  </LinearGradient>
-                </View>
-
-                {/* Item 6 (Video): Rehearsal */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <View style={styles.galleryPlayBadge}>
-                    <Ionicons name="play" size={12} color="#ffffff" />
-                  </View>
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Rehearsal</Text>
-                  </LinearGradient>
-                </View>
-              </ScrollView>
-
-              {/* 2-Dot Pagination Indicator & Left / Right Arrow Controls */}
-              <View style={styles.galleryFooterRow}>
-                <TouchableOpacity 
-                  activeOpacity={0.7}
-                  onPress={() => galleryScrollRef.current?.scrollTo({ x: 0, animated: true })}
-                  style={styles.galleryArrowBtn}
+                <ScrollView 
+                  ref={galleryScrollRef}
+                  horizontal={true} 
+                  showsHorizontalScrollIndicator={false}
+                  onScroll={handleGalleryScroll}
+                  scrollEventThrottle={16}
+                  contentContainerStyle={styles.galleryScrollContainer}
                 >
-                  <Ionicons 
-                    name="chevron-back" 
-                    size={16} 
-                    color={galleryPage === 0 ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'} 
-                  />
-                </TouchableOpacity>
+                  {/* Item 1 (Image): Close-Up */}
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                    <LinearGradient 
+                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                      style={styles.galleryCardGradientOverlay}
+                    >
+                      <Text style={styles.galleryCardLabelText}>Close-Up</Text>
+                    </LinearGradient>
+                  </View>
 
-                <View style={styles.dotsContainer}>
-                  <View style={[styles.dot, galleryPage === 0 ? styles.activeDot : styles.inactiveDot]} />
-                  <View style={[styles.dot, galleryPage === 1 ? styles.activeDot : styles.inactiveDot]} />
-                </View>
+                  {/* Item 2 (Image): Full-Body */}
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                    <LinearGradient 
+                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                      style={styles.galleryCardGradientOverlay}
+                    >
+                      <Text style={styles.galleryCardLabelText}>Full-Body</Text>
+                    </LinearGradient>
+                  </View>
 
-                <TouchableOpacity 
-                  activeOpacity={0.7}
-                  onPress={() => galleryScrollRef.current?.scrollTo({ x: 380, animated: true })}
-                  style={styles.galleryArrowBtn}
-                >
-                  <Ionicons 
-                    name="chevron-forward" 
-                    size={16} 
-                    color={galleryPage === 1 ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'} 
-                  />
-                </TouchableOpacity>
+                  {/* Item 3 (Image): Stage Act */}
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                    <LinearGradient 
+                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                      style={styles.galleryCardGradientOverlay}
+                    >
+                      <Text style={styles.galleryCardLabelText}>Stage Act</Text>
+                    </LinearGradient>
+                  </View>
+
+                  {/* Item 4 (Video): Live Show */}
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                    <View style={styles.galleryPlayBadge}>
+                      <Ionicons name="play" size={12} color="#ffffff" />
+                    </View>
+                    <LinearGradient 
+                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                      style={styles.galleryCardGradientOverlay}
+                    >
+                      <Text style={styles.galleryCardLabelText}>Live Show</Text>
+                    </LinearGradient>
+                  </View>
+
+                  {/* Item 5 (Video): Acoustic Set */}
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                    <View style={styles.galleryPlayBadge}>
+                      <Ionicons name="play" size={12} color="#ffffff" />
+                    </View>
+                    <LinearGradient 
+                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                      style={styles.galleryCardGradientOverlay}
+                    >
+                      <Text style={styles.galleryCardLabelText}>Acoustic Set</Text>
+                    </LinearGradient>
+                  </View>
+
+                  {/* Item 6 (Video): Rehearsal */}
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                    <View style={styles.galleryPlayBadge}>
+                      <Ionicons name="play" size={12} color="#ffffff" />
+                    </View>
+                    <LinearGradient 
+                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                      style={styles.galleryCardGradientOverlay}
+                    >
+                      <Text style={styles.galleryCardLabelText}>Rehearsal</Text>
+                    </LinearGradient>
+                  </View>
+                </ScrollView>
+              </View>
+
+              {/* 2-Dot Centered Pagination Indicator */}
+              <View style={styles.dotsContainerCentered}>
+                <View style={[styles.dot, galleryPage === 0 ? styles.activeDot : styles.inactiveDot]} />
+                <View style={[styles.dot, galleryPage === 1 ? styles.activeDot : styles.inactiveDot]} />
               </View>
 
             </BlurView>
@@ -823,20 +822,28 @@ const styles = StyleSheet.create({
   },
 
   /* Editorial Gallery Layout (Width: 110, Height: 150) */
-  galleryCountBadge: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 9999,
-    marginLeft: 8,
+  galleryViewportContainer: {
+    position: 'relative',
   },
-  galleryCountBadgeText: {
-    color: '#60A5FA',
-    fontSize: 10,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: 'bold',
+  floatingArrowBtn: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: -16,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  floatingArrowLeft: {
+    left: 4,
+  },
+  floatingArrowRight: {
+    right: 4,
   },
   galleryScrollContainer: {
     paddingRight: 10,
@@ -886,26 +893,11 @@ const styles = StyleSheet.create({
     fontFamily: 'AirbnbCereal-Medium',
     color: '#ffffff',
   },
-  galleryFooterRow: {
+  dotsContainerCentered: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 14,
-    paddingHorizontal: 4,
-  },
-  galleryArrowBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dotsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 10,
     gap: 6,
   },
   dot: {
