@@ -23,7 +23,7 @@ const PLACEHOLDER_PHRASES = [
   'Update my Schedule.',
 ];
 
-export default function DashboardScreen({ onNavigateBrowse }) {
+export default function DashboardScreen({ onNavigateBrowse, onNavigateProfile }) {
   const [chatInput, setChatInput] = useState('');
   const [placeholderText, setPlaceholderText] = useState('');
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -160,8 +160,12 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent) */}
-          <View style={styles.cardWrapper}>
+          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent & Interactive Navigation) */}
+          <TouchableOpacity 
+            activeOpacity={0.85}
+            onPress={onNavigateProfile}
+            style={styles.cardWrapper}
+          >
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
@@ -184,7 +188,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
                 </View>
               </BlurView>
             </LinearGradient>
-          </View>
+          </TouchableOpacity>
 
         </View>
 

@@ -4,10 +4,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import DashboardScreen from './src/screens/DashboardScreen';
 import BrowseScreen from './src/screens/BrowseScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 export default function App() {
-  // Default to DASHBOARD screen
-  const [currentScreen, setCurrentScreen] = useState('DASHBOARD'); // 'DASHBOARD' | 'BROWSE'
+  // Navigation state: 'DASHBOARD' | 'BROWSE' | 'PROFILE'
+  const [currentScreen, setCurrentScreen] = useState('DASHBOARD');
 
   // Load Airbnb Cereal fonts
   const [fontsLoaded] = useFonts({
@@ -25,19 +26,27 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaViewProvider>
       <View style={{ flex: 1, backgroundColor: '#000000' }}>
-        {currentScreen === 'DASHBOARD' ? (
+        {currentScreen === 'DASHBOARD' && (
           <DashboardScreen 
             onNavigateBrowse={() => setCurrentScreen('BROWSE')}
-            onSelectGig={() => setCurrentScreen('BROWSE')}
+            onNavigateProfile={() => setCurrentScreen('PROFILE')}
           />
-        ) : (
+        )}
+
+        {currentScreen === 'BROWSE' && (
           <BrowseScreen 
             onBackHome={() => setCurrentScreen('DASHBOARD')}
           />
         )}
+
+        {currentScreen === 'PROFILE' && (
+          <ProfileScreen 
+            onBackHome={() => setCurrentScreen('DASHBOARD')}
+          />
+        )}
       </View>
-    </SafeAreaProvider>
+    </SafeAreaViewProvider>
   );
 }
