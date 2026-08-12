@@ -26,7 +26,7 @@ export default function App() {
   }
 
   return (
-    <SafeAreaViewProvider>
+    <SafeAreaProvider>
       <View style={{ flex: 1, backgroundColor: '#000000' }}>
         {currentScreen === 'DASHBOARD' && (
           <DashboardScreen 
@@ -47,6 +47,6 @@ export default function App() {
           />
         )}
       </View>
-    </SafeAreaViewProvider>
+    </SafeAreaProvider>
   );
 }
