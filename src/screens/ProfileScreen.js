@@ -45,17 +45,40 @@ export default function ProfileScreen({ onBackHome }) {
         showsVerticalScrollIndicator={false}
       >
         
-        {/* 1. Header Card: Name + Stacked Contact Top Row & Solid #1D4ED8 Share Button Bottom Row */}
+        {/* 1. Redesigned Top Header (Hero Trust Card - Airbnb Inspired Split Layout) */}
         <View style={styles.masterCard}>
-          <View style={styles.headerTopRow}>
-            <Text style={styles.nameText}>Akash Tiwari</Text>
+          <View style={styles.heroSplitRow}>
+            
+            {/* Left side: Prominent circular avatar next to name & Verified Artist badge */}
+            <View style={styles.heroLeftSection}>
+              <View style={styles.avatarCircleBlue}>
+                <Text style={styles.avatarInitialText}>A</Text>
+              </View>
 
-            <View style={styles.contactStack}>
-              <Text style={styles.contactText}>+91 98765 43210</Text>
-              <Text style={styles.contactText}>akashtiwari@gygs.in</Text>
+              <View style={styles.heroNameBlock}>
+                <Text style={styles.nameText}>Akash Tiwari</Text>
+                
+                <View style={styles.verifiedBadgeBlue}>
+                  <Ionicons name="checkmark-circle" size={13} color="#60A5FA" />
+                  <Text style={styles.verifiedBadgeText}>Verified Artist</Text>
+                </View>
+              </View>
             </View>
+
+            {/* Right side: Clean vertical stack of key metrics */}
+            <View style={styles.heroMetricsStack}>
+              <View style={styles.ratingRow}>
+                <Text style={styles.ratingValueText}>5.0</Text>
+                <Ionicons name="star" size={14} color="#F59E0B" style={{ marginLeft: 3 }} />
+              </View>
+
+              <Text style={styles.metricSubtext}>4 Reviews</Text>
+              <Text style={styles.metricSubtext}>5 Years active</Text>
+            </View>
+
           </View>
 
+          {/* Bottom Row: Full-width Solid Royal Blue Share Profile Button */}
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={handleShareProfile}
@@ -167,7 +190,7 @@ export default function ProfileScreen({ onBackHome }) {
           </Text>
         </View>
 
-        {/* 6. Show Rates Card (Strict Royal Blue & White accents - NO GREEN) */}
+        {/* 6. Show Rates Card */}
         <View style={styles.masterCard}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardTitle}>Show Rates</Text>
@@ -185,7 +208,7 @@ export default function ProfileScreen({ onBackHome }) {
           </View>
         </View>
 
-        {/* 7. Connected Accounts Card (Royal Blue Accents - NO GREEN) */}
+        {/* 7. Connected Accounts Card */}
         <View style={styles.masterCard}>
           <Text style={[styles.cardTitle, { marginBottom: 12 }]}>Connected Accounts</Text>
 
@@ -268,26 +291,82 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
 
-  /* Header Card Specifics */
-  headerTopRow: {
+  /* Redesigned Hero Trust Header Card Specifics */
+  heroSplitRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+  },
+  heroLeftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    paddingRight: 12,
+  },
+  avatarCircleBlue: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#1D4ED8',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+    marginRight: 12,
+  },
+  avatarInitialText: {
+    color: '#ffffff',
+    fontSize: 22,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+  heroNameBlock: {
+    justifyContent: 'center',
   },
   nameText: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
   },
-  contactStack: {
-    alignItems: 'flex-end',
+  verifiedBadgeBlue: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+    borderWidth: 1,
+    borderColor: '#1D4ED8',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 9999,
+    marginTop: 4,
+    alignSelf: 'flex-start',
   },
-  contactText: {
+  verifiedBadgeText: {
+    color: '#60A5FA',
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Medium',
+    fontWeight: '600',
+  },
+  heroMetricsStack: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
+  },
+  ratingValueText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+  metricSubtext: {
+    color: '#929292',
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-    color: '#929292',
-    textAlign: 'right',
     marginTop: 2,
   },
   shareProfileButton: {
