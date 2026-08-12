@@ -19,7 +19,7 @@ import GigCard, { currencyConverter } from '../components/GigCard';
 // Exact User Category Bar List
 const CATEGORIES = ['All', 'Dance', 'Acting', 'Yoga', 'Fitness', 'Video Editor', 'Videographer'];
 
-export default function BrowseScreen({ onBackHome, onNavigateApplied }) {
+export default function BrowseScreen({ onBackHome }) {
   const [gigs, setGigs] = useState(MOCK_GIGS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -98,20 +98,8 @@ export default function BrowseScreen({ onBackHome, onNavigateApplied }) {
         {/* Pixel-Perfect Flush Left Aligned Title & Subtitle Container */}
         <View style={styles.headerTitleContainer}>
           <Text style={styles.headerTitle}>Gygs Near Me</Text>
-          <Text style={styles.headerSubtitle}>
-            {activeGigsCount} active available
-          </Text>
+          <Text style={styles.headerSubtitle}>{activeGigsCount} active available</Text>
         </View>
-
-        <TouchableOpacity
-          onPress={onNavigateApplied}
-          style={styles.appliedPillButton}
-        >
-          <Ionicons name="document-text-outline" size={15} color="#ffffff" />
-          <Text style={styles.appliedPillText}>
-            Applied
-          </Text>
-        </TouchableOpacity>
       </View>
 
       {/* Glass Search Bar Container */}
@@ -341,22 +329,6 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     marginLeft: 0,
     includeFontPadding: false,
-  },
-  appliedPillButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-  },
-  appliedPillText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontFamily: 'AirbnbCereal-Bold',
   },
   searchContainer: {
     flexDirection: 'row',
