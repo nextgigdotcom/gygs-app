@@ -259,34 +259,46 @@ export default function ProfileScreen({ onBackHome }) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.galleryScrollContainer}
               >
+                {/* Close-Up Card */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
                     style={styles.galleryCardImage} 
                   />
-                  <View style={styles.galleryCardLabelOverlay}>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
                     <Text style={styles.galleryCardLabelText}>Close-Up</Text>
-                  </View>
+                  </LinearGradient>
                 </View>
 
+                {/* Full-Body Card */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
                     style={styles.galleryCardImage} 
                   />
-                  <View style={styles.galleryCardLabelOverlay}>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
                     <Text style={styles.galleryCardLabelText}>Full-Body</Text>
-                  </View>
+                  </LinearGradient>
                 </View>
 
+                {/* Mid-Shot Card */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
                     style={styles.galleryCardImage} 
                   />
-                  <View style={styles.galleryCardLabelOverlay}>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
                     <Text style={styles.galleryCardLabelText}>Mid-Shot</Text>
-                  </View>
+                  </LinearGradient>
                 </View>
               </ScrollView>
             </BlurView>
@@ -719,21 +731,25 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 16,
     overflow: 'hidden',
+    position: 'relative',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   galleryCardImage: {
     width: '100%',
-    height: 96,
+    height: '100%',
     resizeMode: 'cover',
   },
-  galleryCardLabelOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(15, 15, 15, 0.9)',
-    justifyContent: 'center',
+  galleryCardGradientOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 20,
+    paddingBottom: 8,
     alignItems: 'center',
-    paddingVertical: 4,
+    justifyContent: 'flex-end',
   },
   galleryCardLabelText: {
     fontSize: 11,
@@ -761,6 +777,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginTop: 4,
+    marginBottom: 8,
   },
   bulletDotText: {
     color: '#60A5FA',
@@ -773,7 +790,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
     color: 'rgba(255, 255, 255, 0.75)',
-    lineHeight: 18,
+    lineHeight: 22,
   },
   institutionText: {
     fontSize: 13,
