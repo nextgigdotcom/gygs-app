@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -16,8 +16,49 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const { width } = Dimensions.get('window');
 const cardWidth = (width - 40 - 16) / 2; 
 
+const PLACEHOLDER_PHRASES = [
+  'Create an invoice for 50,000.',
+  'Check my Emails.',
+  'Check my DMs.',
+  'Update my Schedule.',
+];
+
 export default function DashboardScreen({ onNavigateBrowse }) {
   const [chatInput, setChatInput] = useState('');
+  const [placeholderText, setPlaceholderText] = useState('');
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Typewriter auto-typing and erasing animation loop
+  useEffect(() => {
+    const currentPhrase = PLACEHOLDER_PHRASES[phraseIndex];
+
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        // Typing forward
+        if (placeholderText.length < currentPhrase.length) {
+          setPlaceholderText(currentPhrase.slice(0, placeholderText.length + 1));
+        } else {
+          // Pause when phrase is fully typed before starting deletion
+          const pauseTimer = setTimeout(() => {
+            setIsDeleting(true);
+          }, 1800);
+          return () => clearTimeout(pauseTimer);
+        }
+      } else {
+        // Erasing backward
+        if (placeholderText.length > 0) {
+          setPlaceholderText(currentPhrase.slice(0, placeholderText.length - 1));
+        } else {
+          // Move to next phrase once completely erased
+          setIsDeleting(false);
+          setPhraseIndex((prevIndex) => (prevIndex + 1) % PLACEHOLDER_PHRASES.length);
+        }
+      }
+    }, isDeleting ? 40 : 70);
+
+    return () => clearTimeout(timer);
+  }, [placeholderText, phraseIndex, isDeleting]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
@@ -30,7 +71,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         <View style={styles.header}>
           <TouchableOpacity activeOpacity={0.8} style={styles.appGridBtnWrapper}>
             <LinearGradient
-              colors={['rgba(29, 78, 216, 0.25)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.03)']}
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.04)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.appGridBtn}
@@ -47,13 +88,13 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 2x2 Grid of Liquid White & Royal Blue Gradient Cards */}
+        {/* 2x2 Grid of Liquid White Glass Gradient Cards with Blue Accents */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(29, 78, 216, 0.14)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.02)']}
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -67,10 +108,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </View>
 
-          {/* Card 2: UP NEXT (Royal Blue Date Badge Gradient) */}
+          {/* Card 2: UP NEXT (Royal Blue Date Badge Accent) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(29, 78, 216, 0.14)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.02)']}
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -78,29 +119,24 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
                 <View style={styles.upNextSection}>
-                  <LinearGradient
-                    colors={['rgba(29, 78, 216, 0.35)', 'rgba(30, 64, 175, 0.18)']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.dateBadgeBlueGradient}
-                  >
+                  <View style={styles.dateBadgeBlue}>
                     <Text style={styles.dateMonthTextBlue}>AUG</Text>
                     <Text style={styles.dateDayTextWhite}>12</Text>
-                  </LinearGradient>
+                  </View>
                   <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
                 </View>
               </BlurView>
             </LinearGradient>
           </View>
 
-          {/* Card 3: BROWSE GYGS (Royal Blue Specular Gradient & Interactive Navigation) */}
+          {/* Card 3: BROWSE GYGS (Royal Blue Active Indicator & Interactive Navigation) */}
           <TouchableOpacity 
             activeOpacity={0.85}
             onPress={onNavigateBrowse}
             style={styles.cardWrapper}
           >
             <LinearGradient
-              colors={['rgba(29, 78, 216, 0.26)', 'rgba(96, 165, 250, 0.12)', 'rgba(255, 255, 255, 0.03)']}
+              colors={['rgba(255, 255, 255, 0.22)', 'rgba(255, 255, 255, 0.05)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={[styles.cardGradient, styles.browseCardBorder]}
@@ -109,12 +145,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
                 <Text style={styles.cardHeaderLabel}>BROWSE</Text>
                 <View style={styles.browseSection}>
                   <View style={styles.dotsRow}>
-                    <LinearGradient
-                      colors={['#60A5FA', '#1D4ED8']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.dotRoyalBlueGradient}
-                    />
+                    <View style={[styles.dot, styles.dotRoyalBlue]} />
                     <View style={styles.dot} />
                     <View style={styles.dot} />
                   </View>
@@ -124,10 +155,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Card 4: MY PROFILE (Vibrant Royal Blue Avatar Gradient) */}
+          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(29, 78, 216, 0.14)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.02)']}
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -135,14 +166,9 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
                 <View style={styles.profileSection}>
-                  <LinearGradient
-                    colors={['#3B82F6', '#1D4ED8', '#1E40AF']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.profileAvatarBlueGradient}
-                  >
+                  <View style={styles.profileAvatarBlue}>
                     <Text style={styles.profileAvatarTextWhite}>A</Text>
-                  </LinearGradient>
+                  </View>
                   <View style={styles.profileNameContainer}>
                     <Text style={styles.profileNameText} numberOfLines={2}>
                       Akash{'\n'}Tiwari
@@ -157,10 +183,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
       </View>
 
-      {/* Bottom Fixed AI Input Bar (Vibrant Blue Mic Button Gradient) */}
+      {/* Bottom Fixed AI Input Bar with Animated Typewriter Placeholder */}
       <View style={styles.bottomBarContainer}>
         <LinearGradient
-          colors={['rgba(29, 78, 216, 0.16)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.03)']}
+          colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.04)']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.bottomBarGradient}
@@ -171,22 +197,15 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </TouchableOpacity>
 
             <TextInput
-              placeholder="Create an"
+              placeholder={placeholderText}
               placeholderTextColor="#777777"
               value={chatInput}
               onChangeText={setChatInput}
               style={styles.inputField}
             />
 
-            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnWrapper}>
-              <LinearGradient
-                colors={['#3B82F6', '#1D4ED8']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.micBtnGradient}
-              >
-                <Ionicons name="mic" size={18} color="#ffffff" />
-              </LinearGradient>
+            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnBlue}>
+              <Ionicons name="mic" size={18} color="#ffffff" />
             </TouchableOpacity>
           </BlurView>
         </LinearGradient>
@@ -221,7 +240,7 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.18)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -251,16 +270,16 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.16)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
   browseCardBorder: {
-    borderColor: 'rgba(96, 165, 250, 0.35)',
+    borderColor: 'rgba(255, 255, 255, 0.28)',
   },
   cardContent: {
     flex: 1,
     padding: 20,
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
   cardHeaderLabel: {
     color: 'rgba(255, 255, 255, 0.65)',
@@ -282,18 +301,19 @@ const styles = StyleSheet.create({
   upNextSection: {
     justifyContent: 'flex-end',
   },
-  dateBadgeBlueGradient: {
+  dateBadgeBlue: {
     width: 54,
     height: 54,
     borderRadius: 16,
+    backgroundColor: 'rgba(29, 78, 216, 0.22)',
     borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.45)',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
   },
   dateMonthTextBlue: {
-    color: '#93C5FD',
+    color: '#60A5FA',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
@@ -307,7 +327,7 @@ const styles = StyleSheet.create({
     marginTop: -2,
   },
   calendarSubtext: {
-    color: 'rgba(255, 255, 255, 0.65)',
+    color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
   },
@@ -326,10 +346,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
-  dotRoyalBlueGradient: {
+  dotRoyalBlue: {
+    backgroundColor: '#1D4ED8',
     width: 16,
-    height: 6,
-    borderRadius: 3,
   },
   browseTitle: {
     color: '#ffffff',
@@ -342,12 +361,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  profileAvatarBlueGradient: {
+  profileAvatarBlue: {
     width: 44,
     height: 44,
     borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(147, 197, 253, 0.4)',
+    backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -375,7 +393,7 @@ const styles = StyleSheet.create({
   bottomBarGradient: {
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.18)',
     overflow: 'hidden',
   },
   bottomBarContent: {
@@ -383,7 +401,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 56,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
   },
   attachBtn: {
     marginRight: 10,
@@ -394,16 +412,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
-  micBtnWrapper: {
-    borderRadius: 19,
-    overflow: 'hidden',
-    marginLeft: 10,
-  },
-  micBtnGradient: {
+  micBtnBlue: {
     width: 38,
     height: 38,
     borderRadius: 19,
+    backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 10,
   },
 });
