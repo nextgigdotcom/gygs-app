@@ -6,8 +6,8 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import BrowseScreen from './src/screens/BrowseScreen';
 
 export default function App() {
-  // Default to BROWSE screen so Gygs Near Me page opens immediately
-  const [currentScreen, setCurrentScreen] = useState('BROWSE'); // 'BROWSE' | 'DASHBOARD'
+  // Default to DASHBOARD screen
+  const [currentScreen, setCurrentScreen] = useState('DASHBOARD'); // 'DASHBOARD' | 'BROWSE'
 
   // Load Airbnb Cereal fonts
   const [fontsLoaded] = useFonts({
@@ -27,14 +27,14 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <View style={{ flex: 1, backgroundColor: '#000000' }}>
-        {currentScreen === 'BROWSE' ? (
-          <BrowseScreen 
-            onBackHome={() => setCurrentScreen('DASHBOARD')}
-          />
-        ) : (
+        {currentScreen === 'DASHBOARD' ? (
           <DashboardScreen 
             onNavigateBrowse={() => setCurrentScreen('BROWSE')}
             onSelectGig={() => setCurrentScreen('BROWSE')}
+          />
+        ) : (
+          <BrowseScreen 
+            onBackHome={() => setCurrentScreen('DASHBOARD')}
           />
         )}
       </View>
