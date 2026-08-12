@@ -20,9 +20,9 @@ import GigCard, { currencyConverter } from '../components/GigCard';
 const CATEGORIES = ['All', 'Dance', 'Acting', 'Yoga', 'Fitness', 'Video Editor', 'Videographer'];
 
 const SEARCH_DYNAMIC_WORDS = [
-  'title...',
-  'location...',
-  'skill...',
+  'title.',
+  'location.',
+  'skill.',
 ];
 
 export default function BrowseScreen({ onBackHome }) {
