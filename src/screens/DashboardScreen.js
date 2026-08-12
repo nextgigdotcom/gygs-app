@@ -28,39 +28,32 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         
         {/* Top Header Bar */}
         <View style={styles.header}>
-          {/* Left: Plain grid icon — no box */}
-          <TouchableOpacity activeOpacity={0.8}>
-            <Ionicons name="grid-outline" size={26} color="#ffffff" />
+          <TouchableOpacity activeOpacity={0.8} style={styles.appGridBtnWrapper}>
+            <LinearGradient
+              colors={['rgba(29, 78, 216, 0.25)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.appGridBtn}
+            >
+              <Ionicons name="grid-outline" size={22} color="#ffffff" />
+            </LinearGradient>
           </TouchableOpacity>
 
-          {/* Right: Notification, Chat & Menu icons */}
-          <View style={styles.headerRightIcons}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
-              <Ionicons name="notifications-outline" size={22} color="#ffffff" />
-              {/* Notification unread badge */}
-              <View style={styles.notifDot} />
-            </TouchableOpacity>
-
-            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
-              <Ionicons name="chatbubble-ellipses-outline" size={21} color="#ffffff" />
-            </TouchableOpacity>
-
-            <TouchableOpacity activeOpacity={0.8}>
-              <Ionicons name="menu-outline" size={26} color="#ffffff" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity activeOpacity={0.8} style={styles.menuBtn}>
+            <Ionicons name="menu-outline" size={28} color="#ffffff" />
+          </TouchableOpacity>
         </View>
 
         {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 2x2 Grid of Liquid White Glass Gradient Cards with Blue Accents */}
+        {/* 2x2 Grid of Liquid White & Royal Blue Gradient Cards */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              colors={['rgba(29, 78, 216, 0.14)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.02)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -74,10 +67,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </View>
 
-          {/* Card 2: UP NEXT (Royal Blue Date Badge Accent) */}
+          {/* Card 2: UP NEXT (Royal Blue Date Badge Gradient) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              colors={['rgba(29, 78, 216, 0.14)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.02)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -85,24 +78,29 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
                 <View style={styles.upNextSection}>
-                  <View style={styles.dateBadgeBlue}>
+                  <LinearGradient
+                    colors={['rgba(29, 78, 216, 0.35)', 'rgba(30, 64, 175, 0.18)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.dateBadgeBlueGradient}
+                  >
                     <Text style={styles.dateMonthTextBlue}>AUG</Text>
                     <Text style={styles.dateDayTextWhite}>12</Text>
-                  </View>
+                  </LinearGradient>
                   <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
                 </View>
               </BlurView>
             </LinearGradient>
           </View>
 
-          {/* Card 3: BROWSE GYGS (Royal Blue Active Indicator & Interactive Navigation) */}
+          {/* Card 3: BROWSE GYGS (Royal Blue Specular Gradient & Interactive Navigation) */}
           <TouchableOpacity 
             activeOpacity={0.85}
             onPress={onNavigateBrowse}
             style={styles.cardWrapper}
           >
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.22)', 'rgba(255, 255, 255, 0.05)']}
+              colors={['rgba(29, 78, 216, 0.26)', 'rgba(96, 165, 250, 0.12)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={[styles.cardGradient, styles.browseCardBorder]}
@@ -111,7 +109,12 @@ export default function DashboardScreen({ onNavigateBrowse }) {
                 <Text style={styles.cardHeaderLabel}>BROWSE</Text>
                 <View style={styles.browseSection}>
                   <View style={styles.dotsRow}>
-                    <View style={[styles.dot, styles.dotRoyalBlue]} />
+                    <LinearGradient
+                      colors={['#60A5FA', '#1D4ED8']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={styles.dotRoyalBlueGradient}
+                    />
                     <View style={styles.dot} />
                     <View style={styles.dot} />
                   </View>
@@ -121,10 +124,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent) */}
+          {/* Card 4: MY PROFILE (Vibrant Royal Blue Avatar Gradient) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              colors={['rgba(29, 78, 216, 0.14)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.02)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -132,9 +135,14 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
                 <View style={styles.profileSection}>
-                  <View style={styles.profileAvatarBlue}>
+                  <LinearGradient
+                    colors={['#3B82F6', '#1D4ED8', '#1E40AF']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.profileAvatarBlueGradient}
+                  >
                     <Text style={styles.profileAvatarTextWhite}>A</Text>
-                  </View>
+                  </LinearGradient>
                   <View style={styles.profileNameContainer}>
                     <Text style={styles.profileNameText} numberOfLines={2}>
                       Akash{'\n'}Tiwari
@@ -149,10 +157,10 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
       </View>
 
-      {/* Bottom Fixed AI Input Bar (Royal Blue Mic Button Accent) */}
+      {/* Bottom Fixed AI Input Bar (Vibrant Blue Mic Button Gradient) */}
       <View style={styles.bottomBarContainer}>
         <LinearGradient
-          colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.04)']}
+          colors={['rgba(29, 78, 216, 0.16)', 'rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.03)']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.bottomBarGradient}
@@ -170,8 +178,15 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               style={styles.inputField}
             />
 
-            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnBlue}>
-              <Ionicons name="mic" size={18} color="#ffffff" />
+            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnWrapper}>
+              <LinearGradient
+                colors={['#3B82F6', '#1D4ED8']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.micBtnGradient}
+              >
+                <Ionicons name="mic" size={18} color="#ffffff" />
+              </LinearGradient>
             </TouchableOpacity>
           </BlurView>
         </LinearGradient>
@@ -197,24 +212,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  headerRightIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 18,
+  appGridBtnWrapper: {
+    borderRadius: 16,
+    overflow: 'hidden',
   },
-  headerIconBtn: {
-    position: 'relative',
-  },
-  notifDot: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: '#ef4444',
+  appGridBtn: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#050505',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuBtn: {
+    padding: 6,
   },
   welcomeTitle: {
     color: '#ffffff',
@@ -239,16 +251,16 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.16)',
   },
   browseCardBorder: {
-    borderColor: 'rgba(255, 255, 255, 0.28)',
+    borderColor: 'rgba(96, 165, 250, 0.35)',
   },
   cardContent: {
     flex: 1,
     padding: 20,
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
   },
   cardHeaderLabel: {
     color: 'rgba(255, 255, 255, 0.65)',
@@ -270,19 +282,18 @@ const styles = StyleSheet.create({
   upNextSection: {
     justifyContent: 'flex-end',
   },
-  dateBadgeBlue: {
+  dateBadgeBlueGradient: {
     width: 54,
     height: 54,
     borderRadius: 16,
-    backgroundColor: 'rgba(29, 78, 216, 0.22)', // Translucent Royal Blue fill
     borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)', // Legible Royal Blue edge
+    borderColor: 'rgba(96, 165, 250, 0.45)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
   },
   dateMonthTextBlue: {
-    color: '#60A5FA', // Bright legible blue
+    color: '#93C5FD',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
@@ -296,7 +307,7 @@ const styles = StyleSheet.create({
     marginTop: -2,
   },
   calendarSubtext: {
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: 'rgba(255, 255, 255, 0.65)',
     fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
   },
@@ -315,9 +326,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
-  dotRoyalBlue: {
-    backgroundColor: '#1D4ED8', // Royal Blue active dot accent
+  dotRoyalBlueGradient: {
     width: 16,
+    height: 6,
+    borderRadius: 3,
   },
   browseTitle: {
     color: '#ffffff',
@@ -330,11 +342,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  profileAvatarBlue: {
+  profileAvatarBlueGradient: {
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: '#1D4ED8', // Solid Deep Royal Blue avatar fill
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -362,7 +375,7 @@ const styles = StyleSheet.create({
   bottomBarGradient: {
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     overflow: 'hidden',
   },
   bottomBarContent: {
@@ -370,7 +383,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 56,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   attachBtn: {
     marginRight: 10,
@@ -381,13 +394,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
-  micBtnBlue: {
+  micBtnWrapper: {
+    borderRadius: 19,
+    overflow: 'hidden',
+    marginLeft: 10,
+  },
+  micBtnGradient: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#1D4ED8', // Solid Deep Royal Blue mic button
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
   },
 });
