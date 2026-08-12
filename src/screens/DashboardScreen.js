@@ -67,25 +67,30 @@ export default function DashboardScreen({ onNavigateBrowse }) {
       {/* Main Content Area */}
       <View style={styles.content}>
         
-        {/* Top Header Bar */}
+        {/* Top Header Bar (No square box on left, 3 icon buttons on right: Chats, Notifications, Menu) */}
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.8} style={styles.appGridBtnWrapper}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.04)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.appGridBtn}
-            >
-              <Ionicons name="grid-outline" size={22} color="#ffffff" />
-            </LinearGradient>
-          </TouchableOpacity>
+          <View /> {/* Empty left side */}
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.menuBtn}>
-            <Ionicons name="menu-outline" size={28} color="#ffffff" />
-          </TouchableOpacity>
+          <View style={styles.headerRightRow}>
+            {/* Direct Chats Button */}
+            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+              <Ionicons name="chatbubbles-outline" size={18} color="#ffffff" />
+            </TouchableOpacity>
+
+            {/* Notifications Button */}
+            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+              <Ionicons name="notifications-outline" size={18} color="#ffffff" />
+              <View style={styles.notifBadgeDot} />
+            </TouchableOpacity>
+
+            {/* Hamburger Menu Button */}
+            <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+              <Ionicons name="menu-outline" size={22} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Welcome Header (Matching Browse Screen Bold Airbnb Cereal Typography) */}
+        {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
         {/* 2x2 Grid of Liquid White Glass Gradient Cards with Blue Accents */}
@@ -198,7 +203,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
             <TextInput
               placeholder={placeholderText}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#777777"
               value={chatInput}
               onChangeText={setChatInput}
               style={styles.inputField}
@@ -231,29 +236,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  appGridBtnWrapper: {
-    borderRadius: 16,
-    overflow: 'hidden',
+  headerRightRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
-  appGridBtn: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
+  headerIconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  menuBtn: {
-    padding: 6,
+  notifBadgeDot: {
+    position: 'absolute',
+    top: 9,
+    right: 9,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#ef4444',
   },
   welcomeTitle: {
     color: '#ffffff',
-    fontSize: 32,
+    fontSize: 30,
     fontFamily: 'AirbnbCereal-Bold',
-    letterSpacing: -0.8,
+    fontWeight: '700',
+    letterSpacing: -0.6,
     marginBottom: 24,
-    includeFontPadding: false,
   },
   gridContainer: {
     flexDirection: 'row',
@@ -282,12 +295,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
   cardHeaderLabel: {
-    color: '#888888',
+    color: 'rgba(255, 255, 255, 0.65)',
     fontSize: 11,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    includeFontPadding: false,
   },
   cardBottomSection: {
     justifyContent: 'flex-end',
@@ -296,7 +309,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 34,
     fontFamily: 'AirbnbCereal-Bold',
-    includeFontPadding: false,
+    fontWeight: '700',
   },
   upNextSection: {
     justifyContent: 'flex-end',
@@ -316,21 +329,20 @@ const styles = StyleSheet.create({
     color: '#60A5FA',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     letterSpacing: 0.5,
-    includeFontPadding: false,
   },
   dateDayTextWhite: {
     color: '#ffffff',
     fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     marginTop: -2,
-    includeFontPadding: false,
   },
   calendarSubtext: {
-    color: '#888888',
+    color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 13,
-    fontFamily: 'AirbnbCereal-Medium',
-    includeFontPadding: false,
+    fontFamily: 'AirbnbCereal-Book',
   },
   browseSection: {
     justifyContent: 'flex-end',
@@ -355,7 +367,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 32,
     fontFamily: 'AirbnbCereal-Bold',
-    includeFontPadding: false,
+    fontWeight: '700',
   },
   profileSection: {
     flexDirection: 'row',
@@ -374,7 +386,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
-    includeFontPadding: false,
+    fontWeight: '700',
   },
   profileNameContainer: {
     flex: 1,
@@ -383,8 +395,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 17,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     lineHeight: 22,
-    includeFontPadding: false,
   },
   bottomBarContainer: {
     paddingHorizontal: 20,
@@ -412,7 +424,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
-    includeFontPadding: false,
   },
   micBtnBlue: {
     width: 38,
