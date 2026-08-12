@@ -259,37 +259,31 @@ export default function ProfileScreen({ onBackHome }) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.galleryScrollContainer}
               >
-                {/* Close-Up Card */}
-                <View style={styles.galleryColumnItem}>
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                  </View>
-                  <Text style={styles.galleryCardLabelTextBelow}>Close-Up</Text>
+                {/* Close-Up */}
+                <View style={styles.galleryEditorialItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryEditorialImage} 
+                  />
+                  <Text style={styles.galleryCaptionText}>Close-Up</Text>
                 </View>
 
-                {/* Full-Body Card */}
-                <View style={styles.galleryColumnItem}>
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                  </View>
-                  <Text style={styles.galleryCardLabelTextBelow}>Full-Body</Text>
+                {/* Full-Body */}
+                <View style={styles.galleryEditorialItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryEditorialImage} 
+                  />
+                  <Text style={styles.galleryCaptionText}>Full-Body</Text>
                 </View>
 
-                {/* Mid-Shot Card */}
-                <View style={styles.galleryColumnItem}>
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                  </View>
-                  <Text style={styles.galleryCardLabelTextBelow}>Mid-Shot</Text>
+                {/* Mid-Shot */}
+                <View style={styles.galleryEditorialItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryEditorialImage} 
+                  />
+                  <Text style={styles.galleryCaptionText}>Mid-Shot</Text>
                 </View>
               </ScrollView>
             </BlurView>
@@ -712,32 +706,25 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 
-  /* Gallery Layout (Editorial Style) */
+  /* Editorial Gallery Layout */
   galleryScrollContainer: {
     paddingRight: 10,
-    gap: 14,
   },
-  galleryColumnItem: {
-    width: 110,
+  galleryEditorialItem: {
     alignItems: 'center',
+    marginRight: 14,
   },
-  galleryCardItem: {
+  galleryEditorialImage: {
     width: 110,
     height: 150,
     borderRadius: 16,
-    overflow: 'hidden',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    resizeMode: 'cover',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },
-  galleryCardImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  galleryCardLabelTextBelow: {
+  galleryCaptionText: {
     fontSize: 12,
-    fontFamily: 'AirbnbCereal-Medium',
+    fontFamily: 'AirbnbCereal-Book',
     color: '#929292',
     textAlign: 'center',
     marginTop: 8,
