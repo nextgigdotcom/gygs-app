@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
+import DashboardScreen from './src/screens/DashboardScreen';
 import BrowseScreen from './src/screens/BrowseScreen';
 
 export default function App() {
+  const [currentScreen, setCurrentScreen] = useState('DASHBOARD'); // 'DASHBOARD' | 'BROWSE'
+
   // Load Airbnb Cereal fonts
   const [fontsLoaded] = useFonts({
     'AirbnbCereal-Bold': require('./assets/fonts/AirbnbCereal-Bold.otf'),
@@ -14,19 +17,25 @@ export default function App() {
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#080808', justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#2d5cd4" />
+      <View style={{ flex: 1, backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#1D4ED8" />
       </View>
     );
   }
 
   return (
     <SafeAreaProvider>
-      <View style={{ flex: 1, backgroundColor: '#080808' }}>
-        <BrowseScreen 
-          onBackHome={() => console.log('Back pressed')}
-          onNavigateApplied={() => alert('Navigating to Applied Gygs...')}
-        />
+      <View style={{ flex: 1, backgroundColor: '#000000' }}>
+        {currentScreen === 'DASHBOARD' ? (
+          <DashboardScreen 
+            onNavigateBrowse={() => setCurrentScreen('BROWSE')}
+            onSelectGig={() => setCurrentScreen('BROWSE')}
+          />
+        ) : (
+          <BrowseScreen 
+            onBackHome={() => setCurrentScreen('DASHBOARD')}
+          />
+        )}
       </View>
     </SafeAreaProvider>
   );
