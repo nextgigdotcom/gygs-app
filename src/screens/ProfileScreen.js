@@ -260,45 +260,36 @@ export default function ProfileScreen({ onBackHome }) {
                 contentContainerStyle={styles.galleryScrollContainer}
               >
                 {/* Close-Up Card */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Close-Up</Text>
-                  </LinearGradient>
+                <View style={styles.galleryColumnItem}>
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                  </View>
+                  <Text style={styles.galleryCardLabelTextBelow}>Close-Up</Text>
                 </View>
 
                 {/* Full-Body Card */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Full-Body</Text>
-                  </LinearGradient>
+                <View style={styles.galleryColumnItem}>
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                  </View>
+                  <Text style={styles.galleryCardLabelTextBelow}>Full-Body</Text>
                 </View>
 
                 {/* Mid-Shot Card */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Mid-Shot</Text>
-                  </LinearGradient>
+                <View style={styles.galleryColumnItem}>
+                  <View style={styles.galleryCardItem}>
+                    <Image 
+                      source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
+                      style={styles.galleryCardImage} 
+                    />
+                  </View>
+                  <Text style={styles.galleryCardLabelTextBelow}>Mid-Shot</Text>
                 </View>
               </ScrollView>
             </BlurView>
@@ -721,17 +712,20 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 
-  /* Gallery Layout matching Screenshot */
+  /* Gallery Layout (Editorial Style) */
   galleryScrollContainer: {
     paddingRight: 10,
-    gap: 12,
+    gap: 14,
+  },
+  galleryColumnItem: {
+    width: 110,
+    alignItems: 'center',
   },
   galleryCardItem: {
-    width: 105,
-    height: 130,
+    width: 110,
+    height: 150,
     borderRadius: 16,
     overflow: 'hidden',
-    position: 'relative',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
@@ -741,20 +735,12 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  galleryCardGradientOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingTop: 20,
-    paddingBottom: 8,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  galleryCardLabelText: {
-    fontSize: 11,
+  galleryCardLabelTextBelow: {
+    fontSize: 12,
     fontFamily: 'AirbnbCereal-Medium',
-    color: '#ffffff',
+    color: '#929292',
+    textAlign: 'center',
+    marginTop: 8,
   },
 
   /* Work Experience & Training Specifics */
