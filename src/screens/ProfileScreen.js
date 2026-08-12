@@ -18,8 +18,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const { width } = Dimensions.get('window');
 
 export default function ProfileScreen({ onBackHome }) {
+  const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const artistTypes = ['Dance'];
   const categories = ['Performer', 'Trainer'];
+
+  const handleGalleryScroll = (event) => {
+    const slideSize = 122; // 110 card width + 12 gap
+    const index = Math.round(event.nativeEvent.contentOffset.x / slideSize);
+    setActiveGalleryIndex(Math.max(0, Math.min(index, 5)));
+  };
 
   const handleShareProfile = () => {
     Alert.alert('Profile Link Copied!', 'https://gygs.in/artist/profile/akashtiwari has been copied to your clipboard.');
@@ -238,7 +245,7 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 4. Gallery & Media Kit Card (6 Swipeable Items: 3 Photos + 3 Videos) */}
+        {/* 4. Gallery Card (6 Swipeable Items with Centered Pagination Dots) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -248,12 +255,7 @@ export default function ProfileScreen({ onBackHome }) {
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.cardHeaderLabel}>GALLERY & MEDIA KIT</Text>
-                  <View style={styles.mediaCountBadge}>
-                    <Text style={styles.mediaCountBadgeText}>6 ITEMS</Text>
-                  </View>
-                </View>
+                <Text style={styles.cardHeaderLabel}>GALLERY</Text>
                 <TouchableOpacity activeOpacity={0.7}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
@@ -265,6 +267,8 @@ export default function ProfileScreen({ onBackHome }) {
                 contentContainerStyle={styles.galleryScrollContainer}
                 decelerationRate="fast"
                 snapToInterval={122}
+                onScroll={handleGalleryScroll}
+                scrollEventThrottle={16}
               >
                 {/* Photo 1: Close-Up */}
                 <View style={styles.galleryCardItem}>
@@ -359,6 +363,19 @@ export default function ProfileScreen({ onBackHome }) {
                   </LinearGradient>
                 </View>
               </ScrollView>
+
+              {/* Centered Swiping Pagination Dots Indicator */}
+              <View style={styles.paginationDotsContainer}>
+                {[0, 1, 2, 3, 4, 5].map((idx) => (
+                  <View 
+                    key={idx} 
+                    style={[
+                      styles.paginationDot, 
+                      activeGalleryIndex === idx && styles.paginationDotActive
+                    ]} 
+                  />
+                ))}
+              </View>
             </BlurView>
           </LinearGradient>
         </View>
@@ -799,6 +816,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
     zIndex: 5,
+  },
+  paginationDotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 14,
+  },
+  paginationDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    marginHorizontal: 3,
+  },
+  paginationDotActive: {
+    width: 18,
+    borderRadius: 9999,
+    backgroundColor: '#60A5FA',
   },
 
   /* Gallery Layout matching Screenshot */
