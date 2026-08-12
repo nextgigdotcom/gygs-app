@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const KNOWN_STATES_COUNTRIES = [
@@ -192,19 +193,35 @@ export default function GigCard({ gig, onPress, onWithdraw, onContact }) {
             {status === 'SHORTLISTED' && !isClosed && (
               <View style={styles.buttonGroup}>
                 <TouchableOpacity
+                  activeOpacity={0.85}
                   onPress={() => onContact && onContact(gig, 'whatsapp')}
-                  style={[styles.buttonGreen, { marginRight: 8 }]}
+                  style={styles.actionBtnWrapper}
                 >
-                  <Ionicons name="logo-whatsapp" size={14} color="#ffffff" style={styles.buttonIcon} />
-                  <Text style={styles.buttonTextWhite}>Message</Text>
+                  <LinearGradient
+                    colors={['rgba(16, 185, 129, 0.65)', 'rgba(5, 150, 105, 0.25)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.greenGlassBtn}
+                  >
+                    <Ionicons name="logo-whatsapp" size={15} color="#25D366" style={styles.buttonIcon} />
+                    <Text style={styles.buttonTextWhite}>Message</Text>
+                  </LinearGradient>
                 </TouchableOpacity>
 
                 <TouchableOpacity
+                  activeOpacity={0.85}
                   onPress={() => onContact && onContact(gig, 'call')}
-                  style={styles.buttonGreen}
+                  style={styles.actionBtnWrapper}
                 >
-                  <Ionicons name="call" size={14} color="#ffffff" style={styles.buttonIcon} />
-                  <Text style={styles.buttonTextWhite}>Call</Text>
+                  <LinearGradient
+                    colors={['rgba(16, 185, 129, 0.65)', 'rgba(5, 150, 105, 0.25)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.greenGlassBtn}
+                  >
+                    <Ionicons name="call" size={15} color="#34D399" style={styles.buttonIcon} />
+                    <Text style={styles.buttonTextWhite}>Call</Text>
+                  </LinearGradient>
                 </TouchableOpacity>
               </View>
             )}
@@ -257,15 +274,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   categoryGlassPill: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)', // Translucent Royal Blue fill
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.3)', // Translucent Royal Blue border
+    borderColor: 'rgba(29, 78, 216, 0.3)',
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 9999,
   },
   categoryGlassPillText: {
-    color: '#60A5FA', // Bright legible blue text
+    color: '#60A5FA',
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Medium',
   },
@@ -357,7 +374,6 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     marginTop: 14,
-    gap: 8,
   },
   buttonWithdraw: {
     paddingVertical: 10,
@@ -376,23 +392,28 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 10,
   },
-  buttonGreen: {
+  actionBtnWrapper: {
     flex: 1,
-    paddingVertical: 10,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  greenGlassBtn: {
+    paddingVertical: 11,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#10b981',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.5)',
   },
   buttonIcon: {
     marginRight: 6,
   },
   buttonTextWhite: {
     color: '#ffffff',
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
   },
