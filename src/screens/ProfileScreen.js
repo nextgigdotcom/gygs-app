@@ -469,55 +469,6 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 8. About Me Liquid Glass Card */}
-        <View style={styles.cardWrapper}>
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.cardGradient}
-          >
-            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
-              <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderLabel}>ABOUT ME</Text>
-                <TouchableOpacity activeOpacity={0.7}>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.aboutText}>
-                Passionate artist and performer in pursuit of creating unforgettable live show experiences. Specialized in Dance, Choreography, and High-Energy Stage acts.
-              </Text>
-            </BlurView>
-          </LinearGradient>
-        </View>
-
-        {/* 9. Show Rates Liquid Glass Card */}
-        <View style={styles.cardWrapper}>
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.cardGradient}
-          >
-            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
-              <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderLabel}>SHOW RATES</Text>
-                <TouchableOpacity activeOpacity={0.7}>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.rateRow}>
-                <View>
-                  <Text style={styles.rateTitle}>Standard Live Performance</Text>
-                  <Text style={styles.rateSubtitle}>2-Hour set with full choreography</Text>
-                </View>
-                <Text style={styles.rateAmount}>₹15,000</Text>
-              </View>
-            </BlurView>
-          </LinearGradient>
-        </View>
-
       </ScrollView>
     </SafeAreaView>
   );
