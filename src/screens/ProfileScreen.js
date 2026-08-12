@@ -405,7 +405,7 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 5. Work Experience Section (100% Exact Replica from Screenshot) */}
+        {/* 5. Work Experience Card 1: Performer */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -415,107 +415,115 @@ export default function ProfileScreen({ onBackHome }) {
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderTitleText}>Work Experience</Text>
+                <Text style={styles.cardHeaderLabel}>PERFORMER</Text>
                 <TouchableOpacity activeOpacity={0.7}>
-                  <Ionicons name="create-outline" size={16} color="#ffffff" />
+                  <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
               </View>
 
-              {/* Sub-Card 1: Performer */}
-              <View style={styles.expSubCard}>
-                <Text style={styles.expRoleCategoryTitle}>Performer</Text>
-
-                {/* Filter Pills Row */}
-                <View style={styles.expFilterPillRow}>
-                  <View style={styles.activePillBlue}>
-                    <Text style={styles.activePillText}>Shows & Events</Text>
-                  </View>
-                </View>
-
-                {/* Project Item 1: Disney's Aladdin */}
-                <View style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>Disney's Aladdin</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>Disney's Aladdin (99 Shows Across India, 2020-2021)</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
-                </View>
-
-                {/* Project Item 2: Asees Kaur Live Show */}
-                <View style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>Asees Kaur Live Show</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>Asees Kaur Live Show Choreography And Performance (2020-2021)</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
+              {/* Filter Pills Row */}
+              <View style={styles.expFilterPillRow}>
+                <View style={styles.activePillBlue}>
+                  <Text style={styles.activePillText}>Shows & Events</Text>
                 </View>
               </View>
 
-              {/* Sub-Card 2: Choreographer */}
-              <View style={[styles.expSubCard, { marginTop: 16 }]}>
-                <Text style={styles.expRoleCategoryTitle}>Choreographer</Text>
-
-                {/* Filter Pills Row */}
-                <View style={styles.expFilterPillRow}>
-                  <View style={styles.activePillBlue}>
-                    <Text style={styles.activePillText}>Shows & Events</Text>
-                  </View>
-                  <View style={styles.inactivePillBorder}>
-                    <Text style={styles.inactivePillText}>Advertisments</Text>
-                  </View>
-                  <View style={styles.inactivePillBorder}>
-                    <Text style={styles.inactivePillText}>Music Video</Text>
-                  </View>
+              {/* Project Item 1: Disney's Aladdin */}
+              <View style={styles.expProjectBlock}>
+                <View style={styles.expProjectHeaderRow}>
+                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={styles.expProjectTitleText}>Disney's Aladdin</Text>
                 </View>
-
-                {/* Project Item 1: Ghoomar */}
-                <View style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>Ghoomar</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>Ghoomar Choreography (2020-2021)</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
-                </View>
-
-                {/* Project Item 2: Badshah's Song */}
-                <View style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>Badshah's Song With Abhishek Bachan And Saiyam Kher</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>Badshah's Song Choreography With Abhishek Bachan And Saiyam Kher (2020-2021)</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
-                </View>
-
-                {/* Project Item 3: Bad Boy */}
-                <View style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>Bad Boy</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>Bad Boy Song Choreography (2020-2021)</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
+                <View style={styles.expSubEntryBox}>
+                  <View style={styles.expLeftAccentLine} />
+                  <Text style={styles.expSubEntryText}>Disney's Aladdin (99 Shows Across India, 2020-2021)</Text>
+                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
                 </View>
               </View>
 
+              {/* Project Item 2: Asees Kaur Live Show */}
+              <View style={styles.expProjectBlock}>
+                <View style={styles.expProjectHeaderRow}>
+                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={styles.expProjectTitleText}>Asees Kaur Live Show</Text>
+                </View>
+                <View style={styles.expSubEntryBox}>
+                  <View style={styles.expLeftAccentLine} />
+                  <Text style={styles.expSubEntryText}>Asees Kaur Live Show Choreography And Performance (2020-2021)</Text>
+                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                </View>
+              </View>
+            </BlurView>
+          </LinearGradient>
+        </View>
+
+        {/* 6. Work Experience Card 2: Choreographer */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>CHOREOGRAPHER</Text>
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Filter Pills Row */}
+              <View style={styles.expFilterPillRow}>
+                <View style={styles.activePillBlue}>
+                  <Text style={styles.activePillText}>Shows & Events</Text>
+                </View>
+                <View style={styles.inactivePillBorder}>
+                  <Text style={styles.inactivePillText}>Advertisments</Text>
+                </View>
+                <View style={styles.inactivePillBorder}>
+                  <Text style={styles.inactivePillText}>Music Video</Text>
+                </View>
+              </View>
+
+              {/* Project Item 1: Ghoomar */}
+              <View style={styles.expProjectBlock}>
+                <View style={styles.expProjectHeaderRow}>
+                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={styles.expProjectTitleText}>Ghoomar</Text>
+                </View>
+                <View style={styles.expSubEntryBox}>
+                  <View style={styles.expLeftAccentLine} />
+                  <Text style={styles.expSubEntryText}>Ghoomar Choreography (2020-2021)</Text>
+                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                </View>
+              </View>
+
+              {/* Project Item 2: Badshah's Song */}
+              <View style={styles.expProjectBlock}>
+                <View style={styles.expProjectHeaderRow}>
+                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={styles.expProjectTitleText}>Badshah's Song With Abhishek Bachan And Saiyam Kher</Text>
+                </View>
+                <View style={styles.expSubEntryBox}>
+                  <View style={styles.expLeftAccentLine} />
+                  <Text style={styles.expSubEntryText}>Badshah's Song Choreography With Abhishek Bachan And Saiyam Kher (2020-2021)</Text>
+                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                </View>
+              </View>
+
+              {/* Project Item 3: Bad Boy */}
+              <View style={styles.expProjectBlock}>
+                <View style={styles.expProjectHeaderRow}>
+                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={styles.expProjectTitleText}>Bad Boy</Text>
+                </View>
+                <View style={styles.expSubEntryBox}>
+                  <View style={styles.expLeftAccentLine} />
+                  <Text style={styles.expSubEntryText}>Bad Boy Song Choreography (2020-2021)</Text>
+                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                </View>
+              </View>
             </BlurView>
           </LinearGradient>
         </View>
