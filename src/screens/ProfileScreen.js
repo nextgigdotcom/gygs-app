@@ -59,7 +59,7 @@ export default function ProfileScreen({ onBackHome }) {
               
               <View style={styles.airbnbSplitRow}>
                 
-                {/* Left Column: Large Avatar + Centered Name + Artist Subtitle */}
+                {/* Left Column: Large Avatar + Centered Name + Location Below Name */}
                 <View style={styles.airbnbLeftCol}>
                   <View style={styles.avatarWrapper}>
                     <View style={styles.avatarCircleBlue}>
@@ -73,6 +73,12 @@ export default function ProfileScreen({ onBackHome }) {
                   </View>
 
                   <Text style={styles.airbnbNameText}>Akash Tiwari</Text>
+
+                  {/* Location with Globe Icon directly below Name */}
+                  <View style={styles.locationBelowNameRow}>
+                    <Ionicons name="globe-outline" size={14} color="#929292" style={{ marginRight: 4 }} />
+                    <Text style={styles.locationBelowNameText}>Lives in Mumbai, India</Text>
+                  </View>
                 </View>
 
                 {/* Vertical Divider Line between Left & Right */}
@@ -122,14 +128,6 @@ export default function ProfileScreen({ onBackHome }) {
 
             </BlurView>
           </LinearGradient>
-        </View>
-
-        {/* 2. Airbnb Location Info Row */}
-        <View style={styles.airbnbInfoRowsContainer}>
-          <View style={styles.airbnbInfoRow}>
-            <Ionicons name="globe-outline" size={20} color="#ffffff" style={styles.airbnbInfoIcon} />
-            <Text style={styles.airbnbInfoText}>Lives in Mumbai, India</Text>
-          </View>
         </View>
 
         {/* 3. Side-by-Side 'Artist Type' and 'Categories' Double Cards Row */}
@@ -391,11 +389,16 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
   },
-  airbnbSubtitleText: {
-    fontSize: 13,
+  locationBelowNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  locationBelowNameText: {
+    fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
     color: '#929292',
-    marginTop: 2,
     textAlign: 'center',
   },
 
