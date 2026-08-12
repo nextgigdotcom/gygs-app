@@ -783,18 +783,16 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tagPill: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)',
+    backgroundColor: '#1D4ED8',
     borderRadius: 9999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
   },
   tagPillText: {
-    color: '#60A5FA',
-    fontSize: 11,
-    fontFamily: 'AirbnbCereal-Medium',
-    fontWeight: '600',
+    color: '#ffffff',
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
   },
 
   /* Demographics 3-Column Side-by-Side Row Layout */
