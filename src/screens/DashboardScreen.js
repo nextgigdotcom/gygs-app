@@ -67,9 +67,9 @@ export default function DashboardScreen({ onNavigateBrowse }) {
       {/* Main Content Area */}
       <View style={styles.content}>
         
-        {/* Top Header Bar (No square box on left, 3 icon buttons on right: Chats, Notifications, Menu) */}
-        <View style={styles.header}>
-          <View style={{ width: 1 }} />
+        {/* Unified Flex-Row Header Bar: Title Left, Icons Right */}
+        <View style={styles.headerRow}>
+          <Text style={styles.welcomeTitle} numberOfLines={1}>Welcome back, Akash</Text>
 
           <View style={styles.headerRightRow}>
             {/* Direct Chats Button */}
@@ -89,9 +89,6 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* Welcome Header */}
-        <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
         {/* 2x2 Grid of Liquid White Glass Gradient Cards with Blue Accents */}
         <View style={styles.gridContainer}>
@@ -160,7 +157,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent) */}
+          {/* Card 4: MY PROFILE (Centered Avatar & Name Layout) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -170,7 +167,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             >
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
-                <View style={styles.profileSection}>
+                <View style={styles.profileSectionCentered}>
                   <View style={styles.profileAvatarBlue}>
                     <Text style={styles.profileAvatarTextWhite}>A</Text>
                   </View>
@@ -230,11 +227,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
   },
-  header: {
+  headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 24,
+  },
+  welcomeTitle: {
+    color: '#ffffff',
+    fontSize: 25,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: -0.6,
+    flex: 1,
+    marginRight: 10,
   },
   headerRightRow: {
     flexDirection: 'row',
@@ -259,14 +265,6 @@ const styles = StyleSheet.create({
     height: 7,
     borderRadius: 3.5,
     backgroundColor: '#ef4444',
-  },
-  welcomeTitle: {
-    color: '#ffffff',
-    fontSize: 30,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    letterSpacing: -0.6,
-    marginBottom: 24,
   },
   gridContainer: {
     flexDirection: 'row',
@@ -369,9 +367,9 @@ const styles = StyleSheet.create({
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
   },
-  profileSection: {
+  profileSectionCentered: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center', // Perfectly vertically centered alongside avatar block
     gap: 12,
   },
   profileAvatarBlue: {
@@ -390,6 +388,7 @@ const styles = StyleSheet.create({
   },
   profileNameContainer: {
     flex: 1,
+    justifyContent: 'center',
   },
   profileNameText: {
     color: '#ffffff',
