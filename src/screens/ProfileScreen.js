@@ -18,14 +18,18 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const { width } = Dimensions.get('window');
 
 export default function ProfileScreen({ onBackHome }) {
-  const [activeGalleryIndex, setActiveGalleryIndex] = React.useState(0);
   const artistTypes = ['Dance'];
   const categories = ['Performer', 'Trainer'];
+  const [galleryPage, setGalleryPage] = React.useState(0);
+  const galleryScrollRef = React.useRef(null);
 
   const handleGalleryScroll = (event) => {
-    const slideSize = 122; // 110 card width + 12 gap
-    const index = Math.round(event.nativeEvent.contentOffset.x / slideSize);
-    setActiveGalleryIndex(Math.max(0, Math.min(index, 5)));
+    const xOffset = event.nativeEvent.contentOffset.x;
+    if (xOffset > 150) {
+      setGalleryPage(1);
+    } else {
+      setGalleryPage(0);
+    }
   };
 
   const handleShareProfile = () => {
@@ -245,7 +249,7 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 4. Gallery Card (6 Swipeable Items with Centered Pagination Dots) */}
+        {/* 4. Editorial Gallery (6 Items: 3 Images + 3 Videos with 2-Dot Indicator & Navigation Arrows) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -254,23 +258,30 @@ export default function ProfileScreen({ onBackHome }) {
             style={styles.cardGradient}
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              
+              {/* Header */}
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderLabel}>GALLERY</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.cardHeaderLabel}>GALLERY</Text>
+                  <View style={styles.galleryCountBadge}>
+                    <Text style={styles.galleryCountBadgeText}>6 Items</Text>
+                  </View>
+                </View>
                 <TouchableOpacity activeOpacity={0.7}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
               </View>
 
+              {/* Swipeable ScrollView */}
               <ScrollView 
+                ref={galleryScrollRef}
                 horizontal={true} 
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.galleryScrollContainer}
-                decelerationRate="fast"
-                snapToInterval={122}
                 onScroll={handleGalleryScroll}
                 scrollEventThrottle={16}
+                contentContainerStyle={styles.galleryScrollContainer}
               >
-                {/* Photo 1: Close-Up */}
+                {/* Item 1 (Image): Close-Up */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
@@ -284,7 +295,7 @@ export default function ProfileScreen({ onBackHome }) {
                   </LinearGradient>
                 </View>
 
-                {/* Photo 2: Full-Body */}
+                {/* Item 2 (Image): Full-Body */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
@@ -298,7 +309,7 @@ export default function ProfileScreen({ onBackHome }) {
                   </LinearGradient>
                 </View>
 
-                {/* Photo 3: Mid-Shot */}
+                {/* Item 3 (Image): Stage Act */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
@@ -308,18 +319,18 @@ export default function ProfileScreen({ onBackHome }) {
                     colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
                     style={styles.galleryCardGradientOverlay}
                   >
-                    <Text style={styles.galleryCardLabelText}>Mid-Shot</Text>
+                    <Text style={styles.galleryCardLabelText}>Stage Act</Text>
                   </LinearGradient>
                 </View>
 
-                {/* Video 1: Live Show Reel */}
+                {/* Item 4 (Video): Live Show */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
                     style={styles.galleryCardImage} 
                   />
-                  <View style={styles.centerPlayButton}>
-                    <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
+                  <View style={styles.galleryPlayBadge}>
+                    <Ionicons name="play" size={12} color="#ffffff" />
                   </View>
                   <LinearGradient 
                     colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
@@ -329,14 +340,31 @@ export default function ProfileScreen({ onBackHome }) {
                   </LinearGradient>
                 </View>
 
-                {/* Video 2: Rehearsal Reel */}
+                {/* Item 5 (Video): Acoustic Set */}
                 <View style={styles.galleryCardItem}>
                   <Image 
                     source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
                     style={styles.galleryCardImage} 
                   />
-                  <View style={styles.centerPlayButton}>
-                    <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
+                  <View style={styles.galleryPlayBadge}>
+                    <Ionicons name="play" size={12} color="#ffffff" />
+                  </View>
+                  <LinearGradient 
+                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                    style={styles.galleryCardGradientOverlay}
+                  >
+                    <Text style={styles.galleryCardLabelText}>Acoustic Set</Text>
+                  </LinearGradient>
+                </View>
+
+                {/* Item 6 (Video): Rehearsal */}
+                <View style={styles.galleryCardItem}>
+                  <Image 
+                    source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
+                    style={styles.galleryCardImage} 
+                  />
+                  <View style={styles.galleryPlayBadge}>
+                    <Ionicons name="play" size={12} color="#ffffff" />
                   </View>
                   <LinearGradient 
                     colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
@@ -345,37 +373,40 @@ export default function ProfileScreen({ onBackHome }) {
                     <Text style={styles.galleryCardLabelText}>Rehearsal</Text>
                   </LinearGradient>
                 </View>
-
-                {/* Video 3: Promo Reel */}
-                <View style={styles.galleryCardItem}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.galleryCardImage} 
-                  />
-                  <View style={styles.centerPlayButton}>
-                    <Ionicons name="play" size={16} color="#ffffff" style={{ marginLeft: 2 }} />
-                  </View>
-                  <LinearGradient 
-                    colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                    style={styles.galleryCardGradientOverlay}
-                  >
-                    <Text style={styles.galleryCardLabelText}>Promo Reel</Text>
-                  </LinearGradient>
-                </View>
               </ScrollView>
 
-              {/* Centered Swiping Pagination Dots Indicator */}
-              <View style={styles.paginationDotsContainer}>
-                {[0, 1, 2, 3, 4, 5].map((idx) => (
-                  <View 
-                    key={idx} 
-                    style={[
-                      styles.paginationDot, 
-                      activeGalleryIndex === idx && styles.paginationDotActive
-                    ]} 
+              {/* 2-Dot Pagination Indicator & Left / Right Arrow Controls */}
+              <View style={styles.galleryFooterRow}>
+                <TouchableOpacity 
+                  activeOpacity={0.7}
+                  onPress={() => galleryScrollRef.current?.scrollTo({ x: 0, animated: true })}
+                  style={styles.galleryArrowBtn}
+                >
+                  <Ionicons 
+                    name="chevron-back" 
+                    size={16} 
+                    color={galleryPage === 0 ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'} 
                   />
-                ))}
+                </TouchableOpacity>
+
+                <View style={styles.dotsContainer}>
+                  <View style={[styles.dot, galleryPage === 0 ? styles.activeDot : styles.inactiveDot]} />
+                  <View style={[styles.dot, galleryPage === 1 ? styles.activeDot : styles.inactiveDot]} />
+                </View>
+
+                <TouchableOpacity 
+                  activeOpacity={0.7}
+                  onPress={() => galleryScrollRef.current?.scrollTo({ x: 380, animated: true })}
+                  style={styles.galleryArrowBtn}
+                >
+                  <Ionicons 
+                    name="chevron-forward" 
+                    size={16} 
+                    color={galleryPage === 1 ? 'rgba(255, 255, 255, 0.3)' : '#ffffff'} 
+                  />
+                </TouchableOpacity>
               </View>
+
             </BlurView>
           </LinearGradient>
         </View>
@@ -788,55 +819,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
-  mediaCountBadge: {
+  demoValueSmall: {
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+    marginTop: 6,
+  },
+
+  /* Editorial Gallery Layout (Width: 110, Height: 150) */
+  galleryCountBadge: {
     backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
     borderColor: 'rgba(96, 165, 250, 0.4)',
-    borderRadius: 9999,
     paddingHorizontal: 8,
     paddingVertical: 2,
+    borderRadius: 9999,
     marginLeft: 8,
   },
-  mediaCountBadgeText: {
+  galleryCountBadgeText: {
     color: '#60A5FA',
-    fontSize: 9,
+    fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
   },
-  centerPlayButton: {
-    position: 'absolute',
-    top: '38%',
-    left: '35%',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    zIndex: 5,
-  },
-  paginationDotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 14,
-  },
-  paginationDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    marginHorizontal: 3,
-  },
-  paginationDotActive: {
-    width: 18,
-    borderRadius: 9999,
-    backgroundColor: '#60A5FA',
-  },
-
-  /* Gallery Layout matching Screenshot */
   galleryScrollContainer: {
     paddingRight: 10,
     gap: 12,
@@ -856,13 +862,27 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  galleryPlayBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
   galleryCardGradientOverlay: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    paddingTop: 20,
-    paddingBottom: 8,
+    paddingTop: 24,
+    paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
@@ -870,6 +890,40 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'AirbnbCereal-Medium',
     color: '#ffffff',
+  },
+  galleryFooterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 14,
+    paddingHorizontal: 4,
+  },
+  galleryArrowBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  dot: {
+    height: 6,
+    borderRadius: 3,
+  },
+  activeDot: {
+    width: 18,
+    backgroundColor: '#1D4ED8',
+  },
+  inactiveDot: {
+    width: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
 
   /* Work Experience & Training Specifics */
