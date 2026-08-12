@@ -23,11 +23,11 @@ export default function ProfileScreen({ onBackHome }) {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-      <StatusBar barStyle="light-content" backgroundColor="#0A0A0A" />
+      <StatusBar barStyle="light-content" backgroundColor="#050505" />
 
       {/* Header Navigation Bar */}
       <View style={styles.navHeader}>
-        <TouchableOpacity onPress={onBackHome} style={styles.backButton}>
+        <TouchableOpacity onPress={onBackHome} style={styles.navIconBtn}>
           <Ionicons name="chevron-back" size={20} color="#ffffff" />
         </TouchableOpacity>
         
@@ -35,40 +35,40 @@ export default function ProfileScreen({ onBackHome }) {
           My Profile
         </Text>
 
-        <TouchableOpacity activeOpacity={0.7} style={styles.backButton}>
-          <Ionicons name="create-outline" size={18} color="#60A5FA" />
+        <TouchableOpacity activeOpacity={0.8} style={styles.navIconBtn}>
+          <Ionicons name="create-outline" size={18} color="#ffffff" />
         </TouchableOpacity>
       </View>
 
-      {/* Global Canvas: Deep Black Background #0A0A0A & >40px Bottom Padding */}
+      {/* Global Canvas: Dashboard Deep Black Background #050505 */}
       <ScrollView 
         style={styles.canvasScrollView} 
         contentContainerStyle={styles.canvasContent}
         showsVerticalScrollIndicator={false}
       >
         
-        {/* 1. Exact Replica of Airbnb Hero Profile Trust Card */}
-        <View style={styles.airbnbCardWrapper}>
+        {/* 1. Dashboard Theme Liquid Glass Airbnb Hero Profile Card */}
+        <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.03)']}
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.airbnbCardGradient}
+            style={styles.cardGradient}
           >
-            <BlurView intensity={40} tint="dark" style={styles.airbnbCardContent}>
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               
               <View style={styles.airbnbSplitRow}>
                 
-                {/* Left Column: Large Avatar + Centered Name + Location Below Name */}
+                {/* Left Column: Avatar + Name + Location Below Name */}
                 <View style={styles.airbnbLeftCol}>
                   <View style={styles.avatarWrapper}>
                     <View style={styles.avatarCircleBlue}>
                       <Text style={styles.avatarInitialText}>A</Text>
                     </View>
                     
-                    {/* Pink/Blue Verification Shield Overlay Badge */}
+                    {/* Royal Blue Verification Shield Badge */}
                     <View style={styles.shieldBadge}>
-                      <Ionicons name="checkmark-sharp" size={14} color="#ffffff" />
+                      <Ionicons name="checkmark-sharp" size={12} color="#ffffff" />
                     </View>
                   </View>
 
@@ -76,15 +76,15 @@ export default function ProfileScreen({ onBackHome }) {
 
                   {/* Location with Globe Icon directly below Name */}
                   <View style={styles.locationBelowNameRow}>
-                    <Ionicons name="globe-outline" size={14} color="#929292" style={{ marginRight: 4 }} />
+                    <Ionicons name="globe-outline" size={13} color="#888888" style={{ marginRight: 4 }} />
                     <Text style={styles.locationBelowNameText}>Lives in Mumbai, India</Text>
                   </View>
                 </View>
 
-                {/* Vertical Divider Line between Left & Right */}
+                {/* Vertical Divider Line */}
                 <View style={styles.columnDivider} />
 
-                {/* Right Column: 3 Stacked Metrics with Horizontal Dividers */}
+                {/* Right Column: 3 Stacked Metrics */}
                 <View style={styles.airbnbRightCol}>
                   
                   {/* Metric 1: Reviews */}
@@ -99,7 +99,7 @@ export default function ProfileScreen({ onBackHome }) {
                   <View style={styles.metricBlock}>
                     <View style={styles.ratingValRow}>
                       <Text style={styles.metricBigNumber}>5.0</Text>
-                      <Ionicons name="star" size={14} color="#ffffff" style={{ marginLeft: 3 }} />
+                      <Ionicons name="star" size={13} color="#ffffff" style={{ marginLeft: 3 }} />
                     </View>
                     <Text style={styles.metricLabelText}>Rating</Text>
                   </View>
@@ -116,7 +116,7 @@ export default function ProfileScreen({ onBackHome }) {
 
               </View>
 
-              {/* Solid Royal Blue Share Profile Button */}
+              {/* Dashboard Solid Royal Blue Share Profile Button */}
               <TouchableOpacity
                 activeOpacity={0.85}
                 onPress={handleShareProfile}
@@ -130,150 +130,232 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 3. Side-by-Side 'Artist Type' and 'Categories' Double Cards Row */}
+        {/* 2. Side-by-Side 'Artist Type' and 'Categories' Liquid Glass Double Cards Row */}
         <View style={styles.doubleCardRow}>
           
           {/* Card A: Artist Type */}
-          <View style={styles.halfMasterCard}>
-            <View style={styles.cardHeaderRow}>
-              <Text style={styles.cardTitleSmall}>Artist Type</Text>
-              <TouchableOpacity activeOpacity={0.7}>
-                <Ionicons name="create-outline" size={14} color="#929292" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.tagContainer}>
-              {artistTypes.map((type, idx) => (
-                <View key={idx} style={styles.tagPill}>
-                  <Text style={styles.tagPillText}>{type}</Text>
+          <View style={styles.halfCardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+                <View style={styles.cardHeaderRow}>
+                  <Text style={styles.cardHeaderLabel}>ARTIST TYPE</Text>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
                 </View>
-              ))}
-            </View>
+                <View style={styles.tagContainer}>
+                  {artistTypes.map((type, idx) => (
+                    <View key={idx} style={styles.tagPill}>
+                      <Text style={styles.tagPillText}>{type}</Text>
+                    </View>
+                  ))}
+                </View>
+              </BlurView>
+            </LinearGradient>
           </View>
 
           {/* Card B: Categories */}
-          <View style={styles.halfMasterCard}>
-            <View style={styles.cardHeaderRow}>
-              <Text style={styles.cardTitleSmall}>Categories</Text>
-              <TouchableOpacity activeOpacity={0.7}>
-                <Ionicons name="create-outline" size={14} color="#929292" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.tagContainer}>
-              {categories.map((cat, idx) => (
-                <View key={idx} style={styles.tagPill}>
-                  <Text style={styles.tagPillText}>{cat}</Text>
+          <View style={styles.halfCardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+                <View style={styles.cardHeaderRow}>
+                  <Text style={styles.cardHeaderLabel}>CATEGORIES</Text>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
                 </View>
-              ))}
-            </View>
+                <View style={styles.tagContainer}>
+                  {categories.map((cat, idx) => (
+                    <View key={idx} style={styles.tagPill}>
+                      <Text style={styles.tagPillText}>{cat}</Text>
+                    </View>
+                  ))}
+                </View>
+              </BlurView>
+            </LinearGradient>
           </View>
 
         </View>
 
-        {/* 4. Demographics Grid (Age, Height, Gender, City) - 2-Column Grid */}
+        {/* 3. Demographics Liquid Glass 2-Column Grid */}
         <View style={styles.demographicsContainer}>
-          <View style={styles.demographicCard}>
-            <Text style={styles.demoLabel}>AGE</Text>
-            <Text style={styles.demoValue}>24 Years</Text>
+          
+          <View style={styles.demographicCardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+                <Text style={styles.cardHeaderLabel}>AGE</Text>
+                <Text style={styles.demoValue}>24 Years</Text>
+              </BlurView>
+            </LinearGradient>
           </View>
 
-          <View style={styles.demographicCard}>
-            <Text style={styles.demoLabel}>HEIGHT</Text>
-            <Text style={styles.demoValue}>5' 9" (175 cm)</Text>
+          <View style={styles.demographicCardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+                <Text style={styles.cardHeaderLabel}>HEIGHT</Text>
+                <Text style={styles.demoValue}>5' 9" (175 cm)</Text>
+              </BlurView>
+            </LinearGradient>
           </View>
 
-          <View style={styles.demographicCard}>
-            <Text style={styles.demoLabel}>GENDER</Text>
-            <Text style={styles.demoValue}>Male</Text>
+          <View style={styles.demographicCardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+                <Text style={styles.cardHeaderLabel}>GENDER</Text>
+                <Text style={styles.demoValue}>Male</Text>
+              </BlurView>
+            </LinearGradient>
           </View>
 
-          <View style={styles.demographicCard}>
-            <Text style={styles.demoLabel}>CITY</Text>
-            <Text style={styles.demoValue}>Mumbai</Text>
+          <View style={styles.demographicCardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+                <Text style={styles.cardHeaderLabel}>CITY</Text>
+                <Text style={styles.demoValue}>Mumbai</Text>
+              </BlurView>
+            </LinearGradient>
           </View>
+
         </View>
 
-        {/* 5. Gallery Card */}
-        <View style={styles.masterCard}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardTitle}>Gallery</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="create-outline" size={16} color="#929292" />
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView 
-            horizontal={true} 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.galleryScrollContainer}
+        {/* 4. Gallery Liquid Glass Card */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
           >
-            <View style={styles.galleryImageBlock}>
-              <Ionicons name="image-outline" size={24} color="#60A5FA" />
-            </View>
-            <View style={styles.galleryImageBlock}>
-              <Ionicons name="image-outline" size={24} color="#60A5FA" />
-            </View>
-            <View style={styles.galleryImageBlock}>
-              <Ionicons name="image-outline" size={24} color="#60A5FA" />
-            </View>
-          </ScrollView>
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>GALLERY</Text>
+                <Ionicons name="create-outline" size={14} color="#888888" />
+              </View>
+
+              <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.galleryScrollContainer}
+              >
+                <View style={styles.galleryImageBlock}>
+                  <Ionicons name="image-outline" size={24} color="#60A5FA" />
+                </View>
+                <View style={styles.galleryImageBlock}>
+                  <Ionicons name="image-outline" size={24} color="#60A5FA" />
+                </View>
+                <View style={styles.galleryImageBlock}>
+                  <Ionicons name="image-outline" size={24} color="#60A5FA" />
+                </View>
+              </ScrollView>
+            </BlurView>
+          </LinearGradient>
         </View>
 
-        {/* 6. About Me Card */}
-        <View style={styles.masterCard}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardTitle}>About Me</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="create-outline" size={16} color="#929292" />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.aboutText}>
-            Passionate vocalist and music producer in pursuit of creating unforgettable live show experiences. Specialized in Bollywood, Acoustic, and Commercial set ups.
-          </Text>
+        {/* 5. About Me Liquid Glass Card */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>ABOUT ME</Text>
+                <Ionicons name="create-outline" size={14} color="#888888" />
+              </View>
+              <Text style={styles.aboutText}>
+                Passionate vocalist and music producer in pursuit of creating unforgettable live show experiences. Specialized in Bollywood, Acoustic, and Commercial set ups.
+              </Text>
+            </BlurView>
+          </LinearGradient>
         </View>
 
-        {/* 7. Show Rates Card */}
-        <View style={styles.masterCard}>
-          <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardTitle}>Show Rates</Text>
-            <TouchableOpacity activeOpacity={0.7}>
-              <Ionicons name="create-outline" size={16} color="#929292" />
-            </TouchableOpacity>
-          </View>
+        {/* 6. Show Rates Liquid Glass Card */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>SHOW RATES</Text>
+                <Ionicons name="create-outline" size={14} color="#888888" />
+              </View>
 
-          <View style={styles.rateRow}>
-            <View>
-              <Text style={styles.rateTitle}>Standard Live Performance</Text>
-              <Text style={styles.rateSubtitle}>2-Hour set with PA sound setup</Text>
-            </View>
-            <Text style={styles.rateAmount}>₹15,000</Text>
-          </View>
+              <View style={styles.rateRow}>
+                <View>
+                  <Text style={styles.rateTitle}>Standard Live Performance</Text>
+                  <Text style={styles.rateSubtitle}>2-Hour set with PA sound setup</Text>
+                </View>
+                <Text style={styles.rateAmount}>₹15,000</Text>
+              </View>
+            </BlurView>
+          </LinearGradient>
         </View>
 
-        {/* 8. Connected Accounts Card */}
-        <View style={styles.masterCard}>
-          <Text style={[styles.cardTitle, { marginBottom: 12 }]}>Connected Accounts</Text>
+        {/* 7. Connected Accounts Liquid Glass Card */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <Text style={[styles.cardHeaderLabel, { marginBottom: 12 }]}>CONNECTED ACCOUNTS</Text>
 
-          <View style={styles.socialRow}>
-            <View style={styles.socialLeft}>
-              <Ionicons name="logo-instagram" size={18} color="#E1306C" />
-              <Text style={styles.socialHandle}>@akashtiwari.music</Text>
-            </View>
-            <View style={styles.connectedBadgeBlue}>
-              <Text style={styles.connectedBadgeBlueText}>Connected</Text>
-            </View>
-          </View>
+              <View style={styles.socialRow}>
+                <View style={styles.socialLeft}>
+                  <Ionicons name="logo-instagram" size={18} color="#E1306C" />
+                  <Text style={styles.socialHandle}>@akashtiwari.music</Text>
+                </View>
+                <View style={styles.connectedBadgeBlue}>
+                  <Text style={styles.connectedBadgeBlueText}>Connected</Text>
+                </View>
+              </View>
 
-          <View style={styles.socialDivider} />
+              <View style={styles.socialDivider} />
 
-          <View style={styles.socialRow}>
-            <View style={styles.socialLeft}>
-              <Ionicons name="logo-youtube" size={18} color="#FF0000" />
-              <Text style={styles.socialHandle}>Akash Tiwari Official</Text>
-            </View>
-            <View style={styles.connectedBadgeBlue}>
-              <Text style={styles.connectedBadgeBlueText}>Connected</Text>
-            </View>
-          </View>
+              <View style={styles.socialRow}>
+                <View style={styles.socialLeft}>
+                  <Ionicons name="logo-youtube" size={18} color="#FF0000" />
+                  <Text style={styles.socialHandle}>Akash Tiwari Official</Text>
+                </View>
+                <View style={styles.connectedBadgeBlue}>
+                  <Text style={styles.connectedBadgeBlueText}>Connected</Text>
+                </View>
+              </View>
+            </BlurView>
+          </LinearGradient>
         </View>
 
       </ScrollView>
@@ -284,7 +366,7 @@ export default function ProfileScreen({ onBackHome }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: '#050505',
   },
   navHeader: {
     flexDirection: 'row',
@@ -293,57 +375,65 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
   },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+  navIconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   navTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     color: '#ffffff',
   },
   canvasScrollView: {
     flex: 1,
-    backgroundColor: '#0A0A0A',
+    backgroundColor: '#050505',
   },
   canvasContent: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingHorizontal: 20,
+    paddingTop: 12,
     paddingBottom: 50,
   },
 
-  /* Exact Airbnb Hero Profile Trust Card Wrapper */
-  airbnbCardWrapper: {
+  /* Master Liquid White Glass Card Architecture */
+  cardWrapper: {
     borderRadius: 24,
     overflow: 'hidden',
     marginBottom: 16,
   },
-  airbnbCardGradient: {
+  cardGradient: {
+    flex: 1,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
-  airbnbCardContent: {
+  cardBlurContent: {
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
+  cardHeaderLabel: {
+    color: 'rgba(255, 255, 255, 0.65)',
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    includeFontPadding: false,
+  },
+
+  /* Airbnb Hero Split Card Specifics */
   airbnbSplitRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  
-  /* Left Column: Avatar + Name + Subtitle */
   airbnbLeftCol: {
     flex: 1,
     alignItems: 'center',
@@ -354,18 +444,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   avatarCircleBlue: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.4)',
   },
   avatarInitialText: {
     color: '#ffffff',
-    fontSize: 34,
+    fontSize: 32,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
   },
@@ -373,14 +463,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#E11D48',
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#0A0A0A',
+    borderColor: '#050505',
   },
   airbnbNameText: {
     fontSize: 20,
@@ -398,18 +488,15 @@ const styles = StyleSheet.create({
   locationBelowNameText: {
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-    color: '#929292',
+    color: 'rgba(255, 255, 255, 0.65)',
     textAlign: 'center',
   },
-
   columnDivider: {
     width: 1,
-    height: 120,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    height: 110,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginHorizontal: 12,
   },
-
-  /* Right Column: 3 Stacked Metrics */
   airbnbRightCol: {
     flex: 1,
     paddingLeft: 6,
@@ -431,19 +518,18 @@ const styles = StyleSheet.create({
   metricLabelText: {
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-    color: '#929292',
+    color: 'rgba(255, 255, 255, 0.65)',
     marginTop: 1,
   },
   horizontalDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginVertical: 8,
   },
-
   shareProfileButton: {
     backgroundColor: '#1D4ED8',
-    borderRadius: 12,
-    paddingVertical: 12,
+    borderRadius: 16,
+    paddingVertical: 13,
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -457,72 +543,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  /* Airbnb Info Rows Below Card */
-  airbnbInfoRowsContainer: {
-    marginBottom: 16,
-    gap: 12,
-    paddingHorizontal: 4,
-  },
-  airbnbInfoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  airbnbInfoIcon: {
-    marginRight: 12,
-  },
-  airbnbInfoText: {
-    fontSize: 15,
-    fontFamily: 'AirbnbCereal-Book',
-    color: '#ffffff',
-  },
-  underlineText: {
-    textDecorationLine: 'underline',
-    fontFamily: 'AirbnbCereal-Medium',
-  },
-
-  /* Master Card Styling */
-  masterCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-  },
-
   /* Side-by-Side Double Cards Row */
   doubleCardRow: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 12,
+    gap: 16,
+    marginBottom: 16,
   },
-  halfMasterCard: {
+  halfCardWrapper: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 24,
+    overflow: 'hidden',
   },
-  cardTitleSmall: {
-    fontSize: 13,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    color: '#ffffff',
-  },
-
-  /* Card Header Rows */
   cardHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
-  },
-  cardTitle: {
-    fontSize: 15,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    color: '#ffffff',
   },
 
   /* Tag Pills Layout */
@@ -534,7 +570,7 @@ const styles = StyleSheet.create({
   tagPill: {
     backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
-    borderColor: '#1D4ED8',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
     borderRadius: 9999,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -551,29 +587,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    marginBottom: 0,
   },
-  demographicCard: {
-    width: '48%',
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  demoLabel: {
-    fontSize: 10,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    color: '#929292',
-    letterSpacing: 0.8,
+  demographicCardWrapper: {
+    width: (Dimensions.get('window').width - 40 - 16) / 2,
+    borderRadius: 24,
+    overflow: 'hidden',
+    marginBottom: 16,
   },
   demoValue: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     color: '#ffffff',
-    marginTop: 6,
+    marginTop: 8,
   },
 
   /* Gallery Horizontal Scroll */
@@ -583,20 +610,20 @@ const styles = StyleSheet.create({
   galleryImageBlock: {
     width: 90,
     height: 90,
-    borderRadius: 12,
+    borderRadius: 16,
     marginRight: 10,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
 
   /* About Text */
   aboutText: {
     fontSize: 14,
     fontFamily: 'AirbnbCereal-Book',
-    color: '#d4d4d4',
+    color: 'rgba(255, 255, 255, 0.8)',
     lineHeight: 22,
   },
 
@@ -614,7 +641,7 @@ const styles = StyleSheet.create({
   rateSubtitle: {
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-    color: '#929292',
+    color: 'rgba(255, 255, 255, 0.65)',
     marginTop: 2,
   },
   rateAmount: {
@@ -644,7 +671,7 @@ const styles = StyleSheet.create({
   connectedBadgeBlue: {
     backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
-    borderColor: '#1D4ED8',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 9999,
@@ -656,7 +683,7 @@ const styles = StyleSheet.create({
   },
   socialDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginVertical: 10,
   },
 });
