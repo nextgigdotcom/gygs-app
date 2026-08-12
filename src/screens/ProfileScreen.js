@@ -6,212 +6,186 @@ import {
   ScrollView, 
   TouchableOpacity, 
   StatusBar,
-  Alert
+  Image,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function ProfileScreen({ onBackHome }) {
-  const artistTypes = ['Solo Vocalist', 'Acoustic Performer'];
-  const categories = ['Bollywood', 'Classical', 'Commercial', 'Acoustic'];
+const { width } = Dimensions.get('window');
 
-  const handleCopyShareLink = () => {
-    Alert.alert('Profile Link Copied!', 'https://gygs.in/artist/profile/akashtiwari has been copied to your clipboard.');
-  };
+export default function ProfileScreen({ onBackHome }) {
+  const specialties = ['Solo Vocalist', 'Acoustic Guitarist', 'Music Producer', 'Bollywood', 'Commercial Live'];
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#050505" />
 
-      {/* Header Section */}
+      {/* Top Header Bar */}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBackHome} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={20} color="#ffffff" />
+          <Ionicons name="chevron-back" size={22} color="#ffffff" />
         </TouchableOpacity>
+        
+        <Text style={styles.headerTitle} numberOfLines={1}>
+          Akash Tiwari
+        </Text>
 
-        <Text style={styles.headerTitle}>My Profile</Text>
-
-        <TouchableOpacity style={styles.editHeaderBtn}>
-          <Ionicons name="create-outline" size={18} color="#ffffff" />
+        <TouchableOpacity style={styles.editButton}>
+          <Ionicons name="create-outline" size={20} color="#60A5FA" />
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
-        {/* 1. Production Artist Header Card */}
-        <View style={styles.heroCardWrapper}>
+        {/* 1. Pro Member Golden Halo & Cover Headshot Card */}
+        <View style={styles.proCardOuter}>
+          {/* Soft Golden Halo Glow behind card */}
           <LinearGradient
-            colors={['rgba(255, 255, 255, 0.16)', 'rgba(255, 255, 255, 0.04)']}
+            colors={['rgba(186, 148, 62, 0.22)', 'rgba(186, 148, 62, 0)']}
+            style={styles.haloGlow}
+          />
+          {/* Golden Gradient Border Wrapper */}
+          <LinearGradient
+            colors={['#ba943e', '#ffd700', '#ba943e']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.heroCardGradient}
+            style={styles.goldBorderWrapper}
           >
-            <BlurView intensity={50} tint="dark" style={styles.heroCardContent}>
-              
-              {/* Header Info Row */}
-              <View style={styles.headerInfoRow}>
-                <View style={styles.headerLeftCol}>
-                  <View style={styles.nameRow}>
-                    <Text style={styles.userNameText}>Akash Tiwari</Text>
-                    <Ionicons name="checkmark-circle" size={18} color="#10B981" style={{ marginLeft: 6 }} />
-                  </View>
-                  <Text style={styles.userRoleSubtitle}>Verified Artist</Text>
-                </View>
-
-                <View style={styles.headerRightCol}>
-                  <Text style={styles.userPhoneText}>+91 98765 43210</Text>
-                  <Text style={styles.userEmailText}>akashtiwari@gygs.in</Text>
-                </View>
-              </View>
-
-              {/* Share Profile Action Bar */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={handleCopyShareLink}
-                style={styles.shareProfileBar}
+            <View style={styles.profileHeaderCard}>
+              {/* Dark Liquid Glass Content Container */}
+              <LinearGradient
+                colors={['rgba(30, 30, 30, 0.95)', 'rgba(10, 10, 10, 0.95)']}
+                style={styles.coverImageContainer}
               >
-                <Text style={styles.shareProfileBarText}>Share Profile</Text>
-                <Ionicons name="open-outline" size={14} color="#ffffff" />
-              </TouchableOpacity>
+                {/* Large Profile Initial Avatar Graphic */}
+                <View style={styles.avatarCircleGlow}>
+                  <Text style={styles.avatarInitial}>A</Text>
+                </View>
 
-            </BlurView>
+                {/* Info Bottom Overlay */}
+                <View style={styles.infoOverlay}>
+                  <View style={styles.nameRow}>
+                    <Text style={styles.artistNameText}>Akash Tiwari</Text>
+
+                    {/* Golden Crown Icon */}
+                    <View style={styles.crownContainer}>
+                      <Ionicons name="sparkles" size={16} color="#ffd700" />
+                    </View>
+
+                    {/* PRO Badge */}
+                    <View style={styles.proBadge}>
+                      <Ionicons name="star" size={8} color="#000000" />
+                      <Text style={styles.proText}>PRO</Text>
+                    </View>
+                  </View>
+
+                  <Text style={styles.artistEmailText}>akashtiwari@gygs.in</Text>
+                </View>
+              </LinearGradient>
+            </View>
           </LinearGradient>
         </View>
 
-        {/* 2. Artist Type & Categories Double Cards Row */}
-        <View style={styles.doubleCardRow}>
-          
-          {/* Card A: Artist Type */}
-          <View style={styles.doubleCardWrapper}>
+        {/* 2. Physical Specifications 2x2 Matrix */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Physical Specifications</Text>
+          <View style={styles.specsMatrix}>
+            <View style={styles.specBox}>
+              <Text style={styles.specLabel}>AGE</Text>
+              <Text style={styles.specValue}>24 Years</Text>
+            </View>
+            <View style={styles.specBox}>
+              <Text style={styles.specLabel}>HEIGHT</Text>
+              <Text style={styles.specValue}>5' 9" (175 cm)</Text>
+            </View>
+            <View style={styles.specBox}>
+              <Text style={styles.specLabel}>GENDER</Text>
+              <Text style={styles.specValue}>Male</Text>
+            </View>
+            <View style={styles.specBox}>
+              <Text style={styles.specLabel}>CITY</Text>
+              <Text style={styles.specValue}>Mumbai</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* 3. Specialty Coordinates Chips */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Specialty Coordinates</Text>
+          <View style={styles.specsRow}>
+            {specialties.map((spec, idx) => (
+              <View 
+                key={idx} 
+                style={[
+                  styles.specChip, 
+                  idx === 0 ? styles.specChipPrimary : null
+                ]}
+              >
+                <Text style={styles.specChipText}>{spec}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 4. Photos Portfolio Slots */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Photos</Text>
+          <View style={styles.photoGrid}>
+            
+            <View style={styles.gridImageContainer}>
+              <BlurView intensity={30} tint="dark" style={styles.photoSlot}>
+                <Ionicons name="camera-outline" size={24} color="#60A5FA" />
+                <Text style={styles.photoSlotLabel}>Close-Up</Text>
+              </BlurView>
+            </View>
+
+            <View style={styles.gridImageContainer}>
+              <BlurView intensity={30} tint="dark" style={styles.photoSlot}>
+                <Ionicons name="person-outline" size={24} color="#60A5FA" />
+                <Text style={styles.photoSlotLabel}>Full-Body</Text>
+              </BlurView>
+            </View>
+
+            <View style={styles.gridImageContainer}>
+              <BlurView intensity={30} tint="dark" style={styles.photoSlot}>
+                <Ionicons name="mic-outline" size={24} color="#60A5FA" />
+                <Text style={styles.photoSlotLabel}>Stage Set</Text>
+              </BlurView>
+            </View>
+
+          </View>
+        </View>
+
+        {/* 5. Videos & Performance Reels */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Videos & Performance Reels</Text>
+          <View style={styles.videoCardWrapper}>
             <LinearGradient
-              colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.03)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.doubleCardGradient}
+              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              style={styles.videoCardGradient}
             >
-              <BlurView intensity={40} tint="dark" style={styles.doubleCardContent}>
-                <View style={styles.cardEditHeader}>
-                  <Text style={styles.cardHeaderLabel}>ARTIST TYPE</Text>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
+              <BlurView intensity={40} tint="dark" style={styles.videoCardContent}>
+                <View style={styles.playIconCircle}>
+                  <Ionicons name="play" size={22} color="#ffffff" style={{ marginLeft: 2 }} />
                 </View>
-                <View style={styles.chipRow}>
-                  {artistTypes.map((type, i) => (
-                    <View key={i} style={styles.categoryChip}>
-                      <Text style={styles.categoryChipText}>{type}</Text>
-                    </View>
-                  ))}
-                </View>
+                <Text style={styles.videoTitle}>Live Performance Showcase 2026</Text>
+                <Text style={styles.videoSubtitle}>Acoustic Vocals & Guitar Medley</Text>
               </BlurView>
             </LinearGradient>
           </View>
+        </View>
 
-          {/* Card B: Categories */}
-          <View style={styles.doubleCardWrapper}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.03)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.doubleCardGradient}
-            >
-              <BlurView intensity={40} tint="dark" style={styles.doubleCardContent}>
-                <View style={styles.cardEditHeader}>
-                  <Text style={styles.cardHeaderLabel}>CATEGORIES</Text>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
-                </View>
-                <View style={styles.chipRow}>
-                  {categories.map((cat, i) => (
-                    <View key={i} style={styles.categoryChip}>
-                      <Text style={styles.categoryChipText}>{cat}</Text>
-                    </View>
-                  ))}
-                </View>
-              </BlurView>
-            </LinearGradient>
+        {/* 6. About & Experience */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>About & Experience</Text>
+          <View style={styles.aboutCard}>
+            <Text style={styles.aboutText}>
+              Passionate vocalist and music producer with over 5 years of live performance experience across Bollywood, Acoustic, and Commercial live show setups. Available for private events, club gigs, and studio recording sessions.
+            </Text>
           </View>
-
-        </View>
-
-        {/* 3. About & Bio Section */}
-        <View style={styles.sectionWrapper}>
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.03)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.sectionGradient}
-          >
-            <BlurView intensity={40} tint="dark" style={styles.sectionContent}>
-              <View style={styles.sectionHeaderRow}>
-                <Text style={styles.sectionHeading}>ABOUT ME</Text>
-                <Ionicons name="create-outline" size={14} color="#888888" />
-              </View>
-              <Text style={styles.bioText}>
-                Passionate vocalist and music producer with over 5 years of live performance experience across Bollywood, Acoustic, and Commercial music sets.
-              </Text>
-            </BlurView>
-          </LinearGradient>
-        </View>
-
-        {/* 4. Performance Fees & Show Rates */}
-        <View style={styles.sectionWrapper}>
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.03)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.sectionGradient}
-          >
-            <BlurView intensity={40} tint="dark" style={styles.sectionContent}>
-              <View style={styles.sectionHeaderRow}>
-                <Text style={styles.sectionHeading}>SHOW RATES</Text>
-                <Ionicons name="create-outline" size={14} color="#888888" />
-              </View>
-
-              <View style={styles.rateCardRow}>
-                <View>
-                  <Text style={styles.rateTitle}>Standard Live Performance</Text>
-                  <Text style={styles.rateSubtitle}>2-Hour set with PA sound setup</Text>
-                </View>
-                <Text style={styles.rateAmount}>₹15,000</Text>
-              </View>
-            </BlurView>
-          </LinearGradient>
-        </View>
-
-        {/* 5. Connected Social Accounts */}
-        <View style={styles.sectionWrapper}>
-          <LinearGradient
-            colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.03)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.sectionGradient}
-          >
-            <BlurView intensity={40} tint="dark" style={styles.sectionContent}>
-              <Text style={styles.sectionHeading}>CONNECTED ACCOUNTS</Text>
-
-              <View style={styles.socialRow}>
-                <View style={styles.socialLeft}>
-                  <Ionicons name="logo-instagram" size={18} color="#E1306C" />
-                  <Text style={styles.socialHandle}>@akashtiwari.music</Text>
-                </View>
-                <View style={styles.connectedBadge}>
-                  <Text style={styles.connectedBadgeText}>Connected</Text>
-                </View>
-              </View>
-
-              <View style={styles.socialDivider} />
-
-              <View style={styles.socialRow}>
-                <View style={styles.socialLeft}>
-                  <Ionicons name="logo-youtube" size={18} color="#FF0000" />
-                  <Text style={styles.socialHandle}>Akash Tiwari Official</Text>
-                </View>
-                <View style={styles.connectedBadge}>
-                  <Text style={styles.connectedBadgeText}>Connected</Text>
-                </View>
-              </View>
-            </BlurView>
-          </LinearGradient>
         </View>
 
       </ScrollView>
@@ -224,253 +198,269 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#050505',
   },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 40,
-  },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.06)',
   },
   backButton: {
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255,255,255,0.12)',
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
     color: '#ffffff',
+    flex: 1,
+    textAlign: 'center',
+    marginHorizontal: 12,
   },
-  editHeaderBtn: {
+  editButton: {
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+  },
+  scrollContainer: {
+    padding: 16,
+    paddingBottom: 40,
+    gap: 20,
+  },
+  proCardOuter: {
+    position: 'relative',
+    marginBottom: 4,
+  },
+  haloGlow: {
+    position: 'absolute',
+    top: -8,
+    left: -8,
+    right: -8,
+    bottom: -8,
+    borderRadius: 24,
+  },
+  goldBorderWrapper: {
+    borderRadius: 16,
+    padding: 1.5,
+  },
+  profileHeaderCard: {
+    height: 280,
+    borderRadius: 14.5,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  coverImageContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  heroCardWrapper: {
-    borderRadius: 24,
-    overflow: 'hidden',
-    marginBottom: 16,
-  },
-  heroCardGradient: {
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-  },
-  heroCardContent: {
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
-  headerInfoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 16,
+  avatarCircleGlow: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: '#1D4ED8',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#60A5FA',
+    shadowColor: '#1D4ED8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
   },
-  headerLeftCol: {
-    flex: 1,
-    paddingRight: 12,
+  avatarInitial: {
+    color: '#ffffff',
+    fontSize: 36,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+  },
+  infoOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    padding: 18,
   },
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
-  userNameText: {
-    fontSize: 24,
+  artistNameText: {
+    fontSize: 22,
     fontFamily: 'AirbnbCereal-Bold',
-    color: '#ffffff',
     fontWeight: '700',
-  },
-  userRoleSubtitle: {
-    fontSize: 13,
-    fontFamily: 'AirbnbCereal-Medium',
-    color: '#60A5FA',
-    marginTop: 2,
-  },
-  headerRightCol: {
-    alignItems: 'flex-end',
-  },
-  userPhoneText: {
-    fontSize: 13,
-    fontFamily: 'AirbnbCereal-Medium',
     color: '#ffffff',
   },
-  userEmailText: {
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Book',
-    color: '#888888',
-    marginTop: 2,
-  },
-  shareProfileBar: {
-    flexDirection: 'row',
+  crownContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#1D4ED8',
-    paddingVertical: 12,
-    borderRadius: 14,
+  },
+  proBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffd700',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    gap: 2,
+  },
+  proText: {
+    fontSize: 9,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#000000',
+  },
+  artistEmailText: {
+    fontSize: 13,
+    color: '#888888',
+    fontFamily: 'AirbnbCereal-Book',
     marginTop: 4,
   },
-  shareProfileBarText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-  },
-  doubleCardRow: {
-    flexDirection: 'row',
+  sectionCard: {
     gap: 12,
-    marginBottom: 14,
   },
-  doubleCardWrapper: {
-    flex: 1,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  doubleCardGradient: {
-    flex: 1,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-  },
-  doubleCardContent: {
-    padding: 16,
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-  },
-  cardEditHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  cardHeaderLabel: {
-    color: '#888888',
-    fontSize: 11,
+  sectionTitle: {
+    fontSize: 15,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
-    letterSpacing: 0.8,
+    color: '#ffffff',
+    letterSpacing: -0.2,
   },
-  chipRow: {
+  specsMatrix: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 10,
   },
-  categoryChip: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+  specBox: {
+    width: (width - 32 - 10) / 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
     borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.3)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 9999,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 14,
+    padding: 16,
   },
-  categoryChipText: {
-    color: '#60A5FA',
-    fontSize: 11,
+  specLabel: {
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#888888',
+    letterSpacing: 0.8,
+  },
+  specValue: {
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+    marginTop: 6,
+  },
+  specsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  specChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+  },
+  specChipPrimary: {
+    borderColor: '#1D4ED8',
+    backgroundColor: 'rgba(29, 78, 216, 0.18)',
+  },
+  specChipText: {
+    color: '#ffffff',
+    fontSize: 13,
     fontFamily: 'AirbnbCereal-Medium',
   },
-  sectionWrapper: {
-    borderRadius: 20,
-    overflow: 'hidden',
-    marginBottom: 14,
+  photoGrid: {
+    flexDirection: 'row',
+    gap: 10,
   },
-  sectionGradient: {
-    borderRadius: 20,
+  gridImageContainer: {
+    flex: 1,
+    height: 110,
+    borderRadius: 14,
+    overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },
-  sectionContent: {
-    padding: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+  photoSlot: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
   },
-  sectionHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  photoSlotLabel: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#888888',
+    marginTop: 6,
+  },
+  videoCardWrapper: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  videoCardGradient: {
+    padding: 16,
+  },
+  videoCardContent: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  playIconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#1D4ED8',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
   },
-  sectionHeading: {
-    color: '#888888',
-    fontSize: 11,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: '700',
-    letterSpacing: 0.8,
-  },
-  bioText: {
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Book',
-    color: '#d4d4d4',
-    lineHeight: 22,
-  },
-  rateCardRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rateTitle: {
+  videoTitle: {
+    color: '#ffffff',
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Bold',
-    color: '#ffffff',
+    fontWeight: '700',
   },
-  rateSubtitle: {
+  videoSubtitle: {
+    color: '#888888',
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-    color: '#888888',
     marginTop: 2,
   },
-  rateAmount: {
-    fontSize: 22,
-    fontFamily: 'AirbnbCereal-Bold',
-    color: '#10B981',
-  },
-  socialRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 4,
-  },
-  socialLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  socialHandle: {
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Medium',
-    color: '#ffffff',
-  },
-  connectedBadge: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+  aboutCard: {
+    padding: 16,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 9999,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
-  connectedBadgeText: {
-    color: '#10B981',
-    fontSize: 10,
-    fontFamily: 'AirbnbCereal-Bold',
-  },
-  socialDivider: {
-    height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    marginVertical: 10,
+  aboutText: {
+    color: '#d4d4d4',
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Book',
+    lineHeight: 22,
   },
 });
