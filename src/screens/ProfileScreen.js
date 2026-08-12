@@ -6,12 +6,15 @@ import {
   ScrollView, 
   TouchableOpacity, 
   StatusBar,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
+
+const { width } = Dimensions.get('window');
 
 export default function ProfileScreen({ onBackHome }) {
   const artistTypes = ['Solo Vocalist', 'Acoustic Performer'];
@@ -590,7 +593,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   demographicCardWrapper: {
-    width: (Dimensions.get('window').width - 40 - 16) / 2,
+    width: (width - 40 - 16) / 2,
     borderRadius: 24,
     overflow: 'hidden',
     marginBottom: 16,
