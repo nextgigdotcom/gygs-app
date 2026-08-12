@@ -93,7 +93,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 2x2 Grid of Liquid White Glass Gradient Cards with Electric Violet Accents */}
+        {/* 2x2 Grid of Liquid White Glass Gradient Cards with Harmonious Alignment */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
@@ -106,14 +106,14 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             >
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>TOTAL EARNINGS</Text>
-                <View style={styles.cardBottomSection}>
+                <View style={styles.cardBottomContainer}>
                   <Text style={styles.earningsValue}>₹0</Text>
                 </View>
               </BlurView>
             </LinearGradient>
           </View>
 
-          {/* Card 2: UP NEXT (Electric Violet #7C3AED Date Badge Accent) */}
+          {/* Card 2: UP NEXT (Royal Blue Date Badge Accent) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -123,9 +123,9 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             >
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
-                <View style={styles.upNextSection}>
-                  <View style={styles.dateBadgeViolet}>
-                    <Text style={styles.dateMonthTextViolet}>AUG</Text>
+                <View style={styles.cardBottomContainer}>
+                  <View style={styles.dateBadgeBlue}>
+                    <Text style={styles.dateMonthTextBlue}>AUG</Text>
                     <Text style={styles.dateDayTextWhite}>12</Text>
                   </View>
                   <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
@@ -134,7 +134,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </View>
 
-          {/* Card 3: BROWSE GYGS (Electric Violet #8B5CF6 Active Indicator & Interactive Navigation) */}
+          {/* Card 3: BROWSE GYGS (Royal Blue Active Indicator & Interactive Navigation) */}
           <TouchableOpacity 
             activeOpacity={0.85}
             onPress={onNavigateBrowse}
@@ -148,9 +148,9 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             >
               <BlurView intensity={50} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>BROWSE</Text>
-                <View style={styles.browseSection}>
+                <View style={styles.cardBottomContainer}>
                   <View style={styles.dotsRow}>
-                    <View style={[styles.dot, styles.dotElectricViolet]} />
+                    <View style={[styles.dot, styles.dotRoyalBlue]} />
                     <View style={styles.dot} />
                     <View style={styles.dot} />
                   </View>
@@ -160,7 +160,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Card 4: MY PROFILE (Electric Violet #7C3AED Avatar Accent) */}
+          {/* Card 4: MY PROFILE (Royal Blue Avatar Accent) */}
           <View style={styles.cardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -170,14 +170,16 @@ export default function DashboardScreen({ onNavigateBrowse }) {
             >
               <BlurView intensity={40} tint="dark" style={styles.cardContent}>
                 <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
-                <View style={styles.profileSection}>
-                  <View style={styles.profileAvatarViolet}>
-                    <Text style={styles.profileAvatarTextWhite}>A</Text>
-                  </View>
-                  <View style={styles.profileNameContainer}>
-                    <Text style={styles.profileNameText} numberOfLines={2}>
-                      Akash{'\n'}Tiwari
-                    </Text>
+                <View style={styles.cardBottomContainer}>
+                  <View style={styles.profileSection}>
+                    <View style={styles.profileAvatarBlue}>
+                      <Text style={styles.profileAvatarTextWhite}>A</Text>
+                    </View>
+                    <View style={styles.profileNameContainer}>
+                      <Text style={styles.profileNameText} numberOfLines={2}>
+                        Akash{'\n'}Tiwari
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </BlurView>
@@ -188,7 +190,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
       </View>
 
-      {/* Bottom Fixed AI Input Bar with Animated Typewriter Placeholder (Electric Violet Mic Button Accent) */}
+      {/* Bottom Fixed AI Input Bar with Animated Typewriter Placeholder */}
       <View style={styles.bottomBarContainer}>
         <LinearGradient
           colors={['rgba(255, 255, 255, 0.14)', 'rgba(255, 255, 255, 0.04)']}
@@ -209,7 +211,7 @@ export default function DashboardScreen({ onNavigateBrowse }) {
               style={styles.inputField}
             />
 
-            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnViolet}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnBlue}>
               <Ionicons name="mic" size={18} color="#ffffff" />
             </TouchableOpacity>
           </BlurView>
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 28,
   },
   headerRightRow: {
     flexDirection: 'row',
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
-    padding: 20,
+    padding: 18,
     justifyContent: 'space-between',
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
@@ -301,57 +303,58 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
+    alignSelf: 'flex-start',
+    includeFontPadding: false,
   },
-  cardBottomSection: {
+  cardBottomContainer: {
     justifyContent: 'flex-end',
+    alignItems: 'flex-start',
   },
   earningsValue: {
     color: '#ffffff',
     fontSize: 34,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
+    includeFontPadding: false,
   },
-  upNextSection: {
-    justifyContent: 'flex-end',
-  },
-  dateBadgeViolet: {
-    width: 54,
-    height: 54,
-    borderRadius: 16,
-    backgroundColor: 'rgba(124, 58, 237, 0.22)', // Electric Violet translucent fill
+  dateBadgeBlue: {
+    width: 50,
+    height: 50,
+    borderRadius: 14,
+    backgroundColor: 'rgba(29, 78, 216, 0.22)',
     borderWidth: 1,
-    borderColor: 'rgba(167, 139, 250, 0.4)', // Electric Violet border highlight
+    borderColor: 'rgba(96, 165, 250, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
-  dateMonthTextViolet: {
-    color: '#C4B5FD', // Vibrant Electric Violet month text
+  dateMonthTextBlue: {
+    color: '#60A5FA',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     letterSpacing: 0.5,
+    includeFontPadding: false,
   },
   dateDayTextWhite: {
     color: '#ffffff',
-    fontSize: 20,
+    fontSize: 19,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     marginTop: -2,
+    includeFontPadding: false,
   },
   calendarSubtext: {
     color: 'rgba(255, 255, 255, 0.6)',
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-  },
-  browseSection: {
-    justifyContent: 'flex-end',
+    includeFontPadding: false,
   },
   dotsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 12,
+    gap: 5,
+    marginBottom: 8,
   },
   dot: {
     width: 6,
@@ -359,27 +362,28 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
-  dotElectricViolet: {
-    backgroundColor: '#8B5CF6', // Electric Violet active dot accent
-    width: 16,
+  dotRoyalBlue: {
+    backgroundColor: '#1D4ED8',
+    width: 14,
   },
   browseTitle: {
     color: '#ffffff',
-    fontSize: 32,
+    fontSize: 30,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
+    includeFontPadding: false,
   },
   profileSection: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 12,
+    gap: 10,
   },
-  profileAvatarViolet: {
+  profileAvatarBlue: {
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: '#7C3AED', // Solid Vibrant Electric Violet avatar fill
+    backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -397,10 +401,10 @@ const styles = StyleSheet.create({
   },
   profileNameText: {
     color: '#ffffff',
-    fontSize: 17,
+    fontSize: 16,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
-    lineHeight: 22,
+    lineHeight: 20,
     includeFontPadding: false,
   },
   bottomBarContainer: {
@@ -430,11 +434,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
-  micBtnViolet: {
+  micBtnBlue: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#7C3AED', // Solid Vibrant Electric Violet mic button
+    backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
