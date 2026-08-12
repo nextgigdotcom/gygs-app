@@ -9,6 +9,8 @@ import {
   Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function ProfileScreen({ onBackHome }) {
@@ -45,51 +47,98 @@ export default function ProfileScreen({ onBackHome }) {
         showsVerticalScrollIndicator={false}
       >
         
-        {/* 1. Redesigned Top Header (Hero Trust Card - Airbnb Inspired Split Layout) */}
-        <View style={styles.masterCard}>
-          <View style={styles.heroSplitRow}>
-            
-            {/* Left side: Prominent circular avatar next to name & Verified Artist badge */}
-            <View style={styles.heroLeftSection}>
-              <View style={styles.avatarCircleBlue}>
-                <Text style={styles.avatarInitialText}>A</Text>
-              </View>
-
-              <View style={styles.heroNameBlock}>
-                <Text style={styles.nameText}>Akash Tiwari</Text>
-                
-                <View style={styles.verifiedBadgeBlue}>
-                  <Ionicons name="checkmark-circle" size={13} color="#60A5FA" />
-                  <Text style={styles.verifiedBadgeText}>Verified Artist</Text>
-                </View>
-              </View>
-            </View>
-
-            {/* Right side: Clean vertical stack of key metrics */}
-            <View style={styles.heroMetricsStack}>
-              <View style={styles.ratingRow}>
-                <Text style={styles.ratingValueText}>5.0</Text>
-                <Ionicons name="star" size={14} color="#F59E0B" style={{ marginLeft: 3 }} />
-              </View>
-
-              <Text style={styles.metricSubtext}>4 Reviews</Text>
-              <Text style={styles.metricSubtext}>5 Years active</Text>
-            </View>
-
-          </View>
-
-          {/* Bottom Row: Full-width Solid Royal Blue Share Profile Button */}
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={handleShareProfile}
-            style={styles.shareProfileButton}
+        {/* 1. Exact Replica of Airbnb Hero Profile Trust Card */}
+        <View style={styles.airbnbCardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.airbnbCardGradient}
           >
-            <Text style={styles.shareProfileButtonText}>Share Profile</Text>
-            <Ionicons name="open-outline" size={14} color="#ffffff" style={{ marginLeft: 6 }} />
-          </TouchableOpacity>
+            <BlurView intensity={40} tint="dark" style={styles.airbnbCardContent}>
+              
+              <View style={styles.airbnbSplitRow}>
+                
+                {/* Left Column: Large Avatar + Centered Name + Artist Subtitle */}
+                <View style={styles.airbnbLeftCol}>
+                  <View style={styles.avatarWrapper}>
+                    <View style={styles.avatarCircleBlue}>
+                      <Text style={styles.avatarInitialText}>A</Text>
+                    </View>
+                    
+                    {/* Pink/Blue Verification Shield Overlay Badge */}
+                    <View style={styles.shieldBadge}>
+                      <Ionicons name="checkmark-sharp" size={14} color="#ffffff" />
+                    </View>
+                  </View>
+
+                  <Text style={styles.airbnbNameText}>Akash Tiwari</Text>
+                  <Text style={styles.airbnbSubtitleText}>Artist & Host</Text>
+                </View>
+
+                {/* Vertical Divider Line between Left & Right */}
+                <View style={styles.columnDivider} />
+
+                {/* Right Column: 3 Stacked Metrics with Horizontal Dividers */}
+                <View style={styles.airbnbRightCol}>
+                  
+                  {/* Metric 1: Reviews */}
+                  <View style={styles.metricBlock}>
+                    <Text style={styles.metricBigNumber}>4</Text>
+                    <Text style={styles.metricLabelText}>Reviews</Text>
+                  </View>
+
+                  <View style={styles.horizontalDivider} />
+
+                  {/* Metric 2: Rating */}
+                  <View style={styles.metricBlock}>
+                    <View style={styles.ratingValRow}>
+                      <Text style={styles.metricBigNumber}>5.0</Text>
+                      <Ionicons name="star" size={14} color="#ffffff" style={{ marginLeft: 3 }} />
+                    </View>
+                    <Text style={styles.metricLabelText}>Rating</Text>
+                  </View>
+
+                  <View style={styles.horizontalDivider} />
+
+                  {/* Metric 3: Years Active */}
+                  <View style={styles.metricBlock}>
+                    <Text style={styles.metricBigNumber}>5</Text>
+                    <Text style={styles.metricLabelText}>Years active</Text>
+                  </View>
+
+                </View>
+
+              </View>
+
+              {/* Solid Royal Blue Share Profile Button */}
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={handleShareProfile}
+                style={styles.shareProfileButton}
+              >
+                <Text style={styles.shareProfileButtonText}>Share Profile</Text>
+                <Ionicons name="open-outline" size={14} color="#ffffff" style={{ marginLeft: 6 }} />
+              </TouchableOpacity>
+
+            </BlurView>
+          </LinearGradient>
         </View>
 
-        {/* 2. Side-by-Side 'Artist Type' and 'Categories' Double Cards Row */}
+        {/* 2. Airbnb Location & Verified Info Rows */}
+        <View style={styles.airbnbInfoRowsContainer}>
+          <View style={styles.airbnbInfoRow}>
+            <Ionicons name="globe-outline" size={20} color="#ffffff" style={styles.airbnbInfoIcon} />
+            <Text style={styles.airbnbInfoText}>Lives in Mumbai, India</Text>
+          </View>
+
+          <View style={styles.airbnbInfoRow}>
+            <Ionicons name="shield-checkmark-outline" size={20} color="#ffffff" style={styles.airbnbInfoIcon} />
+            <Text style={[styles.airbnbInfoText, styles.underlineText]}>Identity verified</Text>
+          </View>
+        </View>
+
+        {/* 3. Side-by-Side 'Artist Type' and 'Categories' Double Cards Row */}
         <View style={styles.doubleCardRow}>
           
           {/* Card A: Artist Type */}
@@ -128,7 +177,7 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 3. Demographics Grid (Age, Height, Gender, City) - 2-Column Grid */}
+        {/* 4. Demographics Grid (Age, Height, Gender, City) - 2-Column Grid */}
         <View style={styles.demographicsContainer}>
           <View style={styles.demographicCard}>
             <Text style={styles.demoLabel}>AGE</Text>
@@ -151,7 +200,7 @@ export default function ProfileScreen({ onBackHome }) {
           </View>
         </View>
 
-        {/* 4. Gallery Card */}
+        {/* 5. Gallery Card */}
         <View style={styles.masterCard}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardTitle}>Gallery</Text>
@@ -177,7 +226,7 @@ export default function ProfileScreen({ onBackHome }) {
           </ScrollView>
         </View>
 
-        {/* 5. About Me Card */}
+        {/* 6. About Me Card */}
         <View style={styles.masterCard}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardTitle}>About Me</Text>
@@ -186,11 +235,11 @@ export default function ProfileScreen({ onBackHome }) {
             </TouchableOpacity>
           </View>
           <Text style={styles.aboutText}>
-            Passionate vocalist and music producer with over 5 years of live performance experience across Bollywood, Acoustic, and Commercial live show setups.
+            Passionate vocalist and music producer in pursuit of creating unforgettable live show experiences. Specialized in Bollywood, Acoustic, and Commercial set ups.
           </Text>
         </View>
 
-        {/* 6. Show Rates Card */}
+        {/* 7. Show Rates Card */}
         <View style={styles.masterCard}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardTitle}>Show Rates</Text>
@@ -208,7 +257,7 @@ export default function ProfileScreen({ onBackHome }) {
           </View>
         </View>
 
-        {/* 7. Connected Accounts Card */}
+        {/* 8. Connected Accounts Card */}
         <View style={styles.masterCard}>
           <Text style={[styles.cardTitle, { marginBottom: 12 }]}>Connected Accounts</Text>
 
@@ -280,100 +329,125 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 50,
   },
-  
-  /* Master Card Styling */
-  masterCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-  },
 
-  /* Redesigned Hero Trust Header Card Specifics */
-  heroSplitRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  /* Exact Airbnb Hero Profile Trust Card Wrapper */
+  airbnbCardWrapper: {
+    borderRadius: 24,
+    overflow: 'hidden',
+    marginBottom: 16,
   },
-  heroLeftSection: {
+  airbnbCardGradient: {
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  airbnbCardContent: {
+    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  },
+  airbnbSplitRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  
+  /* Left Column: Avatar + Name + Subtitle */
+  airbnbLeftCol: {
     flex: 1,
-    paddingRight: 12,
+    alignItems: 'center',
+    paddingRight: 10,
+  },
+  avatarWrapper: {
+    position: 'relative',
+    marginBottom: 10,
   },
   avatarCircleBlue: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)',
-    marginRight: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   avatarInitialText: {
     color: '#ffffff',
-    fontSize: 22,
+    fontSize: 34,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
   },
-  heroNameBlock: {
+  shieldBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#E11D48',
     justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#0A0A0A',
   },
-  nameText: {
+  airbnbNameText: {
     fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
+    textAlign: 'center',
   },
-  verifiedBadgeBlue: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
-    borderWidth: 1,
-    borderColor: '#1D4ED8',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 9999,
-    marginTop: 4,
-    alignSelf: 'flex-start',
+  airbnbSubtitleText: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Book',
+    color: '#929292',
+    marginTop: 2,
+    textAlign: 'center',
   },
-  verifiedBadgeText: {
-    color: '#60A5FA',
-    fontSize: 10,
-    fontFamily: 'AirbnbCereal-Medium',
-    fontWeight: '600',
+
+  columnDivider: {
+    width: 1,
+    height: 120,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    marginHorizontal: 12,
   },
-  heroMetricsStack: {
-    alignItems: 'flex-end',
+
+  /* Right Column: 3 Stacked Metrics */
+  airbnbRightCol: {
+    flex: 1,
+    paddingLeft: 6,
     justifyContent: 'center',
   },
-  ratingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 2,
+  metricBlock: {
+    paddingVertical: 2,
   },
-  ratingValueText: {
-    color: '#ffffff',
-    fontSize: 16,
+  metricBigNumber: {
+    fontSize: 19,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
+    color: '#ffffff',
   },
-  metricSubtext: {
-    color: '#929292',
+  ratingValRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  metricLabelText: {
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
-    marginTop: 2,
+    color: '#929292',
+    marginTop: 1,
   },
+  horizontalDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    marginVertical: 8,
+  },
+
   shareProfileButton: {
     backgroundColor: '#1D4ED8',
-    borderRadius: 8,
+    borderRadius: 12,
     paddingVertical: 12,
-    marginTop: 16,
+    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -384,6 +458,39 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
+  },
+
+  /* Airbnb Info Rows Below Card */
+  airbnbInfoRowsContainer: {
+    marginBottom: 16,
+    gap: 12,
+    paddingHorizontal: 4,
+  },
+  airbnbInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  airbnbInfoIcon: {
+    marginRight: 12,
+  },
+  airbnbInfoText: {
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Book',
+    color: '#ffffff',
+  },
+  underlineText: {
+    textDecorationLine: 'underline',
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+
+  /* Master Card Styling */
+  masterCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
 
   /* Side-by-Side Double Cards Row */
