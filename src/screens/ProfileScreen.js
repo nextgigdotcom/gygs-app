@@ -386,7 +386,7 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 7. Instagram Insights & Reels Card (Replicated from Production Screenshot) */}
+        {/* 7. Instagram Insights Card (Replicated 100% from Production Screenshot) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -397,72 +397,61 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               
               {/* Instagram Card Header */}
-              <View style={styles.socialHeaderRow}>
+              <View style={styles.cardHeaderRow}>
                 <View style={styles.socialLeft}>
-                  <Ionicons name="logo-instagram" size={20} color="#E1306C" />
-                  <View>
-                    <Text style={styles.socialHandle}>@akashtiwari.official</Text>
-                    <Text style={styles.socialSubText}>12.5k Followers</Text>
-                  </View>
+                  <Ionicons name="logo-instagram" size={18} color="#E1306C" />
+                  <Text style={[styles.cardHeaderLabel, { marginLeft: 8 }]}>INSTAGRAM INSIGHTS</Text>
                 </View>
-                <View style={styles.connectedBadgeBlue}>
-                  <Text style={styles.connectedBadgeBlueText}>Connected</Text>
-                </View>
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
               </View>
 
-              {/* Metrics 4-Box Grid */}
+              {/* 2-Column Flex Grid with Generous Spacing */}
               <View style={styles.instaMetricsGrid}>
+                
+                {/* Box 1: Followers */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Followers</Text>
-                  <Text style={styles.instaMetricVal}>12.5k</Text>
+                  <Text style={styles.instaMetricVal}>4.1k</Text>
+                  <Text style={styles.instaMetricSub}>Total Count</Text>
                 </View>
+
+                {/* Box 2: Engagement */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Engagement</Text>
-                  <Text style={styles.instaMetricVal}>4.8%</Text>
+                  <Text style={styles.instaMetricVal}>High</Text>
+                  <Text style={styles.instaMetricSub}>Via Reels</Text>
                 </View>
+
+                {/* Box 3: Accounts Reached */}
                 <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Avg Likes</Text>
-                  <Text style={styles.instaMetricVal}>1.2k</Text>
+                  <Text style={styles.instaMetricLabel}>Accounts Reached</Text>
+                  <Text style={styles.instaMetricVal}>600k+</Text>
+                  <Text style={styles.instaMetricSub}>In Last Month</Text>
                 </View>
+
+                {/* Box 4: Reels */}
                 <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Reel Views</Text>
-                  <Text style={styles.instaMetricVal}>45.0k</Text>
-                </View>
-              </View>
-
-              {/* Reel Grid Previews */}
-              <Text style={[styles.cardHeaderLabel, { marginTop: 16, marginBottom: 10 }]}>TOP REELS & POSTS</Text>
-              
-              <View style={styles.reelsGridContainer}>
-                <View style={styles.reelThumbnailCard}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.reelImage} 
-                  />
-                  <View style={styles.playIconBadge}>
-                    <Ionicons name="play" size={12} color="#ffffff" />
-                  </View>
+                  <Text style={styles.instaMetricLabel}>Reels</Text>
+                  <Text style={styles.instaMetricVal}>10.7k</Text>
+                  <Text style={styles.instaMetricSub}>Avg Views</Text>
                 </View>
 
-                <View style={styles.reelThumbnailCard}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.reelImage} 
-                  />
-                  <View style={styles.playIconBadge}>
-                    <Ionicons name="play" size={12} color="#ffffff" />
-                  </View>
+                {/* Box 5: Impressions */}
+                <View style={styles.instaMetricBox}>
+                  <Text style={styles.instaMetricLabel}>Impressions</Text>
+                  <Text style={styles.instaMetricVal}>1.2M</Text>
+                  <Text style={styles.instaMetricSub}>Last Month</Text>
                 </View>
 
-                <View style={styles.reelThumbnailCard}>
-                  <Image 
-                    source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
-                    style={styles.reelImage} 
-                  />
-                  <View style={styles.playIconBadge}>
-                    <Ionicons name="play" size={12} color="#ffffff" />
-                  </View>
+                {/* Box 6: Reach */}
+                <View style={styles.instaMetricBox}>
+                  <Text style={styles.instaMetricLabel}>Reach</Text>
+                  <Text style={styles.instaMetricVal}>90%</Text>
+                  <Text style={styles.instaMetricSub}>Non-Followers</Text>
                 </View>
+
               </View>
 
             </BlurView>
@@ -820,30 +809,40 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.6)',
     marginTop: 1,
   },
+  /* Instagram Insights 2-Column Flex Grid with Generous Spacing */
   instaMetricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    justifyContent: 'space-between',
+    gap: 14,
+    marginTop: 6,
   },
   instaMetricBox: {
-    width: (width - 40 - 40 - 10) / 2,
+    width: (width - 40 - 40 - 14) / 2,
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 14,
-    padding: 12,
+    borderColor: 'rgba(255, 255, 255, 0.09)',
+    borderRadius: 18,
+    padding: 16,
+    paddingVertical: 14,
   },
   instaMetricLabel: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: 'AirbnbCereal-Medium',
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: 'rgba(255, 255, 255, 0.65)',
   },
   instaMetricVal: {
-    fontSize: 17,
+    fontSize: 20,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
-    marginTop: 4,
+    marginTop: 6,
+    marginBottom: 2,
+  },
+  instaMetricSub: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Book',
+    color: 'rgba(255, 255, 255, 0.5)',
   },
   reelsGridContainer: {
     flexDirection: 'row',
