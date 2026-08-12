@@ -190,47 +190,47 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 3. Demographics Liquid Glass Grid (Age, Height, Gender) */}
-        <View style={styles.demographicsContainer}>
+        {/* 3. Demographics Liquid Glass Row (AGE, HEIGHT, GENDER Side-by-Side) */}
+        <View style={styles.demographicsRow}>
           
-          <View style={styles.demographicCardWrapper}>
+          <View style={styles.tripletCardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
             >
-              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContentSmall}>
                 <Text style={styles.cardHeaderLabel}>AGE</Text>
-                <Text style={styles.demoValue}>24 Years</Text>
+                <Text style={styles.demoValueSmall}>24 Years</Text>
               </BlurView>
             </LinearGradient>
           </View>
 
-          <View style={styles.demographicCardWrapper}>
+          <View style={styles.tripletCardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
             >
-              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContentSmall}>
                 <Text style={styles.cardHeaderLabel}>HEIGHT</Text>
-                <Text style={styles.demoValue}>5' 9" (175 cm)</Text>
+                <Text style={styles.demoValueSmall}>5' 9"</Text>
               </BlurView>
             </LinearGradient>
           </View>
 
-          <View style={styles.demographicCardWrapper}>
+          <View style={styles.tripletCardWrapper}>
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
             >
-              <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <BlurView intensity={40} tint="dark" style={styles.cardBlurContentSmall}>
                 <Text style={styles.cardHeaderLabel}>GENDER</Text>
-                <Text style={styles.demoValue}>Male</Text>
+                <Text style={styles.demoValueSmall}>Male</Text>
               </BlurView>
             </LinearGradient>
           </View>
@@ -575,25 +575,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  /* Demographics 2-Column Grid Layout */
-  demographicsContainer: {
+  /* Demographics 3-Column Side-by-Side Row Layout */
+  demographicsRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 0,
-  },
-  demographicCardWrapper: {
-    width: (width - 40 - 16) / 2,
-    borderRadius: 24,
-    overflow: 'hidden',
+    gap: 12,
     marginBottom: 16,
   },
-  demoValue: {
-    fontSize: 16,
+  tripletCardWrapper: {
+    flex: 1,
+    borderRadius: 24,
+    overflow: 'hidden',
+  },
+  cardBlurContentSmall: {
+    padding: 16,
+    paddingHorizontal: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+  },
+  demoValueSmall: {
+    fontSize: 15,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     color: '#ffffff',
-    marginTop: 8,
+    marginTop: 6,
   },
 
   /* Gallery Horizontal Scroll */
