@@ -405,7 +405,7 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 5. Work Experience Liquid Glass Card (Replicated from Production Screenshot) */}
+        {/* 5. Work Experience Section (100% Exact Replica from Screenshot) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -415,51 +415,107 @@ export default function ProfileScreen({ onBackHome }) {
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderLabel}>WORK EXPERIENCE</Text>
+                <Text style={styles.cardHeaderTitleText}>Work Experience</Text>
                 <TouchableOpacity activeOpacity={0.7}>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
+                  <Ionicons name="create-outline" size={16} color="#ffffff" />
                 </TouchableOpacity>
               </View>
 
-              {/* Experience Item 1: Performer */}
-              <View style={styles.experienceBlock}>
-                <View style={styles.expHeaderRow}>
-                  <Text style={styles.expRoleTitle}>Performer & Choreographer</Text>
-                  <View style={styles.tagPill}>
-                    <Text style={styles.tagPillText}>2021 - Present</Text>
+              {/* Sub-Card 1: Performer */}
+              <View style={styles.expSubCard}>
+                <Text style={styles.expRoleCategoryTitle}>Performer</Text>
+
+                {/* Filter Pills Row */}
+                <View style={styles.expFilterPillRow}>
+                  <View style={styles.activePillBlue}>
+                    <Text style={styles.activePillText}>Shows & Events</Text>
                   </View>
                 </View>
-                
-                <View style={styles.expBulletRow}>
-                  <Text style={styles.bulletDot}>•</Text>
-                  <Text style={styles.expBulletText}>Led 50+ live dance shows and high-energy stage performances across major venues.</Text>
+
+                {/* Project Item 1: Disney's Aladdin */}
+                <View style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>Disney's Aladdin</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>Disney's Aladdin (99 Shows Across India, 2020-2021)</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
                 </View>
-                <View style={styles.expBulletRow}>
-                  <Text style={styles.bulletDot}>•</Text>
-                  <Text style={styles.expBulletText}>Choreographed commercial sequences for corporate events and brand launches.</Text>
+
+                {/* Project Item 2: Asees Kaur Live Show */}
+                <View style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>Asees Kaur Live Show</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>Asees Kaur Live Show Choreography And Performance (2020-2021)</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
                 </View>
               </View>
 
-              <View style={styles.socialDivider} />
+              {/* Sub-Card 2: Choreographer */}
+              <View style={[styles.expSubCard, { marginTop: 16 }]}>
+                <Text style={styles.expRoleCategoryTitle}>Choreographer</Text>
 
-              {/* Experience Item 2: Dance Trainer */}
-              <View style={styles.experienceBlock}>
-                <View style={styles.expHeaderRow}>
-                  <Text style={styles.expRoleTitle}>Senior Dance Trainer</Text>
-                  <View style={styles.tagPill}>
-                    <Text style={styles.tagPillText}>2022 - 2024</Text>
+                {/* Filter Pills Row */}
+                <View style={styles.expFilterPillRow}>
+                  <View style={styles.activePillBlue}>
+                    <Text style={styles.activePillText}>Shows & Events</Text>
+                  </View>
+                  <View style={styles.inactivePillBorder}>
+                    <Text style={styles.inactivePillText}>Advertisments</Text>
+                  </View>
+                  <View style={styles.inactivePillBorder}>
+                    <Text style={styles.inactivePillText}>Music Video</Text>
                   </View>
                 </View>
-                
-                <View style={styles.expBulletRow}>
-                  <Text style={styles.bulletDot}>•</Text>
-                  <Text style={styles.expBulletText}>Conducted intensive masterclasses in Contemporary, Hip-Hop, and Bollywood styles.</Text>
+
+                {/* Project Item 1: Ghoomar */}
+                <View style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>Ghoomar</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>Ghoomar Choreography (2020-2021)</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
                 </View>
-                <View style={styles.expBulletRow}>
-                  <Text style={styles.bulletDot}>•</Text>
-                  <Text style={styles.expBulletText}>Mentored over 200+ aspiring dancers for professional auditions and competitions.</Text>
+
+                {/* Project Item 2: Badshah's Song */}
+                <View style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>Badshah's Song With Abhishek Bachan And Saiyam Kher</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>Badshah's Song Choreography With Abhishek Bachan And Saiyam Kher (2020-2021)</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
+                </View>
+
+                {/* Project Item 3: Bad Boy */}
+                <View style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>Bad Boy</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>Bad Boy Song Choreography (2020-2021)</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
                 </View>
               </View>
+
             </BlurView>
           </LinearGradient>
         </View>
@@ -785,7 +841,7 @@ const styles = StyleSheet.create({
   tagPill: {
     backgroundColor: 'rgba(29, 78, 216, 0.15)',
     borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.3)',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
     borderRadius: 9999,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -911,6 +967,97 @@ const styles = StyleSheet.create({
   inactiveDot: {
     width: 6,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
+  },
+
+  /* 100% Screenshot Work Experience Styles */
+  cardHeaderTitleText: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  expSubCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 20,
+    padding: 16,
+    marginTop: 12,
+  },
+  expRoleCategoryTitle: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 12,
+  },
+  expFilterPillRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  activePillBlue: {
+    backgroundColor: '#1D4ED8',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  activePillText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Medium',
+    fontWeight: '600',
+  },
+  inactivePillBorder: {
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  inactivePillText: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Book',
+  },
+  expProjectBlock: {
+    marginBottom: 16,
+  },
+  expProjectHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  expProjectTitleText: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  expSubEntryBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 4,
+    paddingLeft: 8,
+  },
+  expLeftAccentLine: {
+    width: 2,
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    marginRight: 10,
+    borderRadius: 1,
+  },
+  expSubEntryText: {
+    flex: 1,
+    fontSize: 13,
+    fontStyle: 'italic',
+    fontFamily: 'AirbnbCereal-Book',
+    color: 'rgba(255, 255, 255, 0.75)',
+    lineHeight: 18,
+    marginRight: 8,
   },
 
   /* Work Experience & Training Specifics */
