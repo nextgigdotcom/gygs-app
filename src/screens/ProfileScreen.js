@@ -632,6 +632,7 @@ const bulletDot = {
   fontSize: 14,
   marginRight: 6,
   marginTop: 1,
+  fontFamily: 'AirbnbCereal-Medium',
 };
 
 const styles = StyleSheet.create({
