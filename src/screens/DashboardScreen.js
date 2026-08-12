@@ -3,206 +3,117 @@ import {
   StyleSheet, 
   Text, 
   View, 
-  ScrollView, 
   TouchableOpacity, 
-  TextInput,
-  StatusBar 
+  TextInput, 
+  StatusBar,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BlurView } from 'expo-blur';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { MOCK_GIGS } from '../data/mockGigs';
-import GigCard from '../components/GigCard';
 
-export default function DashboardScreen({ onNavigateBrowse, onSelectGig }) {
-  const [aiPrompt, setAiPrompt] = useState('');
-  const activeGigsCount = MOCK_GIGS.filter((g) => g.active).length;
-  const appliedCount = MOCK_GIGS.filter((g) => g.application).length;
-  const recentGigs = MOCK_GIGS.slice(0, 3);
+const { width } = Dimensions.get('window');
+const cardWidth = (width - 40 - 14) / 2; // 2-column grid with 20px padding and 14px gap
 
-  const suggestionChips = [
-    'Create invoice for ₹50,000',
-    'Check relevant emails',
-    'Draft client proposal',
-  ];
+export default function DashboardScreen({ onNavigateBrowse }) {
+  const [chatInput, setChatInput] = useState('');
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      {/* Main Content Area */}
+      <View style={styles.content}>
         
-        {/* 1. Header Section with Mode Indicator */}
+        {/* 1. Top Header Navigation (Grid Icon Left, Menu Icon Right) */}
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <View style={styles.userAvatar}>
-              <Text style={styles.userAvatarText}>A</Text>
-            </View>
-            <View>
-              <Text style={styles.greetingText}>Welcome back,</Text>
-              <Text style={styles.userNameText}>Akash Tiwari</Text>
-            </View>
-          </View>
+          <TouchableOpacity activeOpacity={0.8} style={styles.headerIconBtn}>
+            <Ionicons name="grid-outline" size={22} color="#ffffff" />
+          </TouchableOpacity>
 
-          <View style={styles.headerRight}>
-            <View style={styles.modeBadge}>
-              <Text style={styles.modeBadgeText}>ARTIST MODE</Text>
-            </View>
-
-            <TouchableOpacity style={styles.notificationBtn}>
-              <Ionicons name="notifications-outline" size={20} color="#ffffff" />
-              <View style={styles.notificationBadge} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity activeOpacity={0.8} style={styles.headerMenuBtn}>
+            <Ionicons name="menu-outline" size={26} color="#ffffff" />
+          </TouchableOpacity>
         </View>
 
-        {/* 2. AI Talent Manager Prompt Box */}
-        <BlurView intensity={40} tint="dark" style={styles.aiBox}>
-          <View style={styles.aiHeaderRow}>
-            <View style={styles.aiTitleRow}>
-              <Ionicons name="sparkles" size={18} color="#60A5FA" />
-              <Text style={styles.aiTitle}>AI Talent Manager</Text>
-            </View>
-            <Text style={styles.aiSubtext}>Powered by Gygs AI</Text>
-          </View>
+        {/* 2. Welcome Title */}
+        <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-          {/* AI Input Row */}
-          <View style={styles.aiInputRow}>
-            <Ionicons name="chatbubble-ellipses-outline" size={18} color="#888888" style={{ marginRight: 8 }} />
-            <TextInput
-              placeholder="Ask AI to draft reply, create invoice, check schedule..."
-              placeholderTextColor="#777777"
-              value={aiPrompt}
-              onChangeText={setAiPrompt}
-              style={styles.aiInput}
-            />
-            <TouchableOpacity style={styles.aiSendBtn}>
-              <Ionicons name="arrow-up" size={16} color="#ffffff" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Suggestion Chips */}
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestionScroll}>
-            {suggestionChips.map((chip, idx) => (
-              <TouchableOpacity 
-                key={idx} 
-                onPress={() => setAiPrompt(chip)}
-                style={styles.suggestionChip}
-              >
-                <Text style={styles.suggestionChipText}>{chip}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </BlurView>
-
-        {/* 3. Connected Integrations Status */}
-        <View style={styles.integrationsRow}>
-          <View style={styles.integrationPill}>
-            <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-            <Ionicons name="mail-outline" size={13} color="#ffffff" style={{ marginRight: 4 }} />
-            <Text style={styles.integrationText}>Gmail</Text>
-          </View>
-
-          <View style={styles.integrationPill}>
-            <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-            <Ionicons name="logo-instagram" size={13} color="#ffffff" style={{ marginRight: 4 }} />
-            <Text style={styles.integrationText}>Instagram</Text>
-          </View>
-
-          <View style={styles.integrationPill}>
-            <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-            <Ionicons name="logo-whatsapp" size={13} color="#ffffff" style={{ marginRight: 4 }} />
-            <Text style={styles.integrationText}>WhatsApp</Text>
-          </View>
-        </View>
-
-        {/* 4. Earnings & Metrics Row */}
-        <View style={styles.metricsRow}>
-          <BlurView intensity={30} tint="dark" style={styles.metricCard}>
-            <Text style={styles.metricLabel}>Total Earnings</Text>
-            <Text style={styles.metricValue}>₹45,000</Text>
-            <Text style={styles.metricSubtext}>+18% this month</Text>
-          </BlurView>
-
-          <BlurView intensity={30} tint="dark" style={styles.metricCard}>
-            <Text style={styles.metricLabel}>Applications</Text>
-            <Text style={styles.metricValue}>{appliedCount} Active</Text>
-            <Text style={styles.metricSubtext}>1 Shortlisted</Text>
-          </BlurView>
-        </View>
-
-        {/* 5. Main Featured Banner: Browse Gygs Near Me (#1D4ED8 Royal Blue) */}
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={onNavigateBrowse}
-          style={styles.browseBannerWrapper}
-        >
-          <View style={styles.browseBanner}>
-            <View style={styles.browseBannerLeft}>
-              <View style={styles.bannerIconBadge}>
-                <Ionicons name="compass" size={22} color="#ffffff" />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.bannerTitle}>Browse Gygs Near Me</Text>
-                <Text style={styles.bannerSubtitle}>
-                  {activeGigsCount} verified live opportunities in your area
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.bannerArrowCircle}>
-              <Ionicons name="arrow-forward" size={18} color="#ffffff" />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        {/* 6. Quick Action Grid */}
+        {/* 3. 2x2 Dashboard Cards Grid */}
         <View style={styles.gridContainer}>
-          <TouchableOpacity activeOpacity={0.85} style={styles.gridCardWrapper}>
-            <BlurView intensity={30} tint="dark" style={styles.gridCard}>
-              <Ionicons name="document-text-outline" size={22} color="#60A5FA" style={styles.gridIcon} />
-              <Text style={styles.gridCardTitle}>My Applications</Text>
-              <Text style={styles.gridCardDesc}>Track status & messages</Text>
-            </BlurView>
+          
+          {/* Card 1: TOTAL EARNINGS */}
+          <View style={styles.card}>
+            <Text style={styles.cardHeaderLabel}>TOTAL EARNINGS</Text>
+            <View style={styles.cardBottomContent}>
+              <Text style={styles.earningsValue}>₹0</Text>
+            </View>
+          </View>
+
+          {/* Card 2: UP NEXT */}
+          <View style={styles.card}>
+            <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
+            <View style={styles.upNextBody}>
+              <View style={styles.dateBadge}>
+                <Text style={styles.dateMonthText}>AUG</Text>
+                <Text style={styles.dateDayText}>12</Text>
+              </View>
+              <Text style={styles.upNextSubtext}>Your calendar is clear</Text>
+            </View>
+          </View>
+
+          {/* Card 3: BROWSE GYGS (Interactive -> Navigates to Browse Gygs Page) */}
+          <TouchableOpacity 
+            activeOpacity={0.85}
+            onPress={onNavigateBrowse}
+            style={[styles.card, styles.browseCardHighlight]}
+          >
+            <Text style={styles.cardHeaderLabel}>BROWSE</Text>
+            <View style={styles.browseDotsRow}>
+              <View style={[styles.dot, styles.dotActive]} />
+              <View style={styles.dot} />
+              <View style={styles.dot} />
+            </View>
+            <Text style={styles.browseTitle}>Gygs</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.85} style={styles.gridCardWrapper}>
-            <BlurView intensity={30} tint="dark" style={styles.gridCard}>
-              <Ionicons name="wallet-outline" size={22} color="#10B981" style={styles.gridIcon} />
-              <Text style={styles.gridCardTitle}>Invoices & Payouts</Text>
-              <Text style={styles.gridCardDesc}>Generate PDF invoices</Text>
-            </BlurView>
-          </TouchableOpacity>
+          {/* Card 4: MY PROFILE */}
+          <View style={styles.card}>
+            <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
+            <View style={styles.profileRow}>
+              <View style={styles.profileAvatar}>
+                <Text style={styles.profileAvatarText}>A</Text>
+              </View>
+              <Text style={styles.profileNameText} numberOfLines={2}>
+                Akash Tiwari
+              </Text>
+            </View>
+          </View>
+
         </View>
 
-        {/* 7. Recent Opportunities Section Header */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Opportunities</Text>
-          <TouchableOpacity onPress={onNavigateBrowse}>
-            <Text style={styles.seeAllText}>View All →</Text>
-          </TouchableOpacity>
-        </View>
+      </View>
 
-        {/* 8. Feed of Recent Gyg Cards */}
-        {recentGigs.map((gig) => (
-          <GigCard
-            key={gig._id}
-            gig={gig}
-            onPress={onSelectGig || onNavigateBrowse}
+      {/* 4. Bottom AI Chat Input Bar */}
+      <View style={styles.bottomBarWrapper}>
+        <View style={styles.bottomBar}>
+          <TouchableOpacity style={styles.attachBtn}>
+            <Ionicons name="attach" size={22} color="#888888" />
+          </TouchableOpacity>
+
+          <TextInput
+            placeholder="Create an"
+            placeholderTextColor="#666666"
+            value={chatInput}
+            onChangeText={setChatInput}
+            style={styles.chatInputText}
           />
-        ))}
 
-        {/* Explore All CTA Button */}
-        <TouchableOpacity
-          activeOpacity={0.85}
-          onPress={onNavigateBrowse}
-          style={styles.exploreCtaBtn}
-        >
-          <Text style={styles.exploreCtaText}>Explore All {MOCK_GIGS.length} Gygs</Text>
-          <Ionicons name="arrow-forward" size={16} color="#ffffff" style={{ marginLeft: 6 }} />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.micBtn}>
+            <Ionicons name="mic" size={18} color="#ffffff" />
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -212,317 +123,176 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
   },
-  scrollContent: {
+  content: {
+    flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 40,
+    paddingTop: 12,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 18,
+    marginBottom: 28,
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  userAvatar: {
+  headerIconBtn: {
     width: 44,
     height: 44,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerMenuBtn: {
+    padding: 6,
+  },
+  welcomeTitle: {
+    color: '#ffffff',
+    fontSize: 28,
+    fontFamily: 'AirbnbCereal-Bold',
+    letterSpacing: -0.5,
+    marginBottom: 20,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 14,
+  },
+  card: {
+    width: cardWidth,
+    height: 165,
     borderRadius: 22,
+    backgroundColor: '#121212',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    padding: 16,
+    justifyContent: 'space-between',
+  },
+  browseCardHighlight: {
+    borderColor: 'rgba(29, 78, 216, 0.4)',
+    backgroundColor: 'rgba(18, 18, 18, 0.95)',
+  },
+  cardHeaderLabel: {
+    color: '#888888',
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    letterSpacing: 0.8,
+  },
+  earningsValue: {
+    color: '#ffffff',
+    fontSize: 32,
+    fontFamily: 'AirbnbCereal-Bold',
+  },
+  upNextBody: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  dateBadge: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    backgroundColor: 'rgba(29, 78, 216, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(29, 78, 216, 0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  dateMonthText: {
+    color: '#60A5FA',
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Bold',
+  },
+  dateDayText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    marginTop: -2,
+  },
+  upNextSubtext: {
+    color: '#888888',
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Book',
+  },
+  browseDotsRow: {
+    flexDirection: 'row',
+    gap: 5,
+    marginTop: 20,
+    marginBottom: 4,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#444444',
+  },
+  dotActive: {
+    backgroundColor: '#1D4ED8',
+    width: 14,
+  },
+  browseTitle: {
+    color: '#ffffff',
+    fontSize: 28,
+    fontFamily: 'AirbnbCereal-Bold',
+  },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 20,
+  },
+  profileAvatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 12,
     backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  userAvatarText: {
+  profileAvatarText: {
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
   },
-  greetingText: {
-    color: '#888888',
-    fontSize: 13,
-    fontFamily: 'AirbnbCereal-Medium',
-  },
-  userNameText: {
+  profileNameText: {
     color: '#ffffff',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'AirbnbCereal-Bold',
+    flex: 1,
+    lineHeight: 20,
   },
-  headerRight: {
+  bottomBarWrapper: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 10,
+  },
+  bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  modeBadge: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(29, 78, 216, 0.3)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 9999,
-  },
-  modeBadgeText: {
-    color: '#60A5FA',
-    fontSize: 10,
-    fontFamily: 'AirbnbCereal-Bold',
-    letterSpacing: 0.5,
-  },
-  notificationBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: '#141414',
+    borderRadius: 28,
+    height: 54,
+    paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  notificationBadge: {
-    position: 'absolute',
-    top: 9,
-    right: 9,
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: '#ef4444',
+  attachBtn: {
+    marginRight: 10,
   },
-  aiBox: {
-    padding: 16,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    marginBottom: 16,
-  },
-  aiHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  aiTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  aiTitle: {
-    color: '#ffffff',
-    fontSize: 15,
-    fontFamily: 'AirbnbCereal-Bold',
-  },
-  aiSubtext: {
-    color: '#888888',
-    fontSize: 11,
-    fontFamily: 'AirbnbCereal-Medium',
-  },
-  aiInputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    height: 46,
-    marginBottom: 10,
-  },
-  aiInput: {
+  chatInputText: {
     flex: 1,
     color: '#ffffff',
-    fontSize: 13,
+    fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
-  aiSendBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+  micBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#1D4ED8',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  suggestionScroll: {
-    gap: 8,
-  },
-  suggestionChip: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 9999,
-  },
-  suggestionChipText: {
-    color: '#d4d4d4',
-    fontSize: 11,
-    fontFamily: 'AirbnbCereal-Medium',
-  },
-  integrationsRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 16,
-  },
-  integrationPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 9999,
-  },
-  statusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginRight: 6,
-  },
-  integrationText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontFamily: 'AirbnbCereal-Medium',
-  },
-  metricsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
-  },
-  metricCard: {
-    flex: 1,
-    padding: 16,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  metricLabel: {
-    color: '#888888',
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Medium',
-    marginBottom: 4,
-  },
-  metricValue: {
-    color: '#ffffff',
-    fontSize: 22,
-    fontFamily: 'AirbnbCereal-Bold',
-    marginBottom: 2,
-  },
-  metricSubtext: {
-    color: '#10B981',
-    fontSize: 11,
-    fontFamily: 'AirbnbCereal-Book',
-  },
-  browseBannerWrapper: {
-    marginBottom: 16,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  browseBanner: {
-    backgroundColor: '#1D4ED8',
-    padding: 18,
-    borderRadius: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  browseBannerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-    paddingRight: 12,
-  },
-  bannerIconBadge: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bannerTitle: {
-    color: '#ffffff',
-    fontSize: 17,
-    fontFamily: 'AirbnbCereal-Bold',
-  },
-  bannerSubtitle: {
-    color: 'rgba(255, 255, 255, 0.85)',
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Book',
-    marginTop: 2,
-  },
-  bannerArrowCircle: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 24,
-  },
-  gridCardWrapper: {
-    flex: 1,
-    borderRadius: 18,
-    overflow: 'hidden',
-  },
-  gridCard: {
-    padding: 16,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  gridIcon: {
-    marginBottom: 8,
-  },
-  gridCardTitle: {
-    color: '#ffffff',
-    fontSize: 15,
-    fontFamily: 'AirbnbCereal-Bold',
-  },
-  gridCardDesc: {
-    color: '#888888',
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Book',
-    marginTop: 2,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-  sectionTitle: {
-    color: '#ffffff',
-    fontSize: 20,
-    fontFamily: 'AirbnbCereal-Bold',
-  },
-  seeAllText: {
-    color: '#60A5FA',
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Bold',
-  },
-  exploreCtaBtn: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
-    paddingVertical: 14,
-    borderRadius: 16,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 6,
-  },
-  exploreCtaText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Bold',
+    marginLeft: 10,
   },
 });
