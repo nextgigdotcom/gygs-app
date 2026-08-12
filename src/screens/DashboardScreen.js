@@ -9,10 +9,11 @@ import {
   Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
-// Generous 20px screen padding and 16px gap between cards
 const cardWidth = (width - 40 - 16) / 2; 
 
 export default function DashboardScreen({ onNavigateBrowse }) {
@@ -20,15 +21,26 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right', 'bottom']}>
-      <StatusBar barStyle="light-content" backgroundColor="#050505" />
+      <StatusBar barStyle="light-content" backgroundColor="#000000" />
+
+      {/* Ambient Background Gradient Glows */}
+      <View style={styles.ambientGlowTopRight} pointerEvents="none" />
+      <View style={styles.ambientGlowBottomLeft} pointerEvents="none" />
 
       {/* Main Content Container */}
       <View style={styles.content}>
         
         {/* Top Header Bar */}
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.8} style={styles.appGridBtn}>
-            <Ionicons name="grid-outline" size={22} color="#ffffff" />
+          <TouchableOpacity activeOpacity={0.8} style={styles.appGridWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.04)']}
+              style={styles.appGridGradient}
+            >
+              <BlurView intensity={40} tint="dark" style={styles.appGridBlur}>
+                <Ionicons name="grid-outline" size={22} color="#ffffff" />
+              </BlurView>
+            </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity activeOpacity={0.8} style={styles.menuBtn}>
@@ -39,84 +51,128 @@ export default function DashboardScreen({ onNavigateBrowse }) {
         {/* Welcome Header */}
         <Text style={styles.welcomeTitle}>Welcome back, Akash</Text>
 
-        {/* 2x2 Grid of Rounded Cards */}
+        {/* 2x2 Grid of Liquid Glass Cards */}
         <View style={styles.gridContainer}>
           
           {/* Card 1: TOTAL EARNINGS */}
-          <View style={styles.card}>
-            <Text style={styles.cardHeaderLabel}>TOTAL EARNINGS</Text>
-            <View style={styles.cardBottomSection}>
-              <Text style={styles.earningsValue}>₹0</Text>
-            </View>
+          <View style={styles.cardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
+                <Text style={styles.cardHeaderLabel}>TOTAL EARNINGS</Text>
+                <View style={styles.cardBottomSection}>
+                  <Text style={styles.earningsValue}>₹0</Text>
+                </View>
+              </BlurView>
+            </LinearGradient>
           </View>
 
           {/* Card 2: UP NEXT */}
-          <View style={styles.card}>
-            <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
-            <View style={styles.upNextSection}>
-              <View style={styles.dateBadge}>
-                <Text style={styles.dateMonthText}>AUG</Text>
-                <Text style={styles.dateDayText}>12</Text>
-              </View>
-              <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
-            </View>
+          <View style={styles.cardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
+                <Text style={styles.cardHeaderLabel}>UP NEXT</Text>
+                <View style={styles.upNextSection}>
+                  <LinearGradient
+                    colors={['rgba(29, 78, 216, 0.35)', 'rgba(29, 78, 216, 0.15)']}
+                    style={styles.dateBadgeGradient}
+                  >
+                    <Text style={styles.dateMonthText}>AUG</Text>
+                    <Text style={styles.dateDayText}>12</Text>
+                  </LinearGradient>
+                  <Text style={styles.calendarSubtext}>Your calendar is clear</Text>
+                </View>
+              </BlurView>
+            </LinearGradient>
           </View>
 
           {/* Card 3: BROWSE GYGS (Interactive -> Navigates to Browse Gygs Screen) */}
           <TouchableOpacity 
             activeOpacity={0.85}
             onPress={onNavigateBrowse}
-            style={styles.card}
+            style={styles.cardWrapper}
           >
-            <Text style={styles.cardHeaderLabel}>BROWSE</Text>
-            <View style={styles.browseSection}>
-              <View style={styles.dotsRow}>
-                <View style={[styles.dot, styles.dotBlue]} />
-                <View style={styles.dot} />
-                <View style={styles.dot} />
-              </View>
-              <Text style={styles.browseTitle}>Gygs</Text>
-            </View>
+            <LinearGradient
+              colors={['rgba(29, 78, 216, 0.22)', 'rgba(255, 255, 255, 0.03)']}
+              style={[styles.cardGradient, styles.browseCardBorder]}
+            >
+              <BlurView intensity={50} tint="dark" style={styles.cardBlur}>
+                <Text style={styles.cardHeaderLabel}>BROWSE</Text>
+                <View style={styles.browseSection}>
+                  <View style={styles.dotsRow}>
+                    <View style={[styles.dot, styles.dotBlue]} />
+                    <View style={styles.dot} />
+                    <View style={styles.dot} />
+                  </View>
+                  <Text style={styles.browseTitle}>Gygs</Text>
+                </View>
+              </BlurView>
+            </LinearGradient>
           </TouchableOpacity>
 
           {/* Card 4: MY PROFILE */}
-          <View style={styles.card}>
-            <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
-            <View style={styles.profileSection}>
-              <View style={styles.profileAvatar}>
-                <Text style={styles.profileAvatarText}>A</Text>
-              </View>
-              <View style={styles.profileNameContainer}>
-                <Text style={styles.profileNameText} numberOfLines={2}>
-                  Akash{'\n'}Tiwari
-                </Text>
-              </View>
-            </View>
+          <View style={styles.cardWrapper}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.02)']}
+              style={styles.cardGradient}
+            >
+              <BlurView intensity={45} tint="dark" style={styles.cardBlur}>
+                <Text style={styles.cardHeaderLabel}>MY PROFILE</Text>
+                <View style={styles.profileSection}>
+                  <LinearGradient
+                    colors={['#1D4ED8', '#2563EB']}
+                    style={styles.profileAvatar}
+                  >
+                    <Text style={styles.profileAvatarText}>A</Text>
+                  </LinearGradient>
+                  <View style={styles.profileNameContainer}>
+                    <Text style={styles.profileNameText} numberOfLines={2}>
+                      Akash{'\n'}Tiwari
+                    </Text>
+                  </View>
+                </View>
+              </BlurView>
+            </LinearGradient>
           </View>
 
         </View>
 
       </View>
 
-      {/* Bottom Fixed AI Input Bar */}
+      {/* Bottom Fixed Liquid Glass AI Input Bar */}
       <View style={styles.bottomBarContainer}>
-        <View style={styles.bottomBar}>
-          <TouchableOpacity activeOpacity={0.7} style={styles.attachBtn}>
-            <Ionicons name="attach" size={24} color="#888888" />
-          </TouchableOpacity>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0.09)', 'rgba(255, 255, 255, 0.03)']}
+          style={styles.bottomBarGradient}
+        >
+          <BlurView intensity={50} tint="dark" style={styles.bottomBarBlur}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.attachBtn}>
+              <Ionicons name="attach" size={24} color="#888888" />
+            </TouchableOpacity>
 
-          <TextInput
-            placeholder="Create an"
-            placeholderTextColor="#666666"
-            value={chatInput}
-            onChangeText={setChatInput}
-            style={styles.inputField}
-          />
+            <TextInput
+              placeholder="Create an"
+              placeholderTextColor="#666666"
+              value={chatInput}
+              onChangeText={setChatInput}
+              style={styles.inputField}
+            />
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.micBtn}>
-            <Ionicons name="mic" size={18} color="#ffffff" />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity activeOpacity={0.8} style={styles.micBtnWrapper}>
+              <LinearGradient
+                colors={['#2563EB', '#1D4ED8']}
+                style={styles.micBtn}
+              >
+                <Ionicons name="mic" size={18} color="#ffffff" />
+              </LinearGradient>
+            </TouchableOpacity>
+          </BlurView>
+        </LinearGradient>
       </View>
 
     </SafeAreaView>
@@ -126,7 +182,27 @@ export default function DashboardScreen({ onNavigateBrowse }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#050505',
+    backgroundColor: '#000000',
+  },
+  ambientGlowTopRight: {
+    position: 'absolute',
+    top: -100,
+    right: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(29, 78, 216, 0.18)',
+    filter: 'blur(60px)',
+  },
+  ambientGlowBottomLeft: {
+    position: 'absolute',
+    bottom: -100,
+    left: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    filter: 'blur(60px)',
   },
   content: {
     flex: 1,
@@ -139,13 +215,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  appGridBtn: {
+  appGridWrapper: {
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  appGridGradient: {
+    borderRadius: 16,
+    padding: 1,
+  },
+  appGridBlur: {
     width: 52,
     height: 52,
-    borderRadius: 16,
-    backgroundColor: '#161616',
+    borderRadius: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -165,13 +249,25 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 16,
   },
-  card: {
+  cardWrapper: {
     width: cardWidth,
     height: 180,
     borderRadius: 24,
-    backgroundColor: '#141414',
+    overflow: 'hidden',
+  },
+  cardGradient: {
+    flex: 1,
+    borderRadius: 24,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.06)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  browseCardBorder: {
+    borderColor: 'rgba(29, 78, 216, 0.5)',
+  },
+  cardBlur: {
+    flex: 1,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
     padding: 20,
     justifyContent: 'space-between',
   },
@@ -195,13 +291,12 @@ const styles = StyleSheet.create({
   upNextSection: {
     justifyContent: 'flex-end',
   },
-  dateBadge: {
+  dateBadgeGradient: {
     width: 54,
     height: 54,
     borderRadius: 16,
-    backgroundColor: '#19253b',
     borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.3)',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
@@ -241,7 +336,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#444444',
   },
   dotBlue: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#60A5FA',
   },
   browseTitle: {
     color: '#ffffff',
@@ -258,7 +353,6 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: '#2563EB',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -283,15 +377,19 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     paddingTop: 10,
   },
-  bottomBar: {
+  bottomBarGradient: {
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    overflow: 'hidden',
+  },
+  bottomBarBlur: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#141414',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderRadius: 30,
     height: 56,
     paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   attachBtn: {
     marginRight: 10,
@@ -302,13 +400,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Book',
   },
+  micBtnWrapper: {
+    marginLeft: 10,
+    borderRadius: 19,
+    overflow: 'hidden',
+  },
   micBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#2563EB',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
   },
 });
