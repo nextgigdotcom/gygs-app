@@ -386,7 +386,7 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 7. Instagram Insights Card (Replicated 100% from Production Screenshot) */}
+        {/* 7. Instagram Insights Card (100% Exact Replica from Screenshot) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -397,14 +397,8 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               
               {/* Instagram Card Header */}
-              <View style={styles.cardHeaderRow}>
-                <View style={styles.socialLeft}>
-                  <Ionicons name="logo-instagram" size={18} color="#E1306C" />
-                  <Text style={[styles.cardHeaderLabel, { marginLeft: 8 }]}>INSTAGRAM INSIGHTS</Text>
-                </View>
-                <TouchableOpacity activeOpacity={0.7}>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
-                </TouchableOpacity>
+              <View style={styles.instaHeaderRow}>
+                <Text style={styles.instaHeaderTitle}>Instagram Insights</Text>
               </View>
 
               {/* 2-Column Flex Grid with Generous Spacing */}
@@ -413,43 +407,43 @@ export default function ProfileScreen({ onBackHome }) {
                 {/* Box 1: Followers */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Followers</Text>
-                  <Text style={styles.instaMetricVal}>4.1k</Text>
-                  <Text style={styles.instaMetricSub}>Total Count</Text>
+                  <Text style={styles.instaMetricVal}>3.3K</Text>
+                  <Text style={styles.instaMetricSub}>Lifetime</Text>
                 </View>
 
                 {/* Box 2: Engagement */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Engagement</Text>
-                  <Text style={styles.instaMetricVal}>High</Text>
-                  <Text style={styles.instaMetricSub}>Via Reels</Text>
+                  <Text style={styles.instaMetricVal}>1.7K accounts</Text>
+                  <Text style={styles.instaMetricSub}>This Month</Text>
                 </View>
 
-                {/* Box 3: Accounts Reached */}
+                {/* Box 3: Partnerships */}
                 <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Accounts Reached</Text>
-                  <Text style={styles.instaMetricVal}>600k+</Text>
-                  <Text style={styles.instaMetricSub}>In Last Month</Text>
+                  <Text style={styles.instaMetricLabel}>Partnerships</Text>
+                  <Text style={styles.instaMetricVal}>0 brands</Text>
+                  <Text style={styles.instaMetricSub}>Lifetime</Text>
                 </View>
 
-                {/* Box 4: Reels */}
+                {/* Box 4: Hook */}
                 <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Reels</Text>
-                  <Text style={styles.instaMetricVal}>10.7k</Text>
-                  <Text style={styles.instaMetricSub}>Avg Views</Text>
+                  <Text style={styles.instaMetricLabel}>Hook</Text>
+                  <Text style={styles.instaMetricVal}>53.1%</Text>
+                  <Text style={styles.instaMetricSub}>Last 90 days</Text>
                 </View>
 
-                {/* Box 5: Impressions */}
+                {/* Box 5: Interaction */}
                 <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Impressions</Text>
-                  <Text style={styles.instaMetricVal}>1.2M</Text>
-                  <Text style={styles.instaMetricSub}>Last Month</Text>
+                  <Text style={styles.instaMetricLabel}>Interaction</Text>
+                  <Text style={styles.instaMetricVal}>3.2%</Text>
+                  <Text style={styles.instaMetricSub}>Last 90 days</Text>
                 </View>
 
                 {/* Box 6: Reach */}
                 <View style={styles.instaMetricBox}>
                   <Text style={styles.instaMetricLabel}>Reach</Text>
-                  <Text style={styles.instaMetricVal}>90%</Text>
-                  <Text style={styles.instaMetricSub}>Non-Followers</Text>
+                  <Text style={styles.instaMetricVal}>44K accounts</Text>
+                  <Text style={styles.instaMetricSub}>This Month</Text>
                 </View>
 
               </View>
@@ -809,40 +803,48 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.6)',
     marginTop: 1,
   },
-  /* Instagram Insights 2-Column Flex Grid with Generous Spacing */
+  /* Instagram Insights 2-Column Flex Grid (100% Screenshot Replica) */
+  instaHeaderRow: {
+    marginBottom: 16,
+  },
+  instaHeaderTitle: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
   instaMetricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 14,
-    marginTop: 6,
+    gap: 16,
   },
   instaMetricBox: {
-    width: (width - 40 - 40 - 14) / 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    width: (width - 40 - 40 - 16) / 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.09)',
-    borderRadius: 18,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 20,
     padding: 16,
-    paddingVertical: 14,
+    paddingVertical: 18,
   },
   instaMetricLabel: {
-    fontSize: 12,
+    fontSize: 15,
     fontFamily: 'AirbnbCereal-Medium',
-    color: 'rgba(255, 255, 255, 0.65)',
+    color: '#ffffff',
   },
   instaMetricVal: {
-    fontSize: 20,
+    fontSize: 15,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
-    marginTop: 6,
-    marginBottom: 2,
+    marginTop: 14,
+    marginBottom: 6,
   },
   instaMetricSub: {
-    fontSize: 11,
+    fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: 'rgba(255, 255, 255, 0.6)',
   },
   reelsGridContainer: {
     flexDirection: 'row',
