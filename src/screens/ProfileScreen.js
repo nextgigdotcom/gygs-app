@@ -46,7 +46,194 @@ const SAMPLE_VIDEO_PRESETS = [
 ];
 
 const SUGGESTED_ARTIST_TYPES = ['Dance', 'Yoga', 'Fitness', 'Acting', 'Video Editor', 'Videographer'];
-const SUGGESTED_CATEGORIES = ['Performer', 'Trainer', 'Choreographer', 'Judge', 'Instructor', 'Creator'];
+
+const WORK_EXPERIENCE_CATEGORIES = [
+  'Music Videos',
+  'Films',
+  'Series',
+  'Advertisement',
+  'Workshops & Classes',
+  'Shows & Events',
+  'Theatre',
+  'Weddings & Sangeets',
+  'Social Media',
+];
+
+const ARTIST_TYPE_CATEGORIES_MAP = {
+  'Dance': ['Performer', 'Choreographer', 'Digital Creator', 'Trainer'],
+  'Yoga': ['Performer', 'Choreographer', 'Digital Creator', 'Trainer'],
+  'Acting': ['Performer', 'Digital Creator', 'Trainer'],
+  'Fitness': ['Performer', 'Digital Creator', 'Trainer'],
+  'Video Editor': ['Editor', 'Colorist', 'VFX Artist', 'Editor & Cinematographer', 'Animator', 'Motion Graphics Designer'],
+  'Videographer': ['Cinematographer', 'Camera Operator', 'Assistant Camera'],
+};
+
+const getAvailableCategoriesForArtistTypes = (artistTypes = []) => {
+  if (!artistTypes || artistTypes.length === 0) {
+    return ['Performer', 'Choreographer', 'Digital Creator', 'Trainer'];
+  }
+  const categorySet = new Set();
+  artistTypes.forEach((type) => {
+    const list = ARTIST_TYPE_CATEGORIES_MAP[type];
+    if (list) {
+      list.forEach((cat) => categorySet.add(cat));
+    }
+  });
+  const result = Array.from(categorySet);
+  return result.length > 0 ? result : ['Performer', 'Trainer'];
+};
+
+const ARTIST_TYPE_SKILLS_MAP = {
+  'Dance': {
+    title: 'Skills',
+    suggested: [
+      'Acrobatics',
+      'Aerial',
+      'Bachata',
+      'Ballet',
+      'Belly Dance',
+      'Bharatnatyam',
+      'Bollywood',
+      'Breaking',
+      'Classical',
+      'Contemporary',
+      'Flamenco',
+      'Folk',
+      'HipHop',
+      'House',
+      'Jazz',
+      'Jazz Funk',
+      'Kathak',
+      'Kathakali',
+      'Krump',
+      'Latin',
+      'Locking',
+      'Popping',
+      'Salsa',
+      'SemiClassical',
+      'Tanoura',
+      'Waacking',
+      'Zumba',
+    ],
+    default: ['Bollywood', 'Classical', 'Contemporary', 'HipHop', 'Jazz', 'Salsa'],
+  },
+  'Yoga': {
+    title: 'Skills',
+    suggested: [
+      'Ashtanga',
+      'Bikram',
+      'Hatha',
+      'Iyengar',
+      'Kundalini',
+      'Postnatal',
+      'Prenatal',
+      'Restorative',
+      'Vinyasa',
+    ],
+    default: ['Ashtanga', 'Hatha', 'Iyengar', 'Restorative', 'Vinyasa'],
+  },
+  'Fitness': {
+    title: 'Skills',
+    suggested: [
+      'Barre',
+      'CrossFit',
+      'Functional',
+      'HIIT',
+      'Mobility',
+      'Olympic Weightlifting',
+      'Pilates',
+      'Powerlifting',
+      'Strength and Conditioning',
+      'Zumba',
+    ],
+    default: ['CrossFit', 'Functional', 'HIIT', 'Pilates', 'Strength and Conditioning'],
+  },
+  'Acting': {
+    title: 'Skills',
+    suggested: [
+      'Improvisation',
+      'Method Acting',
+      'Monologues',
+      'Screen Acting',
+      'Stage Combat',
+      'Voice Modulation',
+    ],
+    default: ['Improvisation', 'Method Acting', 'Screen Acting', 'Voice Modulation'],
+  },
+  'Video Editor': {
+    title: 'Skills',
+    suggested: [
+      'Adobe After Effects',
+      'Adobe Firefly',
+      'Adobe Premiere Pro',
+      'Autodesk Flame',
+      'Autodesk Maya',
+      'Avid Media Composer',
+      'Blender',
+      'CapCut Pro',
+      'Cinema 4D',
+      'DaVinci Resolve',
+      'Descript',
+      'Final Cut Pro',
+      'Fusion',
+      'Mocha Pro',
+      'Nuke',
+      'Runway AI',
+      'Silhouette',
+    ],
+    default: ['Adobe After Effects', 'Adobe Premiere Pro', 'Cinema 4D', 'DaVinci Resolve', 'Final Cut Pro'],
+  },
+  'Editor': {
+    title: 'Skills',
+    suggested: [
+      'Adobe After Effects',
+      'Adobe Firefly',
+      'Adobe Premiere Pro',
+      'Autodesk Flame',
+      'Autodesk Maya',
+      'Avid Media Composer',
+      'Blender',
+      'CapCut Pro',
+      'Cinema 4D',
+      'DaVinci Resolve',
+      'Descript',
+      'Final Cut Pro',
+      'Fusion',
+      'Mocha Pro',
+      'Nuke',
+      'Runway AI',
+      'Silhouette',
+    ],
+    default: ['Adobe After Effects', 'Adobe Premiere Pro', 'Cinema 4D', 'DaVinci Resolve', 'Final Cut Pro'],
+  },
+  'Videographer': {
+    title: 'Skills',
+    suggested: [
+      'Action Rigs',
+      'Cinema Camera',
+      'Drone',
+      'Gimbal & Stabilizer',
+      'Live Streaming',
+      'Mirrorless',
+      'POV Rigs',
+    ],
+    default: ['Cinema Camera', 'Drone', 'Gimbal & Stabilizer', 'Live Streaming', 'Mirrorless'],
+  },
+};
+
+const getSkillSectionTitle = () => 'Skills';
+
+const getSuggestedSkillsForArtistTypes = (artistTypes = []) => {
+  const skillSet = new Set();
+  artistTypes.forEach((type) => {
+    const data = ARTIST_TYPE_SKILLS_MAP[type];
+    if (data && data.suggested) {
+      data.suggested.forEach((s) => skillSet.add(s));
+    }
+  });
+  const result = Array.from(skillSet).sort((a, b) => a.localeCompare(b));
+  return result.length > 0 ? result : ARTIST_TYPE_SKILLS_MAP['Dance'].suggested.slice().sort((a, b) => a.localeCompare(b));
+};
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const DAY_OPTIONS = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
@@ -81,29 +268,156 @@ export default function ProfileScreen({ onBackHome }) {
     { id: '6', label: 'Video 3', uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop', isVideo: true },
   ]);
 
+  const [performerActiveTab, setPerformerActiveTab] = useState('Music Videos');
+  const [choreographerActiveTab, setChoreographerActiveTab] = useState('Music Videos');
+
   const [performerProjects, setPerformerProjects] = useState([
     { 
-      id: '1', 
-      title: "Disney's Aladdin", 
+      id: 'p_mv1', 
+      category: 'Music Videos',
+      title: "Ghoomar Dance Feature", 
+      details: "Featured Solo Artist · T-Series Official Music Video · 2021" 
+    },
+    { 
+      id: 'p_mv2', 
+      category: 'Music Videos',
+      title: "Urban Beat Cypher 2023", 
+      details: "Principal Performer · Independent Record Label · 2023" 
+    },
+    { 
+      id: 'p_f1', 
+      category: 'Films',
+      title: "Street Dancer 3D", 
+      details: "Principal Troupe Dancer · T-Series / Remo D'Souza · 2020" 
+    },
+    { 
+      id: 'p_s1', 
+      category: 'Series',
+      title: "Bandish Bandits (Amazon Prime)", 
+      details: "Classical Fusion Performer · Episode 4 & 6 · 2020" 
+    },
+    { 
+      id: 'p_ad1', 
+      category: 'Advertisement',
+      title: "Nike India - Make It Count", 
+      details: "Movement Artist · Brand Film & Digital Campaign · 2023" 
+    },
+    { 
+      id: 'p_ad2', 
+      category: 'Advertisement',
+      title: "Cadbury Celebrations Commercial", 
+      details: "Principal Dancer · National TV Commercial · 2022" 
+    },
+    { 
+      id: 'p_w1', 
+      category: 'Workshops & Classes',
+      title: "Urban Fusion Masterclass (Mumbai)", 
+      details: "Lead Instructor · 120+ Students · Studio 11 Mumbai · 2023" 
+    },
+    { 
+      id: 'p_se1', 
+      category: 'Shows & Events',
+      title: "Disney's Aladdin Musical", 
       details: "Lead Dancer · 99 Shows Across India · Musical Theatre · 2020–2021" 
     },
     { 
-      id: '2', 
+      id: 'p_se2', 
+      category: 'Shows & Events',
       title: "Asees Kaur Live Show", 
       details: "Live Performer · Concert Choreography · National Tour · 2020–2021" 
+    },
+    { 
+      id: 'p_th1', 
+      category: 'Theatre',
+      title: "Mughal-e-Azam: The Musical", 
+      details: "Kathak & Contemporary Ensemble · NCPA Mumbai · 2022" 
+    },
+    { 
+      id: 'p_ws1', 
+      category: 'Weddings & Sangeets',
+      title: "Royal Udaipur Destination Sangeet", 
+      details: "Celebrity Couple Choreography & Stage Lead · 2023" 
+    },
+    { 
+      id: 'p_sm1', 
+      category: 'Social Media',
+      title: "Viral Reel Collab @akashtiwari", 
+      details: "Choreography Reel · 2.4M Views · Trend Feature · 2023" 
     },
   ]);
 
   const [choreographerProjects, setChoreographerProjects] = useState([
     { 
-      id: '1', 
-      title: "Badshah & Abhishek Bachchan", 
-      details: "Lead Choreographer · Badshah · Abhishek Bachchan · Saiyami Kher · 2020–2021" 
+      id: 'c_mv1', 
+      category: 'Music Videos',
+      title: "Badshah & Saiyami Kher Music Feature", 
+      details: "Lead Choreographer · Music Video Production · 2022" 
     },
     { 
-      id: '2', 
-      title: "Ghoomar", 
-      details: "Assistant Choreographer · Ghoomar Song · Classical & Contemporary · 2020–2021" 
+      id: 'c_mv2', 
+      category: 'Music Videos',
+      title: "Ghoomar Fusion Music Track", 
+      details: "Assistant Choreographer · Classical & Contemporary · 2020–2021" 
+    },
+    { 
+      id: 'c_f1', 
+      category: 'Films',
+      title: "Bheed (Feature Film)", 
+      details: "Associate Choreographer & Movement Director · 2023" 
+    },
+    { 
+      id: 'c_s1', 
+      category: 'Series',
+      title: "Fabulous Lives of Bollywood Wives", 
+      details: "Choreography Direction · Sangeet Episode Feature · 2022" 
+    },
+    { 
+      id: 'c_ad1', 
+      category: 'Advertisement',
+      title: "Puma Nitro Campaign", 
+      details: "Movement Director & Choreographer · Digital Commercial · 2023" 
+    },
+    { 
+      id: 'c_ad2', 
+      category: 'Advertisement',
+      title: "Flipkart Big Billion Days Ad", 
+      details: "Commercial Choreographer · Festive Ad Feature · 2022" 
+    },
+    { 
+      id: 'c_w1', 
+      category: 'Workshops & Classes',
+      title: "Dance Intensive Tour (Delhi & Bangalore)", 
+      details: "Master Choreographer · 3-Day Intensive Workshop · 2023" 
+    },
+    { 
+      id: 'c_se1', 
+      category: 'Shows & Events',
+      title: "Badshah Live Arena Tour", 
+      details: "Lead Stage Choreographer · Arena Tour Across 6 Cities · 2021" 
+    },
+    { 
+      id: 'c_se2', 
+      category: 'Shows & Events',
+      title: "Filmfare Awards Opening Act", 
+      details: "Associate Choreographer · Grand Stage Ensemble · 2022" 
+    },
+    { 
+      id: 'c_th1', 
+      category: 'Theatre',
+      title: "Broadway Dreams India", 
+      details: "Choreographer & Stage Movement Coach · 2022" 
+    },
+    { 
+      id: 'c_ws1', 
+      category: 'Weddings & Sangeets',
+      title: "Grand Ambani Family Sangeet Act", 
+      details: "Lead Concept Choreographer · 40-Dancer Stage Ensemble · 2023" 
+    },
+    { 
+      id: 'c_sm1', 
+      category: 'Social Media',
+      title: "YouTube Dance Showcase 4K", 
+      details: "Concept & Choreography · 1.2M Views · 2023" 
     },
   ]);
 
@@ -132,7 +446,15 @@ export default function ProfileScreen({ onBackHome }) {
     engagement: '8.4%',
   });
 
+  const [skills, setSkills] = useState([
+    'HipHop', 'Contemporary', 'Bollywood', 'Classical', 'Salsa', 'Jazz'
+  ]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedSocialPlatform, setSelectedSocialPlatform] = useState('instagram');
+  const [socialHandles, setSocialHandles] = useState({
+    instagram: 'akashtiwari',
+    youtube: 'Akash Tiwari Official',
+  });
 
   const [galleryPage, setGalleryPage] = useState(0);
   const galleryScrollRef = useRef(null);
@@ -322,7 +644,11 @@ export default function ProfileScreen({ onBackHome }) {
     } else if (modalType === 'artistType') {
       setSelectedArtistTypes([...profile.artistTypes]);
     } else if (modalType === 'categories') {
-      setSelectedCategories([...profile.categories]);
+      const validCategories = getAvailableCategoriesForArtistTypes(profile.artistTypes);
+      const currentSelected = profile.categories.filter(c => validCategories.includes(c));
+      setSelectedCategories(currentSelected.length > 0 ? currentSelected : [validCategories[0]]);
+    } else if (modalType === 'skills') {
+      setSelectedSkills([...skills]);
     } else if (modalType === 'age') {
       setActiveDropdown(null);
     } else if (modalType === 'gender') {
@@ -342,8 +668,8 @@ export default function ProfileScreen({ onBackHome }) {
       setTempData({ ...training });
     } else if (modalType === 'socials') {
       setTempData({
-        instagram: { ...instaInsights },
-        youtube: { ...youtubeInsights },
+        instagramUsername: socialHandles.instagram,
+        youtubeUsername: socialHandles.youtube,
       });
     }
   };
@@ -355,9 +681,26 @@ export default function ProfileScreen({ onBackHome }) {
         height: `${tempHeightFeet || '5'}' ${tempHeightInches || '0'}"`,
       }));
     } else if (activeModal === 'artistType') {
-      setProfile(prev => ({ ...prev, artistTypes: selectedArtistTypes }));
+      const newArtistTypes = selectedArtistTypes.length > 0 ? selectedArtistTypes : ['Dance'];
+      const validCategories = getAvailableCategoriesForArtistTypes(newArtistTypes);
+      const filteredCategories = profile.categories.filter(c => validCategories.includes(c));
+      const finalCategories = filteredCategories.length > 0 ? filteredCategories : [validCategories[0]];
+      const defaultSkillData = ARTIST_TYPE_SKILLS_MAP[newArtistTypes[0]] || ARTIST_TYPE_SKILLS_MAP['Dance'];
+      setSkills(defaultSkillData.default);
+      setProfile(prev => ({
+        ...prev,
+        artistTypes: newArtistTypes,
+        categories: finalCategories,
+      }));
     } else if (activeModal === 'categories') {
-      setProfile(prev => ({ ...prev, categories: selectedCategories }));
+      const validCategories = getAvailableCategoriesForArtistTypes(profile.artistTypes);
+      const finalSelected = selectedCategories.filter(c => validCategories.includes(c));
+      setProfile(prev => ({
+        ...prev,
+        categories: finalSelected.length > 0 ? finalSelected : [validCategories[0]]
+      }));
+    } else if (activeModal === 'skills') {
+      setSkills(selectedSkills.length > 0 ? selectedSkills : skills);
     } else if (activeModal === 'age') {
       const calculated = calculateAgeNumber(birthDay, birthMonth, birthYear);
       setProfile(prev => ({ ...prev, age: `${calculated} Years` }));
@@ -381,8 +724,10 @@ export default function ProfileScreen({ onBackHome }) {
         bullet: tempData.bullet,
       });
     } else if (activeModal === 'socials') {
-      if (tempData.instagram) setInstaInsights(tempData.instagram);
-      if (tempData.youtube) setYoutubeInsights(tempData.youtube);
+      setSocialHandles({
+        instagram: (tempData.instagramUsername || '').replace(/^@/, '').trim(),
+        youtube: (tempData.youtubeUsername || '').replace(/^@/, '').trim(),
+      });
     }
     setActiveModal(null);
   };
@@ -568,7 +913,34 @@ export default function ProfileScreen({ onBackHome }) {
 
         </View>
 
-        {/* 3. Demographics Liquid Glass Row (AGE, HEIGHT, GENDER Side-by-Side) */}
+        {/* 3. Skills Liquid Glass Card */}
+        <View style={styles.cardWrapper}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cardGradient}
+          >
+            <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>SKILLS</Text>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('skills')}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.tagContainer}>
+                {skills.map((skill, index) => (
+                  <View key={index} style={styles.tagPill}>
+                    <Text style={styles.tagPillText}>{skill}</Text>
+                  </View>
+                ))}
+              </View>
+            </BlurView>
+          </LinearGradient>
+        </View>
+
+        {/* 4. Demographics Liquid Glass Row (AGE, HEIGHT, GENDER Side-by-Side) */}
         <View style={styles.demographicsRow}>
           
           {/* Age Card */}
@@ -751,27 +1123,50 @@ export default function ProfileScreen({ onBackHome }) {
                 </TouchableOpacity>
               </View>
 
-              {/* Filter Pills Row */}
-              <View style={styles.expFilterPillRow}>
-                <View style={styles.activePillBlue}>
-                  <Text style={styles.activePillText}>Shows & Events</Text>
-                </View>
-              </View>
+              {/* Filter Pills Row (Interactive 9 Sub-Categories) */}
+              <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.expFilterScrollContainer}
+              >
+                {WORK_EXPERIENCE_CATEGORIES.map((subCat) => {
+                  const isActive = performerActiveTab === subCat;
+                  return (
+                    <TouchableOpacity
+                      key={subCat}
+                      activeOpacity={0.75}
+                      onPress={() => setPerformerActiveTab(subCat)}
+                      style={isActive ? styles.activePillBlue : styles.inactivePillBorder}
+                    >
+                      <Text style={isActive ? styles.activePillText : styles.inactivePillText}>
+                        {subCat}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
 
-              {/* Projects */}
-              {performerProjects.map((proj) => (
-                <View key={proj.id} style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>{proj.title}</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>{proj.details}</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
+              {/* Projects filtered by selected sub-category */}
+              {performerProjects.filter(p => (p.category || 'Music Videos') === performerActiveTab).length > 0 ? (
+                performerProjects
+                  .filter(p => (p.category || 'Music Videos') === performerActiveTab)
+                  .map((proj) => (
+                    <View key={proj.id} style={styles.expProjectBlock}>
+                      <View style={styles.expProjectHeaderRow}>
+                        <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                        <Text style={styles.expProjectTitleText}>{proj.title}</Text>
+                      </View>
+                      <View style={styles.expSubEntryBox}>
+                        <View style={styles.expLeftAccentLine} />
+                        <Text style={styles.expSubEntryText}>{proj.details}</Text>
+                      </View>
+                    </View>
+                  ))
+              ) : (
+                <View style={styles.expEmptySubCatBlock}>
+                  <Text style={styles.expEmptySubCatText}>No {performerActiveTab} projects added yet</Text>
                 </View>
-              ))}
+              )}
             </BlurView>
           </LinearGradient>
         </View>
@@ -792,38 +1187,55 @@ export default function ProfileScreen({ onBackHome }) {
                 </TouchableOpacity>
               </View>
 
-              {/* Filter Pills Row */}
-              <View style={styles.expFilterPillRow}>
-                <View style={styles.activePillBlue}>
-                  <Text style={styles.activePillText}>Shows & Events</Text>
-                </View>
-                <View style={styles.inactivePillBorder}>
-                  <Text style={styles.inactivePillText}>Advertisments</Text>
-                </View>
-                <View style={styles.inactivePillBorder}>
-                  <Text style={styles.inactivePillText}>Music Video</Text>
-                </View>
-              </View>
+              {/* Filter Pills Row (Interactive 9 Sub-Categories) */}
+              <ScrollView 
+                horizontal={true} 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.expFilterScrollContainer}
+              >
+                {WORK_EXPERIENCE_CATEGORIES.map((subCat) => {
+                  const isActive = choreographerActiveTab === subCat;
+                  return (
+                    <TouchableOpacity
+                      key={subCat}
+                      activeOpacity={0.75}
+                      onPress={() => setChoreographerActiveTab(subCat)}
+                      style={isActive ? styles.activePillBlue : styles.inactivePillBorder}
+                    >
+                      <Text style={isActive ? styles.activePillText : styles.inactivePillText}>
+                        {subCat}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
 
-              {/* Projects */}
-              {choreographerProjects.map((proj) => (
-                <View key={proj.id} style={styles.expProjectBlock}>
-                  <View style={styles.expProjectHeaderRow}>
-                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                    <Text style={styles.expProjectTitleText}>{proj.title}</Text>
-                  </View>
-                  <View style={styles.expSubEntryBox}>
-                    <View style={styles.expLeftAccentLine} />
-                    <Text style={styles.expSubEntryText}>{proj.details}</Text>
-                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                  </View>
+              {/* Projects filtered by selected sub-category */}
+              {choreographerProjects.filter(p => (p.category || 'Music Videos') === choreographerActiveTab).length > 0 ? (
+                choreographerProjects
+                  .filter(p => (p.category || 'Music Videos') === choreographerActiveTab)
+                  .map((proj) => (
+                    <View key={proj.id} style={styles.expProjectBlock}>
+                      <View style={styles.expProjectHeaderRow}>
+                        <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                        <Text style={styles.expProjectTitleText}>{proj.title}</Text>
+                      </View>
+                      <View style={styles.expSubEntryBox}>
+                        <View style={styles.expLeftAccentLine} />
+                        <Text style={styles.expSubEntryText}>{proj.details}</Text>
+                      </View>
+                    </View>
+                  ))
+              ) : (
+                <View style={styles.expEmptySubCatBlock}>
+                  <Text style={styles.expEmptySubCatText}>No {choreographerActiveTab} projects added yet</Text>
                 </View>
-              ))}
+              )}
             </BlurView>
           </LinearGradient>
         </View>
 
-        {/* 7. Training & Certification Liquid Glass Card */}
+        {/* 7. Training & Education Liquid Glass Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -833,7 +1245,7 @@ export default function ProfileScreen({ onBackHome }) {
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
-                <Text style={styles.cardHeaderLabel}>TRAINING & CERTIFICATION</Text>
+                <Text style={styles.cardHeaderLabel}>TRAINING & EDUCATION</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('training')}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
@@ -842,9 +1254,6 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.experienceBlock}>
                 <View style={styles.expHeaderRow}>
                   <Text style={styles.expRoleTitle}>{training.title}</Text>
-                  <View style={styles.tagPill}>
-                    <Text style={styles.tagPillText}>{training.tag}</Text>
-                  </View>
                 </View>
                 <Text style={styles.institutionText}>{training.institution}</Text>
                 
@@ -1001,7 +1410,7 @@ export default function ProfileScreen({ onBackHome }) {
                         </LinearGradient>
                         <View>
                           <View style={styles.embedNameRow}>
-                            <Text style={styles.embedHandleText}>@akashtiwari</Text>
+                            <Text style={styles.embedHandleText}>@{socialHandles.instagram || 'username'}</Text>
                             <Ionicons name="checkmark-circle" size={13} color="#3B82F6" style={{ marginLeft: 4 }} />
                           </View>
                           <Text style={styles.embedSubtext}>184 Posts · Verified Creator</Text>
@@ -1010,7 +1419,7 @@ export default function ProfileScreen({ onBackHome }) {
 
                       <TouchableOpacity 
                         activeOpacity={0.8}
-                        onPress={() => Alert.alert('External Link', 'Opening instagram.com/akashtiwari...')}
+                        onPress={() => Alert.alert('External Link', `Opening instagram.com/${socialHandles.instagram || 'akashtiwari'}...`)}
                         style={styles.embedVisitBtnGradientWrapper}
                       >
                         <LinearGradient
@@ -1064,12 +1473,6 @@ export default function ProfileScreen({ onBackHome }) {
                           <Text style={styles.embedPostStatText}>❤️ 4.1k</Text>
                         </LinearGradient>
                       </View>
-                    </View>
-
-                    {/* Bottom Sync Footer */}
-                    <View style={styles.embedFooterRow}>
-                      <Ionicons name="logo-instagram" size={12} color="#E1306C" style={{ marginRight: 5 }} />
-                      <Text style={styles.embedFooterText}>Connected Account · Auto-syncs every 24h</Text>
                     </View>
                   </View>
 
@@ -1136,7 +1539,7 @@ export default function ProfileScreen({ onBackHome }) {
                         </View>
                         <View>
                           <View style={styles.embedNameRow}>
-                            <Text style={styles.embedHandleText}>Akash Tiwari Official</Text>
+                            <Text style={styles.embedHandleText}>{socialHandles.youtube || 'Akash Tiwari Official'}</Text>
                             <Ionicons name="checkmark-circle" size={13} color="#FF0000" style={{ marginLeft: 4 }} />
                           </View>
                           <Text style={styles.embedSubtext}>64 Videos · Official Artist Channel</Text>
@@ -1145,7 +1548,7 @@ export default function ProfileScreen({ onBackHome }) {
 
                       <TouchableOpacity 
                         activeOpacity={0.8}
-                        onPress={() => Alert.alert('External Link', 'Opening youtube.com/@akashtiwari...')}
+                        onPress={() => Alert.alert('External Link', `Opening youtube.com/@${socialHandles.youtube || 'akashtiwari'}...`)}
                         style={styles.embedVisitBtn}
                       >
                         <Text style={styles.embedVisitBtnText}>Watch</Text>
@@ -1263,13 +1666,13 @@ export default function ProfileScreen({ onBackHome }) {
                 </View>
               )}
 
-              {/* 3. Edit Categories Modal */}
+              {/* 3. Edit Categories Modal (Dynamic based on selected Artist Types) */}
               {activeModal === 'categories' && (
                 <View>
-                  <Text style={styles.sheetTitle}>Edit Categories</Text>
-                  <Text style={styles.sheetInputLabel}>SELECT YOUR ROLES</Text>
-                  <View style={styles.sheetPillWrapGrid}>
-                    {SUGGESTED_CATEGORIES.map((tag) => {
+                  <Text style={styles.artistModalTitle}>What are your categories?</Text>
+                  <Text style={styles.artistModalSubtitle}>(Select all that apply)</Text>
+                  <View style={styles.artistPillsWrapGrid}>
+                    {getAvailableCategoriesForArtistTypes(profile.artistTypes).map((tag) => {
                       const isSelected = selectedCategories.includes(tag);
                       return (
                         <TouchableOpacity
@@ -1287,6 +1690,38 @@ export default function ProfileScreen({ onBackHome }) {
                         >
                           <Text style={[styles.sheetPillText, isSelected ? styles.sheetPillTextSelected : styles.sheetPillTextUnselected]}>
                             {tag}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+              )}
+
+              {/* Edit Skills Modal */}
+              {activeModal === 'skills' && (
+                <View>
+                  <Text style={styles.artistModalTitle}>Edit Skills</Text>
+                  <Text style={styles.artistModalSubtitle}>(Select all that apply)</Text>
+                  <View style={styles.artistPillsWrapGrid}>
+                    {getSuggestedSkillsForArtistTypes(profile.artistTypes).map((sk) => {
+                      const isSelected = selectedSkills.includes(sk);
+                      return (
+                        <TouchableOpacity
+                          key={sk}
+                          activeOpacity={0.7}
+                          onPress={() => {
+                            setSelectedSkills(prev => 
+                              prev.includes(sk) ? prev.filter(s => s !== sk) : [...prev, sk]
+                            );
+                          }}
+                          style={[
+                            styles.sheetPill,
+                            isSelected ? styles.sheetPillSelected : styles.sheetPillUnselected
+                          ]}
+                        >
+                          <Text style={[styles.sheetPillText, isSelected ? styles.sheetPillTextSelected : styles.sheetPillTextUnselected]}>
+                            {sk}
                           </Text>
                         </TouchableOpacity>
                       );
@@ -1643,7 +2078,7 @@ export default function ProfileScreen({ onBackHome }) {
                     <View key={proj.id} style={[styles.modalSectionCard, { marginBottom: 14 }]}>
                       <View style={styles.modalItemHeaderRow}>
                         <View style={styles.modalBadgePill}>
-                          <Text style={styles.modalBadgePillText}>SHOW {idx + 1}</Text>
+                          <Text style={styles.modalBadgePillText}>{proj.category || 'Shows & Events'}</Text>
                         </View>
                         <TouchableOpacity 
                           activeOpacity={0.7}
@@ -1654,7 +2089,34 @@ export default function ProfileScreen({ onBackHome }) {
                         </TouchableOpacity>
                       </View>
 
-                      <Text style={styles.sheetInputLabel}>PRODUCTION TITLE</Text>
+                      <Text style={styles.sheetInputLabel}>CATEGORY</Text>
+                      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginBottom: 8 }}>
+                        {WORK_EXPERIENCE_CATEGORIES.map((cat) => {
+                          const isCatSelected = (proj.category || 'Shows & Events') === cat;
+                          return (
+                            <TouchableOpacity
+                              key={cat}
+                              activeOpacity={0.7}
+                              onPress={() => {
+                                const updated = [...tempData.projects];
+                                updated[idx].category = cat;
+                                setTempData(prev => ({ ...prev, projects: updated }));
+                              }}
+                              style={[
+                                styles.sheetPill,
+                                isCatSelected ? styles.sheetPillSelected : styles.sheetPillUnselected,
+                                { marginRight: 6, paddingVertical: 4, paddingHorizontal: 10 }
+                              ]}
+                            >
+                              <Text style={[styles.sheetPillText, isCatSelected ? styles.sheetPillTextSelected : styles.sheetPillTextUnselected, { fontSize: 11 }]}>
+                                {cat}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </ScrollView>
+
+                      <Text style={[styles.sheetInputLabel, { marginTop: 4 }]}>TITLE</Text>
                       <TextInput 
                         style={styles.sheetInput}
                         value={proj.title}
@@ -1667,7 +2129,7 @@ export default function ProfileScreen({ onBackHome }) {
                         placeholderTextColor="#777777"
                       />
 
-                      <Text style={[styles.sheetInputLabel, { marginTop: 12 }]}>HIGHLIGHTS</Text>
+                      <Text style={[styles.sheetInputLabel, { marginTop: 12 }]}>DESCRIPTION</Text>
                       <TextInput 
                         style={styles.sheetInput}
                         value={proj.details}
@@ -1701,7 +2163,7 @@ export default function ProfileScreen({ onBackHome }) {
                     <View key={proj.id} style={[styles.modalSectionCard, { marginBottom: 14 }]}>
                       <View style={styles.modalItemHeaderRow}>
                         <View style={styles.modalBadgePill}>
-                          <Text style={styles.modalBadgePillText}>CHOREOGRAPHY {idx + 1}</Text>
+                          <Text style={styles.modalBadgePillText}>{proj.category || 'Shows & Events'}</Text>
                         </View>
                         <TouchableOpacity 
                           activeOpacity={0.7}
@@ -1712,7 +2174,34 @@ export default function ProfileScreen({ onBackHome }) {
                         </TouchableOpacity>
                       </View>
 
-                      <Text style={styles.sheetInputLabel}>PRODUCTION / ARTIST NAME</Text>
+                      <Text style={styles.sheetInputLabel}>CATEGORY</Text>
+                      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginBottom: 8 }}>
+                        {WORK_EXPERIENCE_CATEGORIES.map((cat) => {
+                          const isCatSelected = (proj.category || 'Shows & Events') === cat;
+                          return (
+                            <TouchableOpacity
+                              key={cat}
+                              activeOpacity={0.7}
+                              onPress={() => {
+                                const updated = [...tempData.projects];
+                                updated[idx].category = cat;
+                                setTempData(prev => ({ ...prev, projects: updated }));
+                              }}
+                              style={[
+                                styles.sheetPill,
+                                isCatSelected ? styles.sheetPillSelected : styles.sheetPillUnselected,
+                                { marginRight: 6, paddingVertical: 4, paddingHorizontal: 10 }
+                              ]}
+                            >
+                              <Text style={[styles.sheetPillText, isCatSelected ? styles.sheetPillTextSelected : styles.sheetPillTextUnselected, { fontSize: 11 }]}>
+                                {cat}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </ScrollView>
+
+                      <Text style={[styles.sheetInputLabel, { marginTop: 4 }]}>TITLE</Text>
                       <TextInput 
                         style={styles.sheetInput}
                         value={proj.title}
@@ -1725,7 +2214,7 @@ export default function ProfileScreen({ onBackHome }) {
                         placeholderTextColor="#777777"
                       />
 
-                      <Text style={[styles.sheetInputLabel, { marginTop: 12 }]}>HIGHLIGHTS</Text>
+                      <Text style={[styles.sheetInputLabel, { marginTop: 12 }]}>DESCRIPTION</Text>
                       <TextInput 
                         style={styles.sheetInput}
                         value={proj.details}
@@ -1751,24 +2240,16 @@ export default function ProfileScreen({ onBackHome }) {
                 </View>
               )}
 
-              {/* 10. Training Editor */}
+              {/* 10. Training & Education Editor */}
               {activeModal === 'training' && (
                 <View>
-                  <Text style={styles.sheetTitle}>Edit Training & Certification</Text>
-                  <Text style={styles.sheetInputLabel}>DEGREE / CERTIFICATION TITLE</Text>
+                  <Text style={styles.sheetTitle}>Edit Training & Education</Text>
+                  <Text style={styles.sheetInputLabel}>DEGREE / COURSE TITLE</Text>
                   <TextInput 
                     style={styles.sheetInput}
                     value={tempData.title}
                     onChangeText={(val) => setTempData(prev => ({ ...prev, title: val }))}
                     placeholder="e.g. Diploma in Performing Arts"
-                    placeholderTextColor="#777777"
-                  />
-                  <Text style={[styles.sheetInputLabel, { marginTop: 14 }]}>STATUS TAG</Text>
-                  <TextInput 
-                    style={styles.sheetInput}
-                    value={tempData.tag}
-                    onChangeText={(val) => setTempData(prev => ({ ...prev, tag: val }))}
-                    placeholder="e.g. Certified"
                     placeholderTextColor="#777777"
                   />
                   <Text style={[styles.sheetInputLabel, { marginTop: 14 }]}>INSTITUTION</Text>
@@ -1791,119 +2272,56 @@ export default function ProfileScreen({ onBackHome }) {
                 </View>
               )}
 
-              {/* 11. Socials Editor */}
+              {/* 11. Socials Editor (Only Instagram and YouTube Usernames) */}
               {activeModal === 'socials' && (
                 <View>
                   <Text style={styles.sheetTitle}>Edit Socials</Text>
                   
-                  {/* Instagram Section */}
-                  <View style={[styles.modalSectionCard, { marginBottom: 14 }]}>
-                    <View style={styles.modalItemHeaderRow}>
-                      <View style={styles.modalBadgePill}>
-                        <Text style={styles.modalBadgePillText}>INSTAGRAM</Text>
-                      </View>
-                      <Ionicons name="logo-instagram" size={18} color="#ffffff" />
+                  {/* Instagram Username Field */}
+                  <View style={styles.socialModalFieldBlock}>
+                    <View style={styles.socialInputLabelRow}>
+                      <Ionicons name="logo-instagram" size={14} color="#ffffff" style={{ marginRight: 6 }} />
+                      <Text style={styles.sheetInputLabel}>INSTAGRAM USERNAME</Text>
                     </View>
-
-                    <View style={styles.modalInstaGrid}>
-                      <View style={styles.modalInstaTile}>
-                        <Text style={styles.sheetInputLabel}>FOLLOWERS</Text>
-                        <TextInput 
-                          style={styles.sheetInput}
-                          value={tempData.instagram?.followers}
-                          onChangeText={(val) => setTempData(prev => ({
-                            ...prev,
-                            instagram: { ...prev.instagram, followers: val }
-                          }))}
-                          placeholder="12.5k followers"
-                          placeholderTextColor="#777777"
-                        />
-                      </View>
-
-                      <View style={styles.modalInstaTile}>
-                        <Text style={styles.sheetInputLabel}>ENGAGEMENT</Text>
-                        <TextInput 
-                          style={styles.sheetInput}
-                          value={tempData.instagram?.engagement}
-                          onChangeText={(val) => setTempData(prev => ({
-                            ...prev,
-                            instagram: { ...prev.instagram, engagement: val }
-                          }))}
-                          placeholder="1.7K accounts"
-                          placeholderTextColor="#777777"
-                        />
-                      </View>
-
-                      <View style={styles.modalInstaTile}>
-                        <Text style={styles.sheetInputLabel}>PARTNERSHIPS</Text>
-                        <TextInput 
-                          style={styles.sheetInput}
-                          value={tempData.instagram?.partnerships}
-                          onChangeText={(val) => setTempData(prev => ({
-                            ...prev,
-                            instagram: { ...prev.instagram, partnerships: val }
-                          }))}
-                          placeholder="0 brands"
-                          placeholderTextColor="#777777"
-                        />
-                      </View>
-
-                      <View style={styles.modalInstaTile}>
-                        <Text style={styles.sheetInputLabel}>HOOK RATE</Text>
-                        <TextInput 
-                          style={styles.sheetInput}
-                          value={tempData.instagram?.hook}
-                          onChangeText={(val) => setTempData(prev => ({
-                            ...prev,
-                            instagram: { ...prev.instagram, hook: val }
-                          }))}
-                          placeholder="53.1%"
-                          placeholderTextColor="#777777"
-                        />
-                      </View>
+                    <View style={styles.socialInputWrapper}>
+                      <Text style={styles.socialPrefixText}>@</Text>
+                      <TextInput 
+                        style={styles.socialInputField}
+                        value={tempData.instagramUsername}
+                        onChangeText={(val) => setTempData(prev => ({
+                          ...prev,
+                          instagramUsername: val
+                        }))}
+                        placeholder="akashtiwari"
+                        placeholderTextColor="#777777"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                      />
                     </View>
                   </View>
 
-                  {/* YouTube Section */}
-                  <View style={styles.modalSectionCard}>
-                    <View style={styles.modalItemHeaderRow}>
-                      <View style={styles.modalBadgePill}>
-                        <Text style={styles.modalBadgePillText}>YOUTUBE</Text>
-                      </View>
-                      <Ionicons name="logo-youtube" size={16} color="#FF0000" />
+                  {/* YouTube Username Field */}
+                  <View style={[styles.socialModalFieldBlock, { marginTop: 16 }]}>
+                    <View style={styles.socialInputLabelRow}>
+                      <Ionicons name="logo-youtube" size={14} color="#FF0000" style={{ marginRight: 6 }} />
+                      <Text style={styles.sheetInputLabel}>YOUTUBE USERNAME / CHANNEL</Text>
                     </View>
-
-                    <View style={styles.modalInstaGrid}>
-                      <View style={styles.modalInstaTile}>
-                        <Text style={styles.sheetInputLabel}>SUBSCRIBERS</Text>
-                        <TextInput 
-                          style={styles.sheetInput}
-                          value={tempData.youtube?.subscribers}
-                          onChangeText={(val) => setTempData(prev => ({
-                            ...prev,
-                            youtube: { ...prev.youtube, subscribers: val }
-                          }))}
-                          placeholder="48.2k subscribers"
-                          placeholderTextColor="#777777"
-                        />
-                      </View>
-
-                      <View style={styles.modalInstaTile}>
-                        <Text style={styles.sheetInputLabel}>TOTAL VIEWS</Text>
-                        <TextInput 
-                          style={styles.sheetInput}
-                          value={tempData.youtube?.views}
-                          onChangeText={(val) => setTempData(prev => ({
-                            ...prev,
-                            youtube: { ...prev.youtube, views: val }
-                          }))}
-                          placeholder="1.2M views"
-                          placeholderTextColor="#777777"
-                        />
-                      </View>
+                    <View style={styles.socialInputWrapper}>
+                      <Text style={styles.socialPrefixText}>@</Text>
+                      <TextInput 
+                        style={styles.socialInputField}
+                        value={tempData.youtubeUsername}
+                        onChangeText={(val) => setTempData(prev => ({
+                          ...prev,
+                          youtubeUsername: val
+                        }))}
+                        placeholder="AkashTiwariOfficial"
+                        placeholderTextColor="#777777"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                      />
                     </View>
                   </View>
-
                 </View>
               )}
 
@@ -2448,6 +2866,13 @@ const styles = StyleSheet.create({
   },
 
   /* Work Experience Styles */
+  expFilterScrollContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 2,
+    marginBottom: 16,
+  },
   expFilterPillRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -2480,6 +2905,17 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 12,
     fontFamily: 'AirbnbCereal-Book',
+  },
+  expEmptySubCatBlock: {
+    paddingVertical: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  expEmptySubCatText: {
+    color: 'rgba(255, 255, 255, 0.4)',
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Book',
+    fontStyle: 'italic',
   },
   expProjectBlock: {
     marginBottom: 16,
@@ -2595,6 +3031,47 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.6)',
   },
 
+  /* Skill Cloud Card Styles */
+  skillCloudCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  skillCloudHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  skillCloudHeaderTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'AirbnbCereal-Bold',
+    color: '#ffffff',
+  },
+  skillPillCloud: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  skillPill: {
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(29, 78, 216, 0.3)',
+    borderRadius: 100,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  skillPillText: {
+    color: '#60A5FA',
+    fontSize: 13,
+    fontWeight: '500',
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+
   /* Floating Centered Dialog Edit Modal Styles */
   sheetOverlay: {
     flex: 1,
@@ -2699,6 +3176,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
+  },
+  socialModalFieldBlock: {
+    width: '100%',
+  },
+  socialInputLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  socialInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2A2A2A',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  socialPrefixText: {
+    color: '#60A5FA',
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    marginRight: 4,
+  },
+  socialInputField: {
+    flex: 1,
+    paddingVertical: 12,
+    color: '#ffffff',
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Medium',
   },
   genderTitle: {
     fontSize: 18,
