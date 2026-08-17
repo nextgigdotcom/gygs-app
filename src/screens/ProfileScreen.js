@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -8,7 +8,12 @@ import {
   StatusBar,
   Alert,
   Dimensions,
-  Image
+  Image,
+  Modal,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  FlatList
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -16,16 +21,375 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const { width } = Dimensions.get('window');
+const GALLERY_GAP = 8;
+const GALLERY_PADDING = 80; // 20 canvas left + 20 canvas right + 20 card left + 20 card right
+const GALLERY_CARD_WIDTH = Math.floor((width - GALLERY_PADDING - (GALLERY_GAP * 2)) / 3);
+const GALLERY_CARD_HEIGHT = Math.round(GALLERY_CARD_WIDTH * (16 / 9));
+const GALLERY_PAGE_STEP = (GALLERY_CARD_WIDTH + GALLERY_GAP) * 3;
+
+const SAMPLE_PHOTO_PRESETS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1509670811275-79453d576390?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=400&auto=format&fit=crop',
+];
+
+const SAMPLE_VIDEO_PRESETS = [
+  'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=400&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=400&auto=format&fit=crop',
+];
+
+const SUGGESTED_ARTIST_TYPES = ['Dance', 'Yoga', 'Fitness', 'Acting', 'Video Editor', 'Videographer'];
+const SUGGESTED_CATEGORIES = ['Performer', 'Trainer', 'Choreographer', 'Judge', 'Instructor', 'Creator'];
+
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const DAY_OPTIONS = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+const CURRENT_YEAR = new Date().getFullYear();
+const YEAR_OPTIONS = Array.from({ length: 60 }, (_, i) => (CURRENT_YEAR - 14 - i).toString());
 
 export default function ProfileScreen({ onBackHome }) {
-  const artistTypes = ['Dance'];
-  const categories = ['Performer', 'Trainer'];
-  const [galleryPage, setGalleryPage] = React.useState(0);
-  const galleryScrollRef = React.useRef(null);
+  // Read-only metrics (NOT EDITABLE as requested)
+  const metrics = {
+    reviews: '4',
+    rating: '5.0',
+    totalGygs: '5',
+  };
+
+  // Editable State for All Profile Sections
+  const [profile, setProfile] = useState({
+    name: 'Akash Tiwari',
+    location: 'Lives in Mumbai, India',
+    artistTypes: ['Dance'],
+    categories: ['Performer', 'Trainer'],
+    age: '24 Years',
+    height: '5\' 9"',
+    gender: 'Male',
+  });
+
+  const [galleryItems, setGalleryItems] = useState([
+    { id: '1', label: 'Close-Up', uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop', isVideo: false },
+    { id: '2', label: 'Full-Body', uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop', isVideo: false },
+    { id: '3', label: 'Mid', uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop', isVideo: false },
+    { id: '4', label: 'Video 1', uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop', isVideo: true },
+    { id: '5', label: 'Video 2', uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop', isVideo: true },
+    { id: '6', label: 'Video 3', uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop', isVideo: true },
+  ]);
+
+  const [performerProjects, setPerformerProjects] = useState([
+    { 
+      id: '1', 
+      title: "Disney's Aladdin", 
+      details: "Lead Dancer · 99 Shows Across India · Musical Theatre · 2020–2021" 
+    },
+    { 
+      id: '2', 
+      title: "Asees Kaur Live Show", 
+      details: "Live Performer · Concert Choreography · National Tour · 2020–2021" 
+    },
+  ]);
+
+  const [choreographerProjects, setChoreographerProjects] = useState([
+    { 
+      id: '1', 
+      title: "Badshah & Abhishek Bachchan", 
+      details: "Lead Choreographer · Badshah · Abhishek Bachchan · Saiyami Kher · 2020–2021" 
+    },
+    { 
+      id: '2', 
+      title: "Ghoomar", 
+      details: "Assistant Choreographer · Ghoomar Song · Classical & Contemporary · 2020–2021" 
+    },
+  ]);
+
+  const [training, setTraining] = useState({
+    title: 'Diploma in Performing Arts',
+    institution: 'National Academy of Dance & Performing Arts (Mumbai)',
+    tag: 'Certified',
+    bullet: 'Classical Rhythm · Contemporary Execution · Stage Expression',
+  });
+
+  const [instaInsights, setInstaInsights] = useState({
+    followers: '12.5k followers',
+    engagement: '1.7K accounts',
+    partnerships: '0 brands',
+    hook: '53.1%',
+    interaction: '3.2%',
+    reach: '44K accounts',
+  });
+
+  const [youtubeInsights, setYoutubeInsights] = useState({
+    subscribers: '48.2k subscribers',
+    views: '1.2M views',
+    watchTime: '34.5K hrs',
+    avgDuration: '4:12 mins',
+    topVideo: '320K views',
+    engagement: '8.4%',
+  });
+
+  const [selectedSocialPlatform, setSelectedSocialPlatform] = useState('instagram');
+
+  const [galleryPage, setGalleryPage] = useState(0);
+  const galleryScrollRef = useRef(null);
+
+  // Contextual Bottom Sheet Edit States
+  const [activeModal, setActiveModal] = useState(null);
+  const [tempHeightFeet, setTempHeightFeet] = useState('5');
+  const [tempHeightInches, setTempHeightInches] = useState('9');
+  const [selectedArtistTypes, setSelectedArtistTypes] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [birthDay, setBirthDay] = useState('13');
+  const [birthMonth, setBirthMonth] = useState('September');
+  const [birthYear, setBirthYear] = useState('1999');
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const calculateAgeNumber = (day, monthName, year) => {
+    const monthIndex = MONTH_NAMES.indexOf(monthName);
+    const m = monthIndex !== -1 ? monthIndex : 8;
+    const y = parseInt(year, 10) || 1999;
+    const d = parseInt(day, 10) || 13;
+    const today = new Date();
+    let age = today.getFullYear() - y;
+    const currentMonth = today.getMonth();
+    if (currentMonth < m || (currentMonth === m && today.getDate() < d)) {
+      age--;
+    }
+    return Math.max(1, age);
+  };
+
+  // Fullscreen Media Viewer State
+  const [viewerVisible, setViewerVisible] = useState(false);
+  const [currentViewerIndex, setCurrentViewerIndex] = useState(0);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const fullscreenFlatListRef = useRef(null);
+
+  const openFullscreenViewer = (index) => {
+    setCurrentViewerIndex(index);
+    setIsPlayingVideo(false);
+    setViewerVisible(true);
+    setTimeout(() => {
+      fullscreenFlatListRef.current?.scrollToIndex({ index, animated: false });
+    }, 50);
+  };
+
+  const closeFullscreenViewer = () => {
+    setViewerVisible(false);
+    setIsPlayingVideo(false);
+  };
+
+  // Modal Editing State
+  const [tempData, setTempData] = useState({});
+  const [editingVideoId, setEditingVideoId] = useState(null);
+
+  const handleRemoveMedia = (itemId) => {
+    setTempData(prev => ({
+      ...prev,
+      items: (prev.items || []).filter(it => it.id !== itemId),
+    }));
+  };
+
+  const handleAddOrRestorePhoto = (slotTitle) => {
+    const defaultUriMap = {
+      'Close-Up': SAMPLE_PHOTO_PRESETS[0],
+      'Full-Body': SAMPLE_PHOTO_PRESETS[1],
+      'Mid': SAMPLE_PHOTO_PRESETS[2],
+    };
+    const newPhoto = {
+      id: Date.now().toString(),
+      label: slotTitle,
+      uri: defaultUriMap[slotTitle] || SAMPLE_PHOTO_PRESETS[3],
+      isVideo: false,
+    };
+    setTempData(prev => {
+      const items = [...(prev.items || [])];
+      const videoItems = items.filter(it => it.isVideo);
+      const photoItems = items.filter(it => !it.isVideo && it.label !== slotTitle);
+      return {
+        ...prev,
+        items: [...photoItems, newPhoto, ...videoItems],
+      };
+    });
+  };
+
+  const handleChangeMedia = (itemId, isVideo) => {
+    const presets = isVideo ? SAMPLE_VIDEO_PRESETS : SAMPLE_PHOTO_PRESETS;
+    const currentItem = (tempData.items || []).find(it => it.id === itemId);
+    const currentUri = currentItem ? currentItem.uri : '';
+    const otherPresets = presets.filter(p => p !== currentUri);
+    const nextPreset = otherPresets[Math.floor(Math.random() * otherPresets.length)] || presets[0];
+
+    setTempData(prev => ({
+      ...prev,
+      items: (prev.items || []).map(it => it.id === itemId ? { ...it, uri: nextPreset } : it),
+    }));
+  };
+
+  const handleAddVideo = () => {
+    const currentVideos = (tempData.items || []).filter(it => it.isVideo);
+    if (currentVideos.length >= 3) {
+      Alert.alert('Limit Reached', 'You can have up to 3 showcase videos.');
+      return;
+    }
+    const nextNum = currentVideos.length + 1;
+    const newVideo = {
+      id: Date.now().toString(),
+      label: `Video ${nextNum}`,
+      uri: SAMPLE_VIDEO_PRESETS[(nextNum - 1) % SAMPLE_VIDEO_PRESETS.length],
+      isVideo: true,
+    };
+    setTempData(prev => ({
+      ...prev,
+      items: [...(prev.items || []), newVideo],
+    }));
+  };
+
+  const handleAddPerformerProject = () => {
+    const newProj = {
+      id: Date.now().toString(),
+      title: '',
+      details: '',
+    };
+    setTempData(prev => ({
+      ...prev,
+      projects: [...(prev.projects || []), newProj],
+    }));
+  };
+
+  const handleRemovePerformerProject = (projId) => {
+    setTempData(prev => ({
+      ...prev,
+      projects: (prev.projects || []).filter(p => p.id !== projId),
+    }));
+  };
+
+  const handleAddChoreographerProject = () => {
+    const newProj = {
+      id: Date.now().toString(),
+      title: '',
+      details: '',
+    };
+    setTempData(prev => ({
+      ...prev,
+      projects: [...(prev.projects || []), newProj],
+    }));
+  };
+
+  const handleRemoveChoreographerProject = (projId) => {
+    setTempData(prev => ({
+      ...prev,
+      projects: (prev.projects || []).filter(p => p.id !== projId),
+    }));
+  };
+
+  const toggleArtistTypeTag = (tag) => {
+    const currentList = (tempData.artistTypesStr || '').split(',').map(s => s.trim()).filter(Boolean);
+    let updated;
+    if (currentList.includes(tag)) {
+      updated = currentList.filter(t => t !== tag);
+    } else {
+      updated = [...currentList, tag];
+    }
+    setTempData(prev => ({ ...prev, artistTypesStr: updated.join(', ') }));
+  };
+
+  const toggleCategoryTag = (tag) => {
+    const currentList = (tempData.categoriesStr || '').split(',').map(s => s.trim()).filter(Boolean);
+    let updated;
+    if (currentList.includes(tag)) {
+      updated = currentList.filter(t => t !== tag);
+    } else {
+      updated = [...currentList, tag];
+    }
+    setTempData(prev => ({ ...prev, categoriesStr: updated.join(', ') }));
+  };
+
+  const openModal = (modalType) => {
+    setActiveModal(modalType);
+    if (modalType === 'height') {
+      const match = (profile.height || '').match(/(\d+)'?\s*(\d+)?/);
+      if (match) {
+        setTempHeightFeet(match[1] || '5');
+        setTempHeightInches(match[2] || '9');
+      } else {
+        setTempHeightFeet('5');
+        setTempHeightInches('9');
+      }
+    } else if (modalType === 'artistType') {
+      setSelectedArtistTypes([...profile.artistTypes]);
+    } else if (modalType === 'categories') {
+      setSelectedCategories([...profile.categories]);
+    } else if (modalType === 'age') {
+      setActiveDropdown(null);
+    } else if (modalType === 'gender') {
+      setTempData({ gender: profile.gender });
+    } else if (modalType === 'basic') {
+      setTempData({ name: profile.name, location: profile.location });
+    } else if (modalType === 'demographics') {
+      setTempData({ age: profile.age, height: profile.height, gender: profile.gender });
+    } else if (modalType === 'gallery') {
+      setTempData({ items: galleryItems.map(item => ({ ...item })) });
+      setEditingVideoId(null);
+    } else if (modalType === 'performer') {
+      setTempData({ projects: performerProjects.map(p => ({ ...p })) });
+    } else if (modalType === 'choreographer') {
+      setTempData({ projects: choreographerProjects.map(p => ({ ...p })) });
+    } else if (modalType === 'training') {
+      setTempData({ ...training });
+    } else if (modalType === 'socials') {
+      setTempData({
+        instagram: { ...instaInsights },
+        youtube: { ...youtubeInsights },
+      });
+    }
+  };
+
+  const handleSaveModal = () => {
+    if (activeModal === 'height') {
+      setProfile(prev => ({
+        ...prev,
+        height: `${tempHeightFeet || '5'}' ${tempHeightInches || '0'}"`,
+      }));
+    } else if (activeModal === 'artistType') {
+      setProfile(prev => ({ ...prev, artistTypes: selectedArtistTypes }));
+    } else if (activeModal === 'categories') {
+      setProfile(prev => ({ ...prev, categories: selectedCategories }));
+    } else if (activeModal === 'age') {
+      const calculated = calculateAgeNumber(birthDay, birthMonth, birthYear);
+      setProfile(prev => ({ ...prev, age: `${calculated} Years` }));
+    } else if (activeModal === 'gender') {
+      setProfile(prev => ({ ...prev, gender: tempData.gender || profile.gender }));
+    } else if (activeModal === 'basic') {
+      setProfile(prev => ({ ...prev, name: tempData.name, location: tempData.location }));
+    } else if (activeModal === 'demographics') {
+      setProfile(prev => ({ ...prev, age: tempData.age, height: tempData.height, gender: tempData.gender }));
+    } else if (activeModal === 'gallery') {
+      if (tempData.items) setGalleryItems(tempData.items);
+    } else if (activeModal === 'performer') {
+      if (tempData.projects) setPerformerProjects(tempData.projects);
+    } else if (activeModal === 'choreographer') {
+      if (tempData.projects) setChoreographerProjects(tempData.projects);
+    } else if (activeModal === 'training') {
+      setTraining({
+        title: tempData.title,
+        institution: tempData.institution,
+        tag: tempData.tag,
+        bullet: tempData.bullet,
+      });
+    } else if (activeModal === 'socials') {
+      if (tempData.instagram) setInstaInsights(tempData.instagram);
+      if (tempData.youtube) setYoutubeInsights(tempData.youtube);
+    }
+    setActiveModal(null);
+  };
 
   const handleGalleryScroll = (event) => {
     const xOffset = event.nativeEvent.contentOffset.x;
-    if (xOffset > 150) {
+    if (xOffset > (GALLERY_PAGE_STEP / 2)) {
       setGalleryPage(1);
     } else {
       setGalleryPage(0);
@@ -50,7 +414,7 @@ export default function ProfileScreen({ onBackHome }) {
           My Profile
         </Text>
 
-        <TouchableOpacity activeOpacity={0.8} style={styles.navIconBtn}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => openModal('basic')} style={styles.navIconBtn}>
           <Ionicons name="create-outline" size={18} color="#ffffff" />
         </TouchableOpacity>
       </View>
@@ -76,35 +440,37 @@ export default function ProfileScreen({ onBackHome }) {
                 
                 {/* Left Column: Avatar + Name + Location Below Name */}
                 <View style={styles.airbnbLeftCol}>
-                  <View style={styles.avatarWrapper}>
+                  <TouchableOpacity activeOpacity={0.8} onPress={() => openModal('basic')} style={styles.avatarWrapper}>
                     <View style={styles.avatarCircleBlue}>
-                      <Text style={styles.avatarInitialText}>A</Text>
+                      <Text style={styles.avatarInitialText}>
+                        {profile.name ? profile.name.charAt(0).toUpperCase() : 'A'}
+                      </Text>
                     </View>
                     
                     {/* Royal Blue Verification Shield Badge */}
                     <View style={styles.shieldBadge}>
                       <Ionicons name="checkmark-sharp" size={12} color="#ffffff" />
                     </View>
-                  </View>
+                  </TouchableOpacity>
 
-                  <Text style={styles.airbnbNameText}>Akash Tiwari</Text>
+                  <Text style={styles.airbnbNameText}>{profile.name}</Text>
 
                   {/* Location with Globe Icon directly below Name */}
                   <View style={styles.locationBelowNameRow}>
                     <Ionicons name="globe-outline" size={13} color="#888888" style={{ marginRight: 4 }} />
-                    <Text style={styles.locationBelowNameText}>Lives in Mumbai, India</Text>
+                    <Text style={styles.locationBelowNameText}>{profile.location}</Text>
                   </View>
                 </View>
 
                 {/* Vertical Divider Line */}
                 <View style={styles.columnDivider} />
 
-                {/* Right Column: 3 Stacked Metrics */}
+                {/* Right Column: 3 Stacked Metrics (READ ONLY - NOT EDITABLE) */}
                 <View style={styles.airbnbRightCol}>
                   
                   {/* Metric 1: Reviews */}
                   <View style={styles.metricBlock}>
-                    <Text style={styles.metricBigNumber}>4</Text>
+                    <Text style={styles.metricBigNumber}>{metrics.reviews}</Text>
                     <Text style={styles.metricLabelText}>Reviews</Text>
                   </View>
 
@@ -113,7 +479,7 @@ export default function ProfileScreen({ onBackHome }) {
                   {/* Metric 2: Rating */}
                   <View style={styles.metricBlock}>
                     <View style={styles.ratingValRow}>
-                      <Text style={styles.metricBigNumber}>5.0</Text>
+                      <Text style={styles.metricBigNumber}>{metrics.rating}</Text>
                       <Ionicons name="star" size={13} color="#ffffff" style={{ marginLeft: 3 }} />
                     </View>
                     <Text style={styles.metricLabelText}>Rating</Text>
@@ -121,10 +487,10 @@ export default function ProfileScreen({ onBackHome }) {
 
                   <View style={styles.horizontalDivider} />
 
-                  {/* Metric 3: Years Active */}
+                  {/* Metric 3: Total Gygs */}
                   <View style={styles.metricBlock}>
-                    <Text style={styles.metricBigNumber}>5</Text>
-                    <Text style={styles.metricLabelText}>Years active</Text>
+                    <Text style={styles.metricBigNumber}>{metrics.totalGygs}</Text>
+                    <Text style={styles.metricLabelText}>Total Gygs</Text>
                   </View>
 
                 </View>
@@ -159,12 +525,12 @@ export default function ProfileScreen({ onBackHome }) {
               <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
                 <View style={styles.cardHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>ARTIST TYPE</Text>
-                  <TouchableOpacity activeOpacity={0.7}>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('artistType')}>
                     <Ionicons name="create-outline" size={14} color="#888888" />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.tagContainer}>
-                  {artistTypes.map((type, idx) => (
+                  {profile.artistTypes.map((type, idx) => (
                     <View key={idx} style={styles.tagPill}>
                       <Text style={styles.tagPillText}>{type}</Text>
                     </View>
@@ -185,12 +551,12 @@ export default function ProfileScreen({ onBackHome }) {
               <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
                 <View style={styles.cardHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>CATEGORIES</Text>
-                  <TouchableOpacity activeOpacity={0.7}>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('categories')}>
                     <Ionicons name="create-outline" size={14} color="#888888" />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.tagContainer}>
-                  {categories.map((cat, idx) => (
+                  {profile.categories.map((cat, idx) => (
                     <View key={idx} style={styles.tagPill}>
                       <Text style={styles.tagPillText}>{cat}</Text>
                     </View>
@@ -205,7 +571,12 @@ export default function ProfileScreen({ onBackHome }) {
         {/* 3. Demographics Liquid Glass Row (AGE, HEIGHT, GENDER Side-by-Side) */}
         <View style={styles.demographicsRow}>
           
-          <View style={styles.tripletCardWrapper}>
+          {/* Age Card */}
+          <TouchableOpacity 
+            activeOpacity={0.85} 
+            onPress={() => openModal('age')}
+            style={styles.tripletCardWrapper}
+          >
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
@@ -213,13 +584,23 @@ export default function ProfileScreen({ onBackHome }) {
               style={styles.cardGradient}
             >
               <BlurView intensity={40} tint="dark" style={styles.cardBlurContentSmall}>
-                <Text style={styles.cardHeaderLabel}>AGE</Text>
-                <Text style={styles.demoValueSmall}>24 Years</Text>
+                <View style={styles.demoHeaderRow}>
+                  <Text style={styles.cardHeaderLabel}>AGE</Text>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('age')}>
+                    <Ionicons name="create-outline" size={12} color="#888888" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.demoValueSmall}>{profile.age}</Text>
               </BlurView>
             </LinearGradient>
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.tripletCardWrapper}>
+          {/* Height Card */}
+          <TouchableOpacity 
+            activeOpacity={0.85} 
+            onPress={() => openModal('height')}
+            style={styles.tripletCardWrapper}
+          >
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
@@ -227,13 +608,23 @@ export default function ProfileScreen({ onBackHome }) {
               style={styles.cardGradient}
             >
               <BlurView intensity={40} tint="dark" style={styles.cardBlurContentSmall}>
-                <Text style={styles.cardHeaderLabel}>HEIGHT</Text>
-                <Text style={styles.demoValueSmall}>5' 9"</Text>
+                <View style={styles.demoHeaderRow}>
+                  <Text style={styles.cardHeaderLabel}>HEIGHT</Text>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('height')}>
+                    <Ionicons name="create-outline" size={12} color="#888888" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.demoValueSmall}>{profile.height}</Text>
               </BlurView>
             </LinearGradient>
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.tripletCardWrapper}>
+          {/* Gender Card */}
+          <TouchableOpacity 
+            activeOpacity={0.85} 
+            onPress={() => openModal('gender')}
+            style={styles.tripletCardWrapper}
+          >
             <LinearGradient
               colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
               start={{ x: 0, y: 0 }}
@@ -241,15 +632,20 @@ export default function ProfileScreen({ onBackHome }) {
               style={styles.cardGradient}
             >
               <BlurView intensity={40} tint="dark" style={styles.cardBlurContentSmall}>
-                <Text style={styles.cardHeaderLabel}>GENDER</Text>
-                <Text style={styles.demoValueSmall}>Male</Text>
+                <View style={styles.demoHeaderRow}>
+                  <Text style={styles.cardHeaderLabel}>GENDER</Text>
+                  <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('gender')}>
+                    <Ionicons name="create-outline" size={12} color="#888888" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.demoValueSmall}>{profile.gender}</Text>
               </BlurView>
             </LinearGradient>
-          </View>
+          </TouchableOpacity>
 
         </View>
 
-        {/* 4. Editorial Gallery (6 Items: 3 Images + 3 Videos with 2-Dot Indicator & Navigation Arrows) */}
+        {/* 4. Editorial Gallery */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -262,12 +658,12 @@ export default function ProfileScreen({ onBackHome }) {
               {/* Header */}
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>GALLERY</Text>
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('gallery')}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
               </View>
 
-              {/* Swipeable ScrollView Container with Floating Extreme Left/Right Overlay Arrows */}
+              {/* Swipeable ScrollView Container */}
               <View style={styles.galleryViewportContainer}>
                 
                 {/* Floating Extreme Left Arrow Button */}
@@ -285,7 +681,7 @@ export default function ProfileScreen({ onBackHome }) {
                 {galleryPage === 0 && (
                   <TouchableOpacity 
                     activeOpacity={0.8}
-                    onPress={() => galleryScrollRef.current?.scrollTo({ x: 380, animated: true })}
+                    onPress={() => galleryScrollRef.current?.scrollTo({ x: GALLERY_PAGE_STEP, animated: true })}
                     style={[styles.floatingArrowBtn, styles.floatingArrowRight]}
                   >
                     <Ionicons name="chevron-forward" size={16} color="#ffffff" />
@@ -298,100 +694,34 @@ export default function ProfileScreen({ onBackHome }) {
                   showsHorizontalScrollIndicator={false}
                   onScroll={handleGalleryScroll}
                   scrollEventThrottle={16}
+                  decelerationRate="fast"
+                  snapToInterval={GALLERY_PAGE_STEP}
                   contentContainerStyle={styles.galleryScrollContainer}
                 >
-                  {/* Item 1 (Image): Close-Up */}
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                    <LinearGradient 
-                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                      style={styles.galleryCardGradientOverlay}
+                  {galleryItems.map((item, index) => (
+                    <TouchableOpacity 
+                      key={item.id} 
+                      activeOpacity={0.85}
+                      onPress={() => openFullscreenViewer(index)}
+                      style={styles.galleryCardItem}
                     >
-                      <Text style={styles.galleryCardLabelText}>Close-Up</Text>
-                    </LinearGradient>
-                  </View>
-
-                  {/* Item 2 (Image): Full-Body */}
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                    <LinearGradient 
-                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                      style={styles.galleryCardGradientOverlay}
-                    >
-                      <Text style={styles.galleryCardLabelText}>Full-Body</Text>
-                    </LinearGradient>
-                  </View>
-
-                  {/* Item 3 (Image): Stage Act */}
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                    <LinearGradient 
-                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                      style={styles.galleryCardGradientOverlay}
-                    >
-                      <Text style={styles.galleryCardLabelText}>Stage Act</Text>
-                    </LinearGradient>
-                  </View>
-
-                  {/* Item 4 (Video): Live Show */}
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                    <View style={styles.galleryPlayBadge}>
-                      <Ionicons name="play" size={12} color="#ffffff" />
-                    </View>
-                    <LinearGradient 
-                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                      style={styles.galleryCardGradientOverlay}
-                    >
-                      <Text style={styles.galleryCardLabelText}>Live Show</Text>
-                    </LinearGradient>
-                  </View>
-
-                  {/* Item 5 (Video): Acoustic Set */}
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                    <View style={styles.galleryPlayBadge}>
-                      <Ionicons name="play" size={12} color="#ffffff" />
-                    </View>
-                    <LinearGradient 
-                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                      style={styles.galleryCardGradientOverlay}
-                    >
-                      <Text style={styles.galleryCardLabelText}>Acoustic Set</Text>
-                    </LinearGradient>
-                  </View>
-
-                  {/* Item 6 (Video): Rehearsal */}
-                  <View style={styles.galleryCardItem}>
-                    <Image 
-                      source={{ uri: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop' }} 
-                      style={styles.galleryCardImage} 
-                    />
-                    <View style={styles.galleryPlayBadge}>
-                      <Ionicons name="play" size={12} color="#ffffff" />
-                    </View>
-                    <LinearGradient 
-                      colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
-                      style={styles.galleryCardGradientOverlay}
-                    >
-                      <Text style={styles.galleryCardLabelText}>Rehearsal</Text>
-                    </LinearGradient>
-                  </View>
+                      <Image 
+                        source={{ uri: item.uri }} 
+                        style={styles.galleryCardImage} 
+                      />
+                      {item.isVideo && (
+                        <View style={styles.galleryPlayBadge}>
+                          <Ionicons name="play" size={13} color="#ffffff" />
+                        </View>
+                      )}
+                      <LinearGradient 
+                        colors={['transparent', 'rgba(0, 0, 0, 0.88)']} 
+                        style={styles.galleryCardGradientOverlay}
+                      >
+                        <Text style={styles.galleryCardLabelText} numberOfLines={1}>{item.label}</Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  ))}
                 </ScrollView>
               </View>
 
@@ -416,7 +746,7 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>PERFORMER</Text>
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('performer')}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
               </View>
@@ -428,31 +758,20 @@ export default function ProfileScreen({ onBackHome }) {
                 </View>
               </View>
 
-              {/* Project Item 1: Disney's Aladdin */}
-              <View style={styles.expProjectBlock}>
-                <View style={styles.expProjectHeaderRow}>
-                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                  <Text style={styles.expProjectTitleText}>Disney's Aladdin</Text>
+              {/* Projects */}
+              {performerProjects.map((proj) => (
+                <View key={proj.id} style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>{proj.title}</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>{proj.details}</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
                 </View>
-                <View style={styles.expSubEntryBox}>
-                  <View style={styles.expLeftAccentLine} />
-                  <Text style={styles.expSubEntryText}>Disney's Aladdin (99 Shows Across India, 2020-2021)</Text>
-                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                </View>
-              </View>
-
-              {/* Project Item 2: Asees Kaur Live Show */}
-              <View style={styles.expProjectBlock}>
-                <View style={styles.expProjectHeaderRow}>
-                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                  <Text style={styles.expProjectTitleText}>Asees Kaur Live Show</Text>
-                </View>
-                <View style={styles.expSubEntryBox}>
-                  <View style={styles.expLeftAccentLine} />
-                  <Text style={styles.expSubEntryText}>Asees Kaur Live Show Choreography And Performance (2020-2021)</Text>
-                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                </View>
-              </View>
+              ))}
             </BlurView>
           </LinearGradient>
         </View>
@@ -468,7 +787,7 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>CHOREOGRAPHER</Text>
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('choreographer')}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
               </View>
@@ -486,49 +805,25 @@ export default function ProfileScreen({ onBackHome }) {
                 </View>
               </View>
 
-              {/* Project Item 1: Ghoomar */}
-              <View style={styles.expProjectBlock}>
-                <View style={styles.expProjectHeaderRow}>
-                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                  <Text style={styles.expProjectTitleText}>Ghoomar</Text>
+              {/* Projects */}
+              {choreographerProjects.map((proj) => (
+                <View key={proj.id} style={styles.expProjectBlock}>
+                  <View style={styles.expProjectHeaderRow}>
+                    <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.expProjectTitleText}>{proj.title}</Text>
+                  </View>
+                  <View style={styles.expSubEntryBox}>
+                    <View style={styles.expLeftAccentLine} />
+                    <Text style={styles.expSubEntryText}>{proj.details}</Text>
+                    <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
+                  </View>
                 </View>
-                <View style={styles.expSubEntryBox}>
-                  <View style={styles.expLeftAccentLine} />
-                  <Text style={styles.expSubEntryText}>Ghoomar Choreography (2020-2021)</Text>
-                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                </View>
-              </View>
-
-              {/* Project Item 2: Badshah's Song */}
-              <View style={styles.expProjectBlock}>
-                <View style={styles.expProjectHeaderRow}>
-                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                  <Text style={styles.expProjectTitleText}>Badshah's Song With Abhishek Bachan And Saiyam Kher</Text>
-                </View>
-                <View style={styles.expSubEntryBox}>
-                  <View style={styles.expLeftAccentLine} />
-                  <Text style={styles.expSubEntryText}>Badshah's Song Choreography With Abhishek Bachan And Saiyam Kher (2020-2021)</Text>
-                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                </View>
-              </View>
-
-              {/* Project Item 3: Bad Boy */}
-              <View style={styles.expProjectBlock}>
-                <View style={styles.expProjectHeaderRow}>
-                  <Ionicons name="business-outline" size={16} color="#ffffff" style={{ marginRight: 8 }} />
-                  <Text style={styles.expProjectTitleText}>Bad Boy</Text>
-                </View>
-                <View style={styles.expSubEntryBox}>
-                  <View style={styles.expLeftAccentLine} />
-                  <Text style={styles.expSubEntryText}>Bad Boy Song Choreography (2020-2021)</Text>
-                  <Ionicons name="chevron-forward" size={14} color="rgba(255, 255, 255, 0.4)" />
-                </View>
-              </View>
+              ))}
             </BlurView>
           </LinearGradient>
         </View>
 
-        {/* 6. Training & Certification Liquid Glass Card (Replicated from Production Screenshot) */}
+        {/* 7. Training & Certification Liquid Glass Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -539,30 +834,30 @@ export default function ProfileScreen({ onBackHome }) {
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>TRAINING & CERTIFICATION</Text>
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('training')}>
                   <Ionicons name="create-outline" size={14} color="#888888" />
                 </TouchableOpacity>
               </View>
 
               <View style={styles.experienceBlock}>
                 <View style={styles.expHeaderRow}>
-                  <Text style={styles.expRoleTitle}>Diploma in Performing Arts</Text>
+                  <Text style={styles.expRoleTitle}>{training.title}</Text>
                   <View style={styles.tagPill}>
-                    <Text style={styles.tagPillText}>Certified</Text>
+                    <Text style={styles.tagPillText}>{training.tag}</Text>
                   </View>
                 </View>
-                <Text style={styles.institutionText}>National Academy of Dance & Performing Arts (Mumbai)</Text>
+                <Text style={styles.institutionText}>{training.institution}</Text>
                 
                 <View style={[styles.expBulletRow, { marginTop: 6 }]}>
                   <Text style={bulletDot}>•</Text>
-                  <Text style={styles.expBulletText}>Specialized in classical rhythm, contemporary execution, and stage expression.</Text>
+                  <Text style={styles.expBulletText}>{training.bullet}</Text>
                 </View>
               </View>
             </BlurView>
           </LinearGradient>
         </View>
 
-        {/* 7. Instagram Insights Card (100% Exact Replica from Screenshot) */}
+        {/* 8. Interactive Socials Component (Google Creator Profiles Inspired) */}
         <View style={styles.cardWrapper}>
           <LinearGradient
             colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.03)']}
@@ -572,65 +867,1229 @@ export default function ProfileScreen({ onBackHome }) {
           >
             <BlurView intensity={40} tint="dark" style={styles.cardBlurContent}>
               
-              {/* Instagram Card Header */}
-              <View style={styles.instaHeaderRow}>
-                <Text style={styles.instaHeaderTitle}>Instagram Insights</Text>
+              {/* Socials Card Header */}
+              <View style={styles.cardHeaderRow}>
+                <Text style={styles.cardHeaderLabel}>SOCIALS</Text>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('socials')}>
+                  <Ionicons name="create-outline" size={14} color="#888888" />
+                </TouchableOpacity>
               </View>
 
-              {/* 3 Explicit Side-by-Side Rows */}
-              <View style={styles.instaRow}>
-                {/* Box 1: Followers */}
-                <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Followers</Text>
-                  <Text style={styles.instaMetricVal}>3.3K</Text>
-                  <Text style={styles.instaMetricSub}>Lifetime</Text>
-                </View>
+              {/* 1. The Horizontal Pill Row (Fits Both in One View) */}
+              <View style={styles.socialsPillContainer}>
+                {/* Instagram Pill */}
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setSelectedSocialPlatform(prev => prev === 'instagram' ? null : 'instagram')}
+                  style={[
+                    styles.platformPill,
+                    selectedSocialPlatform === 'instagram' && styles.platformPillActive
+                  ]}
+                >
+                  <LinearGradient
+                    colors={['#833AB4', '#FD1D1D', '#FCAF45']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.platformIconCircleInstaGradient}
+                  >
+                    <View style={styles.platformIconCircleInstaInner}>
+                      <Ionicons name="logo-instagram" size={16} color="#ffffff" />
+                    </View>
+                  </LinearGradient>
+                  <View style={styles.platformPillTextStack}>
+                    <Text style={styles.platformNameText} numberOfLines={1}>Instagram</Text>
+                    <Text style={styles.platformStatText} numberOfLines={1}>{instaInsights.followers || '12.5k followers'}</Text>
+                  </View>
+                  {selectedSocialPlatform === 'instagram' && (
+                    <View style={styles.activeDotIndicator} />
+                  )}
+                </TouchableOpacity>
 
-                {/* Box 2: Engagement */}
-                <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Engagement</Text>
-                  <Text style={styles.instaMetricVal}>1.7K accounts</Text>
-                  <Text style={styles.instaMetricSub}>This Month</Text>
-                </View>
+                {/* YouTube Pill */}
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setSelectedSocialPlatform(prev => prev === 'youtube' ? null : 'youtube')}
+                  style={[
+                    styles.platformPill,
+                    selectedSocialPlatform === 'youtube' && styles.platformPillActive
+                  ]}
+                >
+                  <LinearGradient
+                    colors={['#FF0000', '#990000']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.platformIconCircleYoutubeGradient}
+                  >
+                    <View style={styles.platformIconCircleYoutubeInner}>
+                      <Ionicons name="logo-youtube" size={15} color="#ffffff" />
+                    </View>
+                  </LinearGradient>
+                  <View style={styles.platformPillTextStack}>
+                    <Text style={styles.platformNameText} numberOfLines={1}>YouTube</Text>
+                    <Text style={styles.platformStatText} numberOfLines={1}>{youtubeInsights.subscribers || '48.2k subscribers'}</Text>
+                  </View>
+                  {selectedSocialPlatform === 'youtube' && (
+                    <View style={styles.activeDotIndicator} />
+                  )}
+                </TouchableOpacity>
               </View>
 
-              <View style={styles.instaRow}>
-                {/* Box 3: Partnerships */}
-                <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Partnerships</Text>
-                  <Text style={styles.instaMetricVal}>0 brands</Text>
-                  <Text style={styles.instaMetricSub}>Lifetime</Text>
-                </View>
+              {/* 2 & 3. The Expandable View (Progressive Disclosure) */}
+              {selectedSocialPlatform === 'instagram' && (
+                <View style={styles.socialsExpandedContent}>
+                  
+                  {/* Instagram Insights Grid */}
+                  <View style={styles.insightsSectionHeadingRow}>
+                    <Text style={styles.insightsSectionTitle}>INSIGHTS</Text>
+                  </View>
 
-                {/* Box 4: Hook */}
-                <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Hook</Text>
-                  <Text style={styles.instaMetricVal}>53.1%</Text>
-                  <Text style={styles.instaMetricSub}>Last 90 days</Text>
-                </View>
-              </View>
+                  <View style={styles.instaRow}>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Followers</Text>
+                      <Text style={styles.instaMetricVal}>{instaInsights.followers}</Text>
+                      <Text style={styles.instaMetricSub}>Lifetime</Text>
+                    </View>
 
-              <View style={[styles.instaRow, { marginBottom: 0 }]}>
-                {/* Box 5: Interaction */}
-                <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Interaction</Text>
-                  <Text style={styles.instaMetricVal}>3.2%</Text>
-                  <Text style={styles.instaMetricSub}>Last 90 days</Text>
-                </View>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Engagement</Text>
+                      <Text style={styles.instaMetricVal}>{instaInsights.engagement}</Text>
+                      <Text style={styles.instaMetricSub}>This Month</Text>
+                    </View>
+                  </View>
 
-                {/* Box 6: Reach */}
-                <View style={styles.instaMetricBox}>
-                  <Text style={styles.instaMetricLabel}>Reach</Text>
-                  <Text style={styles.instaMetricVal}>44K accounts</Text>
-                  <Text style={styles.instaMetricSub}>This Month</Text>
+                  <View style={styles.instaRow}>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Partnerships</Text>
+                      <Text style={styles.instaMetricVal}>{instaInsights.partnerships}</Text>
+                      <Text style={styles.instaMetricSub}>Lifetime</Text>
+                    </View>
+
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Hook Rate</Text>
+                      <Text style={styles.instaMetricVal}>{instaInsights.hook}</Text>
+                      <Text style={styles.instaMetricSub}>Last 90 days</Text>
+                    </View>
+                  </View>
+
+                  <View style={[styles.instaRow, { marginBottom: 16 }]}>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Interaction</Text>
+                      <Text style={styles.instaMetricVal}>{instaInsights.interaction}</Text>
+                      <Text style={styles.instaMetricSub}>Last 90 days</Text>
+                    </View>
+
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Reach</Text>
+                      <Text style={styles.instaMetricVal}>{instaInsights.reach}</Text>
+                      <Text style={styles.instaMetricSub}>This Month</Text>
+                    </View>
+                  </View>
+
+                  {/* Instagram Embedded Feed Placeholder Card */}
+                  <View style={styles.socialEmbedCard}>
+                    <View style={styles.embedHeaderRow}>
+                      <View style={styles.embedProfileRow}>
+                        <LinearGradient
+                          colors={['#833AB4', '#FD1D1D', '#FCAF45']}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }}
+                          style={styles.embedAvatarInstaGradient}
+                        >
+                          <View style={styles.embedAvatarInstaInner}>
+                            <Ionicons name="logo-instagram" size={16} color="#ffffff" />
+                          </View>
+                        </LinearGradient>
+                        <View>
+                          <View style={styles.embedNameRow}>
+                            <Text style={styles.embedHandleText}>@akashtiwari</Text>
+                            <Ionicons name="checkmark-circle" size={13} color="#3B82F6" style={{ marginLeft: 4 }} />
+                          </View>
+                          <Text style={styles.embedSubtext}>184 Posts · Verified Creator</Text>
+                        </View>
+                      </View>
+
+                      <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={() => Alert.alert('External Link', 'Opening instagram.com/akashtiwari...')}
+                        style={styles.embedVisitBtnGradientWrapper}
+                      >
+                        <LinearGradient
+                          colors={['#833AB4', '#FD1D1D', '#FCAF45']}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }}
+                          style={styles.embedVisitBtnGradientBorder}
+                        >
+                          <View style={styles.embedVisitBtnInner}>
+                            <Text style={styles.embedVisitBtnText}>View</Text>
+                            <Ionicons name="open-outline" size={11} color="#ffffff" style={{ marginLeft: 4 }} />
+                          </View>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    </View>
+
+                    {/* 3-Post Feed Grid Placeholder */}
+                    <View style={styles.embedFeedGrid}>
+                      <View style={styles.embedPostItem}>
+                        <Image 
+                          source={{ uri: 'https://images.unsplash.com/photo-1547153760-18fc86324498?q=80&w=400&auto=format&fit=crop' }} 
+                          style={styles.embedPostImage} 
+                        />
+                        <View style={styles.embedPostReelBadge}>
+                          <Ionicons name="play" size={10} color="#ffffff" />
+                        </View>
+                        <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.embedPostOverlay}>
+                          <Text style={styles.embedPostStatText}>❤️ 2.4k</Text>
+                        </LinearGradient>
+                      </View>
+
+                      <View style={styles.embedPostItem}>
+                        <Image 
+                          source={{ uri: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop' }} 
+                          style={styles.embedPostImage} 
+                        />
+                        <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.embedPostOverlay}>
+                          <Text style={styles.embedPostStatText}>❤️ 1.8k</Text>
+                        </LinearGradient>
+                      </View>
+
+                      <View style={styles.embedPostItem}>
+                        <Image 
+                          source={{ uri: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop' }} 
+                          style={styles.embedPostImage} 
+                        />
+                        <View style={styles.embedPostReelBadge}>
+                          <Ionicons name="play" size={10} color="#ffffff" />
+                        </View>
+                        <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.embedPostOverlay}>
+                          <Text style={styles.embedPostStatText}>❤️ 4.1k</Text>
+                        </LinearGradient>
+                      </View>
+                    </View>
+
+                    {/* Bottom Sync Footer */}
+                    <View style={styles.embedFooterRow}>
+                      <Ionicons name="logo-instagram" size={12} color="#E1306C" style={{ marginRight: 5 }} />
+                      <Text style={styles.embedFooterText}>Connected Account · Auto-syncs every 24h</Text>
+                    </View>
+                  </View>
+
                 </View>
-              </View>
+              )}
+
+              {/* When YouTube is active */}
+              {selectedSocialPlatform === 'youtube' && (
+                <View style={styles.socialsExpandedContent}>
+                  
+                  {/* YouTube Insights Grid */}
+                  <View style={styles.insightsSectionHeadingRow}>
+                    <Text style={styles.insightsSectionTitle}>ANALYTICS</Text>
+                  </View>
+
+                  <View style={styles.instaRow}>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Subscribers</Text>
+                      <Text style={styles.instaMetricVal}>{youtubeInsights.subscribers}</Text>
+                      <Text style={styles.instaMetricSub}>Lifetime</Text>
+                    </View>
+
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Total Views</Text>
+                      <Text style={styles.instaMetricVal}>{youtubeInsights.views}</Text>
+                      <Text style={styles.instaMetricSub}>This Month</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.instaRow}>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Watch Time</Text>
+                      <Text style={styles.instaMetricVal}>{youtubeInsights.watchTime}</Text>
+                      <Text style={styles.instaMetricSub}>Lifetime</Text>
+                    </View>
+
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Avg Duration</Text>
+                      <Text style={styles.instaMetricVal}>{youtubeInsights.avgDuration}</Text>
+                      <Text style={styles.instaMetricSub}>Per Video</Text>
+                    </View>
+                  </View>
+
+                  <View style={[styles.instaRow, { marginBottom: 16 }]}>
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Top Video</Text>
+                      <Text style={styles.instaMetricVal}>{youtubeInsights.topVideo}</Text>
+                      <Text style={styles.instaMetricSub}>All-Time High</Text>
+                    </View>
+
+                    <View style={styles.instaMetricBox}>
+                      <Text style={styles.instaMetricLabel}>Engagement</Text>
+                      <Text style={styles.instaMetricVal}>{youtubeInsights.engagement}</Text>
+                      <Text style={styles.instaMetricSub}>Last 90 days</Text>
+                    </View>
+                  </View>
+
+                  {/* YouTube Video Feed Embed Placeholder Card */}
+                  <View style={styles.socialEmbedCard}>
+                    <View style={styles.embedHeaderRow}>
+                      <View style={styles.embedProfileRow}>
+                        <View style={styles.embedAvatarYoutube}>
+                          <Ionicons name="play" size={14} color="#ffffff" />
+                        </View>
+                        <View>
+                          <View style={styles.embedNameRow}>
+                            <Text style={styles.embedHandleText}>Akash Tiwari Official</Text>
+                            <Ionicons name="checkmark-circle" size={13} color="#FF0000" style={{ marginLeft: 4 }} />
+                          </View>
+                          <Text style={styles.embedSubtext}>64 Videos · Official Artist Channel</Text>
+                        </View>
+                      </View>
+
+                      <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={() => Alert.alert('External Link', 'Opening youtube.com/@akashtiwari...')}
+                        style={styles.embedVisitBtn}
+                      >
+                        <Text style={styles.embedVisitBtnText}>Watch</Text>
+                        <Ionicons name="open-outline" size={12} color="#ffffff" style={{ marginLeft: 4 }} />
+                      </TouchableOpacity>
+                    </View>
+
+                    {/* Featured Video Embed Card */}
+                    <View style={styles.youtubeFeaturedEmbed}>
+                      <Image 
+                        source={{ uri: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=600&auto=format&fit=crop' }} 
+                        style={styles.youtubeFeaturedThumb} 
+                      />
+                      <View style={styles.youtubeCenterPlayBtn}>
+                        <Ionicons name="play" size={22} color="#ffffff" style={{ marginLeft: 2 }} />
+                      </View>
+                      <View style={styles.youtubeDurationBadge}>
+                        <Text style={styles.youtubeDurationText}>08:42</Text>
+                      </View>
+                    </View>
+                    <Text style={styles.youtubeVideoTitleText} numberOfLines={1}>
+                      Dance Choreography Masterclass | Badshah Tour Routine
+                    </Text>
+
+                    {/* Bottom Sync Footer */}
+                    <View style={styles.embedFooterRow}>
+                      <Ionicons name="logo-youtube" size={12} color="#FF0000" style={{ marginRight: 5 }} />
+                      <Text style={styles.embedFooterText}>Connected Channel · YouTube Partner Program</Text>
+                    </View>
+                  </View>
+
+                </View>
+              )}
 
             </BlurView>
           </LinearGradient>
         </View>
 
       </ScrollView>
+
+      {/* Floating Centered Edit Modal Architecture */}
+      <Modal
+        visible={activeModal !== null}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setActiveModal(null)}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+          style={styles.sheetOverlay}
+        >
+          <View style={styles.sheetContainer}>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.sheetScrollBody}>
+              
+              {/* 1. Edit Height Modal */}
+              {activeModal === 'height' && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Height</Text>
+                  <View style={styles.sheetHeightRow}>
+                    <View style={styles.sheetHeightCol}>
+                      <Text style={styles.sheetInputLabel}>Feet</Text>
+                      <TextInput 
+                        style={styles.sheetInput}
+                        value={tempHeightFeet}
+                        onChangeText={setTempHeightFeet}
+                        keyboardType="numeric"
+                        placeholder="5"
+                        placeholderTextColor="#777777"
+                      />
+                    </View>
+                    <View style={styles.sheetHeightCol}>
+                      <Text style={styles.sheetInputLabel}>Inches</Text>
+                      <TextInput 
+                        style={styles.sheetInput}
+                        value={tempHeightInches}
+                        onChangeText={setTempHeightInches}
+                        keyboardType="numeric"
+                        placeholder="9"
+                        placeholderTextColor="#777777"
+                      />
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              {/* 2. Edit Artist Types Modal */}
+              {activeModal === 'artistType' && (
+                <View>
+                  <Text style={styles.artistModalTitle}>What best describes you?</Text>
+                  <Text style={styles.artistModalSubtitle}>(Select all that apply)</Text>
+                  <View style={styles.artistPillsWrapGrid}>
+                    {SUGGESTED_ARTIST_TYPES.map((tag) => {
+                      const isSelected = selectedArtistTypes.includes(tag);
+                      return (
+                        <TouchableOpacity
+                          key={tag}
+                          activeOpacity={0.7}
+                          onPress={() => {
+                            setSelectedArtistTypes(prev => 
+                              prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                            );
+                          }}
+                          style={[
+                            styles.sheetPill,
+                            isSelected ? styles.sheetPillSelected : styles.sheetPillUnselected
+                          ]}
+                        >
+                          <Text style={[styles.sheetPillText, isSelected ? styles.sheetPillTextSelected : styles.sheetPillTextUnselected]}>
+                            {tag}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+              )}
+
+              {/* 3. Edit Categories Modal */}
+              {activeModal === 'categories' && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Categories</Text>
+                  <Text style={styles.sheetInputLabel}>SELECT YOUR ROLES</Text>
+                  <View style={styles.sheetPillWrapGrid}>
+                    {SUGGESTED_CATEGORIES.map((tag) => {
+                      const isSelected = selectedCategories.includes(tag);
+                      return (
+                        <TouchableOpacity
+                          key={tag}
+                          activeOpacity={0.7}
+                          onPress={() => {
+                            setSelectedCategories(prev => 
+                              prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+                            );
+                          }}
+                          style={[
+                            styles.sheetPill,
+                            isSelected ? styles.sheetPillSelected : styles.sheetPillUnselected
+                          ]}
+                        >
+                          <Text style={[styles.sheetPillText, isSelected ? styles.sheetPillTextSelected : styles.sheetPillTextUnselected]}>
+                            {tag}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+              )}
+
+              {/* 4. Edit Age / Birthday Picker Modal */}
+              {activeModal === 'age' && (
+                <View>
+                  <Text style={styles.birthdayTitle}>When is your birthday?</Text>
+                  
+                  {/* The 3-Column Dropdown Row */}
+                  <View style={styles.birthdayRow}>
+                    
+                    {/* Day Dropdown */}
+                    <TouchableOpacity 
+                      activeOpacity={0.8}
+                      onPress={() => setActiveDropdown(activeDropdown === 'day' ? null : 'day')}
+                      style={[
+                        styles.birthdayDropdownBlock, 
+                        { flex: 0.85 },
+                        activeDropdown === 'day' && styles.birthdayDropdownBlockActive
+                      ]}
+                    >
+                      <Text style={styles.birthdayDropdownText}>{birthDay}</Text>
+                      <Ionicons name="chevron-down" size={14} color="rgba(255, 255, 255, 0.7)" />
+                    </TouchableOpacity>
+
+                    {/* Month Dropdown */}
+                    <TouchableOpacity 
+                      activeOpacity={0.8}
+                      onPress={() => setActiveDropdown(activeDropdown === 'month' ? null : 'month')}
+                      style={[
+                        styles.birthdayDropdownBlock, 
+                        { flex: 1.4 },
+                        activeDropdown === 'month' && styles.birthdayDropdownBlockActive
+                      ]}
+                    >
+                      <Text style={styles.birthdayDropdownText} numberOfLines={1}>{birthMonth}</Text>
+                      <Ionicons name="chevron-down" size={14} color="rgba(255, 255, 255, 0.7)" />
+                    </TouchableOpacity>
+
+                    {/* Year Dropdown */}
+                    <TouchableOpacity 
+                      activeOpacity={0.8}
+                      onPress={() => setActiveDropdown(activeDropdown === 'year' ? null : 'year')}
+                      style={[
+                        styles.birthdayDropdownBlock, 
+                        { flex: 1.05 },
+                        activeDropdown === 'year' && styles.birthdayDropdownBlockActive
+                      ]}
+                    >
+                      <Text style={styles.birthdayDropdownText}>{birthYear}</Text>
+                      <Ionicons name="chevron-down" size={14} color="rgba(255, 255, 255, 0.7)" />
+                    </TouchableOpacity>
+
+                  </View>
+
+                  {/* Dropdown Options Popup/Accordion */}
+                  {activeDropdown && (
+                    <View style={styles.birthdayPickerOptionsContainer}>
+                      <ScrollView 
+                        nestedScrollEnabled={true}
+                        showsVerticalScrollIndicator={true}
+                        style={styles.birthdayPickerScroll}
+                      >
+                        {activeDropdown === 'day' && DAY_OPTIONS.map((d) => (
+                          <TouchableOpacity 
+                            key={d}
+                            activeOpacity={0.7}
+                            onPress={() => {
+                              setBirthDay(d);
+                              setActiveDropdown(null);
+                            }}
+                            style={[styles.birthdayOptionItem, birthDay === d && styles.birthdayOptionItemActive]}
+                          >
+                            <Text style={[styles.birthdayOptionText, birthDay === d && styles.birthdayOptionTextActive]}>
+                              {d}
+                            </Text>
+                            {birthDay === d && <Ionicons name="checkmark" size={14} color="#60A5FA" />}
+                          </TouchableOpacity>
+                        ))}
+
+                        {activeDropdown === 'month' && MONTH_NAMES.map((m) => (
+                          <TouchableOpacity 
+                            key={m}
+                            activeOpacity={0.7}
+                            onPress={() => {
+                              setBirthMonth(m);
+                              setActiveDropdown(null);
+                            }}
+                            style={[styles.birthdayOptionItem, birthMonth === m && styles.birthdayOptionItemActive]}
+                          >
+                            <Text style={[styles.birthdayOptionText, birthMonth === m && styles.birthdayOptionTextActive]}>
+                              {m}
+                            </Text>
+                            {birthMonth === m && <Ionicons name="checkmark" size={14} color="#60A5FA" />}
+                          </TouchableOpacity>
+                        ))}
+
+                        {activeDropdown === 'year' && YEAR_OPTIONS.map((y) => (
+                          <TouchableOpacity 
+                            key={y}
+                            activeOpacity={0.7}
+                            onPress={() => {
+                              setBirthYear(y);
+                              setActiveDropdown(null);
+                            }}
+                            style={[styles.birthdayOptionItem, birthYear === y && styles.birthdayOptionItemActive]}
+                          >
+                            <Text style={[styles.birthdayOptionText, birthYear === y && styles.birthdayOptionTextActive]}>
+                              {y}
+                            </Text>
+                            {birthYear === y && <Ionicons name="checkmark" size={14} color="#60A5FA" />}
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    </View>
+                  )}
+
+                  {/* Calculated Age Display */}
+                  <View style={styles.calculatedAgeBox}>
+                    <Text style={styles.calculatedAgeText}>
+                      Age: {calculateAgeNumber(birthDay, birthMonth, birthYear)} Years
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {/* 5. Edit Gender Modal */}
+              {activeModal === 'gender' && (
+                <View>
+                  <Text style={styles.genderTitle}>What is your Gender?</Text>
+                  <View style={styles.genderSegmentedRow}>
+                    {['Male', 'Female', 'Other'].map((g) => {
+                      const isSelected = tempData.gender === g;
+                      return (
+                        <TouchableOpacity
+                          key={g}
+                          activeOpacity={0.75}
+                          onPress={() => setTempData(prev => ({ ...prev, gender: g }))}
+                          style={[
+                            styles.genderSegmentBtn,
+                            isSelected ? styles.genderSegmentBtnSelected : styles.genderSegmentBtnUnselected
+                          ]}
+                        >
+                          <Text style={[
+                            styles.genderSegmentText, 
+                            isSelected ? styles.genderSegmentTextSelected : styles.genderSegmentTextUnselected
+                          ]}>
+                            {g}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+              )}
+
+              {/* 6. Edit Basic Info Modal */}
+              {activeModal === 'basic' && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Basic Info</Text>
+                  <Text style={styles.sheetInputLabel}>FULL NAME</Text>
+                  <TextInput 
+                    style={styles.sheetInput}
+                    value={tempData.name}
+                    onChangeText={(val) => setTempData(prev => ({ ...prev, name: val }))}
+                    placeholder="e.g. Akash Tiwari"
+                    placeholderTextColor="#777777"
+                  />
+                  <Text style={[styles.sheetInputLabel, { marginTop: 14 }]}>LOCATION</Text>
+                  <TextInput 
+                    style={styles.sheetInput}
+                    value={tempData.location}
+                    onChangeText={(val) => setTempData(prev => ({ ...prev, location: val }))}
+                    placeholder="e.g. Lives in Mumbai, India"
+                    placeholderTextColor="#777777"
+                  />
+                </View>
+              )}
+
+              {/* 7. Gallery Grid Manager */}
+              {activeModal === 'gallery' && tempData.items && (
+                <View style={styles.gridManagerWrapper}>
+                  <Text style={styles.sheetTitle}>Manage Gallery Grid</Text>
+                  <View style={styles.gridSectionHeaderRow}>
+                    <View style={styles.gridSectionTitleRow}>
+                      <Ionicons name="images-outline" size={15} color="#60A5FA" style={{ marginRight: 6 }} />
+                      <Text style={styles.gridSectionTitle}>REQUIRED PHOTOS</Text>
+                    </View>
+                    <View style={styles.gridStrictBadge}>
+                      <Ionicons name="lock-closed" size={10} color="#93C5FD" style={{ marginRight: 3 }} />
+                      <Text style={styles.gridStrictBadgeText}>Strict Titles</Text>
+                    </View>
+                  </View>
+
+                  {/* 3-Column Photos Grid */}
+                  <View style={styles.photoGridRow}>
+                    {['Close-Up', 'Full-Body', 'Mid'].map((slotTitle) => {
+                      const item = tempData.items.find(it => !it.isVideo && it.label === slotTitle);
+                      return (
+                        <View key={slotTitle} style={styles.gridCardSlot}>
+                          <View style={styles.gridSlotHeader}>
+                            <Text style={styles.gridSlotTitleText} numberOfLines={1}>{slotTitle}</Text>
+                          </View>
+                          
+                          {item && item.uri ? (
+                            <View style={styles.gridCardPreviewBox}>
+                              <Image source={{ uri: item.uri }} style={styles.gridCardImage} />
+                              <View style={styles.gridCardActionOverlay}>
+                                <TouchableOpacity 
+                                  activeOpacity={0.8}
+                                  onPress={() => handleChangeMedia(item.id, false)}
+                                  style={styles.gridActionIconBtn}
+                                >
+                                  <Ionicons name="camera" size={13} color="#ffffff" />
+                                </TouchableOpacity>
+                                <TouchableOpacity 
+                                  activeOpacity={0.8}
+                                  onPress={() => handleRemoveMedia(item.id)}
+                                  style={[styles.gridActionIconBtn, styles.gridDeleteBtn]}
+                                >
+                                  <Ionicons name="trash" size={13} color="#FF6B6B" />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : (
+                            <TouchableOpacity 
+                              activeOpacity={0.8}
+                              onPress={() => handleAddOrRestorePhoto(slotTitle)}
+                              style={styles.gridEmptyCardBox}
+                            >
+                              <Ionicons name="add-circle-outline" size={24} color="#60A5FA" />
+                              <Text style={styles.gridEmptyAddText}>Add {slotTitle}</Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      );
+                    })}
+                  </View>
+
+                  {/* Section 2: Performance Videos */}
+                  <View style={[styles.gridSectionHeaderRow, { marginTop: 22 }]}>
+                    <View style={styles.gridSectionTitleRow}>
+                      <Ionicons name="videocam-outline" size={16} color="#60A5FA" style={{ marginRight: 6 }} />
+                      <Text style={styles.gridSectionTitle}>PERFORMANCE VIDEOS</Text>
+                    </View>
+                    {tempData.items.filter(it => it.isVideo).length < 3 && (
+                      <TouchableOpacity 
+                        activeOpacity={0.7}
+                        onPress={handleAddVideo}
+                        style={styles.gridAddVideoBtn}
+                      >
+                        <Ionicons name="add" size={14} color="#ffffff" style={{ marginRight: 2 }} />
+                        <Text style={styles.gridAddVideoBtnText}>Add Video</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+
+                  {/* Videos Grid */}
+                  <View style={styles.videoGridRow}>
+                    {tempData.items.filter(it => it.isVideo).map((vItem, vIdx) => {
+                      const isEditingThisTitle = editingVideoId === vItem.id;
+                      return (
+                        <View key={vItem.id} style={styles.videoCardSlot}>
+                          <View style={styles.videoSlotHeaderRow}>
+                            {isEditingThisTitle ? (
+                              <View style={styles.videoRenameRow}>
+                                <TextInput 
+                                  style={styles.videoRenameInput}
+                                  value={vItem.label}
+                                  autoFocus={true}
+                                  onChangeText={(val) => {
+                                    const updated = [...tempData.items];
+                                    const idx = updated.findIndex(it => it.id === vItem.id);
+                                    if (idx !== -1) {
+                                      updated[idx].label = val;
+                                      setTempData(prev => ({ ...prev, items: updated }));
+                                    }
+                                  }}
+                                  placeholder={`Video ${vIdx + 1}`}
+                                  placeholderTextColor="#666666"
+                                />
+                                <TouchableOpacity 
+                                  activeOpacity={0.8}
+                                  onPress={() => setEditingVideoId(null)}
+                                  style={styles.videoRenameDoneBtn}
+                                >
+                                  <Ionicons name="checkmark" size={14} color="#ffffff" />
+                                </TouchableOpacity>
+                              </View>
+                            ) : (
+                              <View style={styles.videoTitleDisplayRow}>
+                                <Text style={styles.videoTitleText} numberOfLines={1}>{vItem.label}</Text>
+                                <TouchableOpacity 
+                                  activeOpacity={0.7}
+                                  onPress={() => setEditingVideoId(vItem.id)}
+                                  style={styles.videoEditPencilBtn}
+                                >
+                                  <Ionicons name="pencil" size={12} color="#60A5FA" />
+                                </TouchableOpacity>
+                              </View>
+                            )}
+                          </View>
+
+                          <View style={styles.gridCardPreviewBox}>
+                            <Image source={{ uri: vItem.uri }} style={styles.gridCardImage} />
+                            <View style={styles.videoCenterPlayIndicator}>
+                              <Ionicons name="play" size={14} color="#ffffff" />
+                            </View>
+                            <View style={styles.gridCardActionOverlay}>
+                              <TouchableOpacity 
+                                activeOpacity={0.8}
+                                onPress={() => handleChangeMedia(vItem.id, true)}
+                                style={styles.gridActionIconBtn}
+                              >
+                                <Ionicons name="cloud-upload" size={13} color="#ffffff" />
+                              </TouchableOpacity>
+                              <TouchableOpacity 
+                                activeOpacity={0.8}
+                                onPress={() => handleRemoveMedia(vItem.id)}
+                                style={[styles.gridActionIconBtn, styles.gridDeleteBtn]}
+                              >
+                                <Ionicons name="trash" size={13} color="#FF6B6B" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    })}
+
+                    {tempData.items.filter(it => it.isVideo).length < 3 && (
+                      <TouchableOpacity 
+                        activeOpacity={0.8}
+                        onPress={handleAddVideo}
+                        style={styles.gridEmptyVideoCardBox}
+                      >
+                        <Ionicons name="videocam-outline" size={24} color="#60A5FA" />
+                        <Text style={styles.gridEmptyAddText}>+ Add Video {tempData.items.filter(it => it.isVideo).length + 1}</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </View>
+              )}
+
+              {/* 8. Performer Projects Editor */}
+              {activeModal === 'performer' && tempData.projects && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Performer Work</Text>
+                  {tempData.projects.map((proj, idx) => (
+                    <View key={proj.id} style={[styles.modalSectionCard, { marginBottom: 14 }]}>
+                      <View style={styles.modalItemHeaderRow}>
+                        <View style={styles.modalBadgePill}>
+                          <Text style={styles.modalBadgePillText}>SHOW {idx + 1}</Text>
+                        </View>
+                        <TouchableOpacity 
+                          activeOpacity={0.7}
+                          onPress={() => handleRemovePerformerProject(proj.id)}
+                          style={styles.modalDeleteIconBtn}
+                        >
+                          <Ionicons name="trash-outline" size={15} color="#FF6B6B" />
+                        </TouchableOpacity>
+                      </View>
+
+                      <Text style={styles.sheetInputLabel}>PRODUCTION TITLE</Text>
+                      <TextInput 
+                        style={styles.sheetInput}
+                        value={proj.title}
+                        onChangeText={(val) => {
+                          const updated = [...tempData.projects];
+                          updated[idx].title = val;
+                          setTempData(prev => ({ ...prev, projects: updated }));
+                        }}
+                        placeholder="e.g. Disney's Aladdin"
+                        placeholderTextColor="#777777"
+                      />
+
+                      <Text style={[styles.sheetInputLabel, { marginTop: 12 }]}>HIGHLIGHTS</Text>
+                      <TextInput 
+                        style={styles.sheetInput}
+                        value={proj.details}
+                        onChangeText={(val) => {
+                          const updated = [...tempData.projects];
+                          updated[idx].details = val;
+                          setTempData(prev => ({ ...prev, projects: updated }));
+                        }}
+                        placeholder="e.g. Lead Dancer · 99 Shows · Musical Theatre"
+                        placeholderTextColor="#777777"
+                      />
+                    </View>
+                  ))}
+
+                  <TouchableOpacity 
+                    activeOpacity={0.8}
+                    onPress={handleAddPerformerProject}
+                    style={styles.modalAddDashedBtn}
+                  >
+                    <Ionicons name="add-circle" size={18} color="#60A5FA" style={{ marginRight: 6 }} />
+                    <Text style={styles.modalAddDashedBtnText}>+ Add Performance Project</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {/* 9. Choreographer Projects Editor */}
+              {activeModal === 'choreographer' && tempData.projects && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Choreographer Work</Text>
+                  {tempData.projects.map((proj, idx) => (
+                    <View key={proj.id} style={[styles.modalSectionCard, { marginBottom: 14 }]}>
+                      <View style={styles.modalItemHeaderRow}>
+                        <View style={styles.modalBadgePill}>
+                          <Text style={styles.modalBadgePillText}>CHOREOGRAPHY {idx + 1}</Text>
+                        </View>
+                        <TouchableOpacity 
+                          activeOpacity={0.7}
+                          onPress={() => handleRemoveChoreographerProject(proj.id)}
+                          style={styles.modalDeleteIconBtn}
+                        >
+                          <Ionicons name="trash-outline" size={15} color="#FF6B6B" />
+                        </TouchableOpacity>
+                      </View>
+
+                      <Text style={styles.sheetInputLabel}>PRODUCTION / ARTIST NAME</Text>
+                      <TextInput 
+                        style={styles.sheetInput}
+                        value={proj.title}
+                        onChangeText={(val) => {
+                          const updated = [...tempData.projects];
+                          updated[idx].title = val;
+                          setTempData(prev => ({ ...prev, projects: updated }));
+                        }}
+                        placeholder="e.g. Badshah & Abhishek Bachchan"
+                        placeholderTextColor="#777777"
+                      />
+
+                      <Text style={[styles.sheetInputLabel, { marginTop: 12 }]}>HIGHLIGHTS</Text>
+                      <TextInput 
+                        style={styles.sheetInput}
+                        value={proj.details}
+                        onChangeText={(val) => {
+                          const updated = [...tempData.projects];
+                          updated[idx].details = val;
+                          setTempData(prev => ({ ...prev, projects: updated }));
+                        }}
+                        placeholder="e.g. Lead Choreographer · National Tour"
+                        placeholderTextColor="#777777"
+                      />
+                    </View>
+                  ))}
+
+                  <TouchableOpacity 
+                    activeOpacity={0.8}
+                    onPress={handleAddChoreographerProject}
+                    style={styles.modalAddDashedBtn}
+                  >
+                    <Ionicons name="add-circle" size={18} color="#60A5FA" style={{ marginRight: 6 }} />
+                    <Text style={styles.modalAddDashedBtnText}>+ Add Choreography Project</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {/* 10. Training Editor */}
+              {activeModal === 'training' && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Training & Certification</Text>
+                  <Text style={styles.sheetInputLabel}>DEGREE / CERTIFICATION TITLE</Text>
+                  <TextInput 
+                    style={styles.sheetInput}
+                    value={tempData.title}
+                    onChangeText={(val) => setTempData(prev => ({ ...prev, title: val }))}
+                    placeholder="e.g. Diploma in Performing Arts"
+                    placeholderTextColor="#777777"
+                  />
+                  <Text style={[styles.sheetInputLabel, { marginTop: 14 }]}>STATUS TAG</Text>
+                  <TextInput 
+                    style={styles.sheetInput}
+                    value={tempData.tag}
+                    onChangeText={(val) => setTempData(prev => ({ ...prev, tag: val }))}
+                    placeholder="e.g. Certified"
+                    placeholderTextColor="#777777"
+                  />
+                  <Text style={[styles.sheetInputLabel, { marginTop: 14 }]}>INSTITUTION</Text>
+                  <TextInput 
+                    style={styles.sheetInput}
+                    value={tempData.institution}
+                    onChangeText={(val) => setTempData(prev => ({ ...prev, institution: val }))}
+                    placeholder="e.g. National Academy of Dance"
+                    placeholderTextColor="#777777"
+                  />
+                  <Text style={[styles.sheetInputLabel, { marginTop: 14 }]}>CURRICULUM HIGHLIGHTS</Text>
+                  <TextInput 
+                    style={[styles.sheetInput, { height: 75, textAlignVertical: 'top' }]}
+                    multiline={true}
+                    value={tempData.bullet}
+                    onChangeText={(val) => setTempData(prev => ({ ...prev, bullet: val }))}
+                    placeholder="e.g. Classical Rhythm · Contemporary Execution"
+                    placeholderTextColor="#777777"
+                  />
+                </View>
+              )}
+
+              {/* 11. Socials Editor */}
+              {activeModal === 'socials' && (
+                <View>
+                  <Text style={styles.sheetTitle}>Edit Socials</Text>
+                  
+                  {/* Instagram Section */}
+                  <View style={[styles.modalSectionCard, { marginBottom: 14 }]}>
+                    <View style={styles.modalItemHeaderRow}>
+                      <View style={styles.modalBadgePill}>
+                        <Text style={styles.modalBadgePillText}>INSTAGRAM</Text>
+                      </View>
+                      <Ionicons name="logo-instagram" size={18} color="#ffffff" />
+                    </View>
+
+                    <View style={styles.modalInstaGrid}>
+                      <View style={styles.modalInstaTile}>
+                        <Text style={styles.sheetInputLabel}>FOLLOWERS</Text>
+                        <TextInput 
+                          style={styles.sheetInput}
+                          value={tempData.instagram?.followers}
+                          onChangeText={(val) => setTempData(prev => ({
+                            ...prev,
+                            instagram: { ...prev.instagram, followers: val }
+                          }))}
+                          placeholder="12.5k followers"
+                          placeholderTextColor="#777777"
+                        />
+                      </View>
+
+                      <View style={styles.modalInstaTile}>
+                        <Text style={styles.sheetInputLabel}>ENGAGEMENT</Text>
+                        <TextInput 
+                          style={styles.sheetInput}
+                          value={tempData.instagram?.engagement}
+                          onChangeText={(val) => setTempData(prev => ({
+                            ...prev,
+                            instagram: { ...prev.instagram, engagement: val }
+                          }))}
+                          placeholder="1.7K accounts"
+                          placeholderTextColor="#777777"
+                        />
+                      </View>
+
+                      <View style={styles.modalInstaTile}>
+                        <Text style={styles.sheetInputLabel}>PARTNERSHIPS</Text>
+                        <TextInput 
+                          style={styles.sheetInput}
+                          value={tempData.instagram?.partnerships}
+                          onChangeText={(val) => setTempData(prev => ({
+                            ...prev,
+                            instagram: { ...prev.instagram, partnerships: val }
+                          }))}
+                          placeholder="0 brands"
+                          placeholderTextColor="#777777"
+                        />
+                      </View>
+
+                      <View style={styles.modalInstaTile}>
+                        <Text style={styles.sheetInputLabel}>HOOK RATE</Text>
+                        <TextInput 
+                          style={styles.sheetInput}
+                          value={tempData.instagram?.hook}
+                          onChangeText={(val) => setTempData(prev => ({
+                            ...prev,
+                            instagram: { ...prev.instagram, hook: val }
+                          }))}
+                          placeholder="53.1%"
+                          placeholderTextColor="#777777"
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* YouTube Section */}
+                  <View style={styles.modalSectionCard}>
+                    <View style={styles.modalItemHeaderRow}>
+                      <View style={styles.modalBadgePill}>
+                        <Text style={styles.modalBadgePillText}>YOUTUBE</Text>
+                      </View>
+                      <Ionicons name="logo-youtube" size={16} color="#FF0000" />
+                    </View>
+
+                    <View style={styles.modalInstaGrid}>
+                      <View style={styles.modalInstaTile}>
+                        <Text style={styles.sheetInputLabel}>SUBSCRIBERS</Text>
+                        <TextInput 
+                          style={styles.sheetInput}
+                          value={tempData.youtube?.subscribers}
+                          onChangeText={(val) => setTempData(prev => ({
+                            ...prev,
+                            youtube: { ...prev.youtube, subscribers: val }
+                          }))}
+                          placeholder="48.2k subscribers"
+                          placeholderTextColor="#777777"
+                        />
+                      </View>
+
+                      <View style={styles.modalInstaTile}>
+                        <Text style={styles.sheetInputLabel}>TOTAL VIEWS</Text>
+                        <TextInput 
+                          style={styles.sheetInput}
+                          value={tempData.youtube?.views}
+                          onChangeText={(val) => setTempData(prev => ({
+                            ...prev,
+                            youtube: { ...prev.youtube, views: val }
+                          }))}
+                          placeholder="1.2M views"
+                          placeholderTextColor="#777777"
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+                </View>
+              )}
+
+            </ScrollView>
+
+            {/* 4. Save/Cancel Actions */}
+            <View style={styles.sheetActionsRow}>
+              <TouchableOpacity 
+                activeOpacity={0.7} 
+                onPress={() => setActiveModal(null)} 
+                style={styles.sheetCancelBtn}
+              >
+                <Text style={styles.sheetCancelBtnText}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                activeOpacity={0.85} 
+                onPress={handleSaveModal} 
+                style={styles.sheetSaveBtn}
+              >
+                <Text style={styles.sheetSaveBtnText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Fullscreen Media Lightbox Viewer Modal */}
+      <Modal
+        visible={viewerVisible}
+        transparent={false}
+        animationType="fade"
+        statusBarTranslucent={true}
+        onRequestClose={closeFullscreenViewer}
+      >
+        <View style={styles.fullscreenModalContainer}>
+          <StatusBar barStyle="light-content" backgroundColor="#000000" />
+
+          {/* Fullscreen Swipeable Carousel */}
+          <FlatList
+            ref={fullscreenFlatListRef}
+            data={galleryItems}
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            initialScrollIndex={currentViewerIndex}
+            getItemLayout={(_, index) => ({
+              length: width,
+              offset: width * index,
+              index,
+            })}
+            onScrollToIndexFailed={(info) => {
+              setTimeout(() => {
+                fullscreenFlatListRef.current?.scrollToIndex({ index: info.index, animated: false });
+              }, 100);
+            }}
+            onMomentumScrollEnd={(e) => {
+              const nextIdx = Math.round(e.nativeEvent.contentOffset.x / width);
+              if (nextIdx >= 0 && nextIdx < galleryItems.length) {
+                setCurrentViewerIndex(nextIdx);
+                setIsPlayingVideo(false);
+              }
+            }}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.fullscreenSlideContainer}>
+                <Image 
+                  source={{ uri: item.uri }} 
+                  style={styles.fullscreenImage} 
+                  resizeMode="cover"
+                />
+
+                {/* If Video: Centered Play/Pause Button & Scrubber */}
+                {item.isVideo && (
+                  <View style={styles.fullscreenVideoOverlay}>
+                    <TouchableOpacity 
+                      activeOpacity={0.85}
+                      onPress={() => setIsPlayingVideo(!isPlayingVideo)}
+                      style={styles.fullscreenPlayCenterBtn}
+                    >
+                      <Ionicons 
+                        name={isPlayingVideo ? "pause" : "play"} 
+                        size={32} 
+                        color="#ffffff" 
+                        style={{ marginLeft: isPlayingVideo ? 0 : 4 }}
+                      />
+                    </TouchableOpacity>
+
+                    {/* Video Timeline & Scrub Bar */}
+                    <View style={styles.fullscreenVideoTimelineBox}>
+                      <View style={styles.fullscreenProgressTrack}>
+                        <View style={[styles.fullscreenProgressBar, { width: isPlayingVideo ? '72%' : '30%' }]} />
+                      </View>
+                      <View style={styles.fullscreenTimeRow}>
+                        <Text style={styles.fullscreenTimeText}>{isPlayingVideo ? '0:24' : '0:10'}</Text>
+                        <Text style={styles.fullscreenTimeText}>0:45</Text>
+                      </View>
+                    </View>
+                  </View>
+                )}
+              </View>
+            )}
+          />
+
+          {/* Top Header Overlay with Counter, Tag, and Close */}
+          <SafeAreaView edges={['top']} style={styles.fullscreenTopHeader}>
+            <View style={styles.fullscreenTopHeaderContent}>
+              <View style={styles.fullscreenBadgeRow}>
+                <View style={styles.fullscreenTypeBadge}>
+                  <Ionicons 
+                    name={galleryItems[currentViewerIndex]?.isVideo ? "videocam" : "image"} 
+                    size={13} 
+                    color="#60A5FA" 
+                    style={{ marginRight: 4 }}
+                  />
+                  <Text style={styles.fullscreenTypeBadgeText}>
+                    {galleryItems[currentViewerIndex]?.isVideo ? 'VIDEO' : 'PHOTO'}
+                  </Text>
+                </View>
+                <Text style={styles.fullscreenCounterText}>
+                  {currentViewerIndex + 1} / {galleryItems.length}
+                </Text>
+              </View>
+
+              <TouchableOpacity 
+                activeOpacity={0.8}
+                onPress={closeFullscreenViewer} 
+                style={styles.fullscreenCloseBtn}
+              >
+                <Ionicons name="close" size={22} color="#ffffff" />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+
+          {/* Left Navigation Chevron */}
+          {currentViewerIndex > 0 && (
+            <TouchableOpacity 
+              activeOpacity={0.8}
+              onPress={() => {
+                const next = currentViewerIndex - 1;
+                fullscreenFlatListRef.current?.scrollToIndex({ index: next, animated: true });
+                setCurrentViewerIndex(next);
+                setIsPlayingVideo(false);
+              }}
+              style={[styles.fullscreenNavBtn, styles.fullscreenNavLeft]}
+            >
+              <Ionicons name="chevron-back" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          )}
+
+          {/* Right Navigation Chevron */}
+          {currentViewerIndex < galleryItems.length - 1 && (
+            <TouchableOpacity 
+              activeOpacity={0.8}
+              onPress={() => {
+                const next = currentViewerIndex + 1;
+                fullscreenFlatListRef.current?.scrollToIndex({ index: next, animated: true });
+                setCurrentViewerIndex(next);
+                setIsPlayingVideo(false);
+              }}
+              style={[styles.fullscreenNavBtn, styles.fullscreenNavRight]}
+            >
+              <Ionicons name="chevron-forward" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          )}
+
+          {/* Bottom Title & Hint Overlay */}
+          <SafeAreaView edges={['bottom']} style={styles.fullscreenBottomOverlay}>
+            <LinearGradient
+              colors={['transparent', 'rgba(0, 0, 0, 0.94)']}
+              style={styles.fullscreenBottomGradient}
+            >
+              <Text style={styles.fullscreenTitleText}>
+                {galleryItems[currentViewerIndex]?.label}
+              </Text>
+              <Text style={styles.fullscreenSubtitleText}>
+                {galleryItems[currentViewerIndex]?.isVideo 
+                  ? 'Tap center button to play / pause · Swipe left or right to browse' 
+                  : 'Swipe left or right to browse photos · Tap close to exit'}
+              </Text>
+            </LinearGradient>
+          </SafeAreaView>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -878,6 +2337,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.02)',
   },
+  demoHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   demoValueSmall: {
     fontSize: 15,
     fontFamily: 'AirbnbCereal-Bold',
@@ -886,17 +2350,17 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
 
-  /* Editorial Gallery Layout (Width: 110, Height: 150) */
+  /* Editorial Gallery Layout */
   galleryViewportContainer: {
     position: 'relative',
   },
   floatingArrowBtn: {
     position: 'absolute',
     top: '50%',
-    marginTop: -16,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    marginTop: -14,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.25)',
@@ -905,19 +2369,19 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   floatingArrowLeft: {
-    left: 4,
+    left: -6,
   },
   floatingArrowRight: {
-    right: 4,
+    right: -6,
   },
   galleryScrollContainer: {
-    paddingRight: 10,
-    gap: 12,
+    flexDirection: 'row',
+    gap: GALLERY_GAP,
   },
   galleryCardItem: {
-    width: 110,
-    height: 150,
-    borderRadius: 16,
+    width: GALLERY_CARD_WIDTH,
+    height: GALLERY_CARD_HEIGHT,
+    borderRadius: 14,
     overflow: 'hidden',
     position: 'relative',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -931,32 +2395,37 @@ const styles = StyleSheet.create({
   },
   galleryPlayBadge: {
     position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    top: '50%',
+    left: '50%',
+    marginTop: -16,
+    marginLeft: -16,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.65)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
+    paddingLeft: 2,
   },
   galleryCardGradientOverlay: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    paddingTop: 24,
-    paddingBottom: 10,
+    paddingTop: 18,
+    paddingBottom: 6,
+    paddingHorizontal: 2,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
   galleryCardLabelText: {
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: 'AirbnbCereal-Medium',
     color: '#ffffff',
+    textAlign: 'center',
   },
   dotsContainerCentered: {
     flexDirection: 'row',
@@ -978,28 +2447,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
 
-  /* 100% Screenshot Work Experience Styles */
-  cardHeaderTitleText: {
-    fontSize: 18,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-  expSubCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 20,
-    padding: 16,
-    marginTop: 12,
-  },
-  expRoleCategoryTitle: {
-    fontSize: 18,
-    fontFamily: 'AirbnbCereal-Bold',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 12,
-  },
+  /* Work Experience Styles */
   expFilterPillRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -1064,11 +2512,11 @@ const styles = StyleSheet.create({
   expSubEntryText: {
     flex: 1,
     fontSize: 13,
-    fontStyle: 'italic',
     fontFamily: 'AirbnbCereal-Book',
-    color: 'rgba(255, 255, 255, 0.75)',
-    lineHeight: 18,
+    color: 'rgba(255, 255, 255, 0.8)',
+    lineHeight: 19,
     marginRight: 8,
+    letterSpacing: 0.2,
   },
 
   /* Work Experience & Training Specifics */
@@ -1093,12 +2541,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 8,
   },
-  bulletDotText: {
-    color: '#60A5FA',
-    fontSize: 14,
-    marginRight: 6,
-    marginTop: 1,
-  },
   expBulletText: {
     flex: 1,
     fontSize: 13,
@@ -1114,32 +2556,6 @@ const styles = StyleSheet.create({
   },
 
   /* Instagram Insights Layout */
-  socialHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  socialLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  socialHandle: {
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Bold',
-    color: '#ffffff',
-  },
-  socialSubText: {
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Book',
-    color: 'rgba(255, 255, 255, 0.6)',
-    marginTop: 1,
-  },
-  /* Instagram Insights 2-Column Side-by-Side Rows (100% Screenshot Replica) */
-  instaHeaderRow: {
-    marginBottom: 16,
-  },
   instaHeaderTitle: {
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
@@ -1178,85 +2594,1082 @@ const styles = StyleSheet.create({
     fontFamily: 'AirbnbCereal-Book',
     color: 'rgba(255, 255, 255, 0.6)',
   },
-  reelsGridContainer: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  reelThumbnailCard: {
+
+  /* Floating Centered Dialog Edit Modal Styles */
+  sheetOverlay: {
     flex: 1,
-    height: 110,
-    borderRadius: 14,
-    overflow: 'hidden',
-    position: 'relative',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  reelImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  playIconBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  /* About Text */
-  aboutText: {
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Book',
-    color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: 22,
+  sheetContainer: {
+    width: '90%',
+    maxWidth: 400,
+    backgroundColor: '#1A1A1A',
+    borderRadius: 24,
+    padding: 24,
+    maxHeight: '85%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 24,
   },
-
-  /* Show Rates Row */
-  rateRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  rateTitle: {
-    fontSize: 14,
-    fontFamily: 'AirbnbCereal-Bold',
-    color: '#ffffff',
-  },
-  rateSubtitle: {
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Book',
-    color: 'rgba(255, 255, 255, 0.65)',
-    marginTop: 2,
-  },
-  rateAmount: {
+  birthdayTitle: {
     fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 20,
   },
-
-  /* Connected Accounts Social Row */
-  connectedBadgeBlue: {
-    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+  birthdayRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  birthdayDropdownBlock: {
+    backgroundColor: '#2A2A2A',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  birthdayDropdownBlockActive: {
+    borderColor: '#1D4ED8',
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+  },
+  birthdayDropdownText: {
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#ffffff',
+  },
+  birthdayPickerOptionsContainer: {
+    marginTop: 10,
+    backgroundColor: '#222222',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    maxHeight: 160,
+    overflow: 'hidden',
+  },
+  birthdayPickerScroll: {
+    paddingVertical: 4,
+  },
+  birthdayOptionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  birthdayOptionItemActive: {
+    backgroundColor: 'rgba(29, 78, 216, 0.25)',
+  },
+  birthdayOptionText: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: 'rgba(255, 255, 255, 0.85)',
+  },
+  birthdayOptionTextActive: {
+    color: '#ffffff',
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+  calculatedAgeBox: {
+    marginTop: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  calculatedAgeText: {
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  genderTitle: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  genderSegmentedRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+    width: '100%',
+  },
+  genderSegmentBtn: {
+    flex: 1,
+    paddingVertical: 13,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  genderSegmentBtnSelected: {
+    backgroundColor: '#1D4ED8',
+    borderWidth: 1,
+    borderColor: '#1D4ED8',
+  },
+  genderSegmentBtnUnselected: {
+    backgroundColor: '#2A2A2A',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  genderSegmentText: {
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+  genderSegmentTextSelected: {
+    color: '#ffffff',
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+  genderSegmentTextUnselected: {
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  artistModalTitle: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  artistModalSubtitle: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: 'rgba(255, 255, 255, 0.6)',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  artistPillsWrapGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 6,
+  },
+  sheetHandleBar: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignSelf: 'center',
+    marginBottom: 18,
+  },
+  sheetScrollBody: {
+    maxHeight: 480,
+  },
+  sheetTitle: {
+    fontSize: 18,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 18,
+  },
+  sheetInputLabel: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginBottom: 8,
+    letterSpacing: 0.5,
+  },
+  sheetInput: {
+    backgroundColor: '#2A2A2A',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    color: '#ffffff',
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+  sheetHeightRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  sheetHeightCol: {
+    flex: 1,
+  },
+  sheetPillWrapGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginTop: 4,
+  },
+  sheetPill: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderRadius: 9999,
   },
-  connectedBadgeBlueText: {
+  sheetPillSelected: {
+    backgroundColor: '#1D4ED8',
+    borderWidth: 1,
+    borderColor: '#1D4ED8',
+  },
+  sheetPillUnselected: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  sheetPillText: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+  sheetPillTextSelected: {
+    color: '#ffffff',
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+  sheetPillTextUnselected: {
+    color: '#ffffff',
+  },
+  sheetActionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 24,
+    gap: 12,
+  },
+  sheetCancelBtn: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  sheetCancelBtnText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+  sheetSaveBtn: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 9999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1D4ED8',
+  },
+  sheetSaveBtnText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+  modalDemographicsGridRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  modalDemoCol: {
+    flex: 1,
+  },
+  modalItemHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  modalBadgePill: {
+    backgroundColor: 'rgba(30, 58, 138, 0.7)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.35)',
+  },
+  modalBadgePillText: {
+    color: '#93C5FD',
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  modalDeleteIconBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(60, 0, 0, 0.7)',
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalAddDashedBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+    borderRadius: 16,
+    paddingVertical: 14,
+    marginTop: 4,
+  },
+  modalAddDashedBtnText: {
+    color: '#93C5FD',
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+  },
+  modalInstaGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    justifyContent: 'space-between',
+  },
+  modalInstaTile: {
+    width: '48%',
+    marginBottom: 6,
+  },
+  modalSaveButtonWrapper: {
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  modalSaveButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 16,
+  },
+  modalSaveButtonText: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+  },
+
+  /* Fullscreen Media Lightbox Styles */
+  fullscreenModalContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+    position: 'relative',
+  },
+  fullscreenSlideContainer: {
+    width: width,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000',
+    position: 'relative',
+  },
+  fullscreenImage: {
+    width: width,
+    height: '100%',
+  },
+  fullscreenVideoOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullscreenPlayCenterBtn: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  fullscreenVideoTimelineBox: {
+    position: 'absolute',
+    bottom: 110,
+    left: 24,
+    right: 24,
+  },
+  fullscreenProgressTrack: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    overflow: 'hidden',
+    marginBottom: 6,
+  },
+  fullscreenProgressBar: {
+    height: '100%',
+    borderRadius: 2,
+    backgroundColor: '#3B82F6',
+  },
+  fullscreenTimeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  fullscreenTimeText: {
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'AirbnbCereal-Book',
+  },
+  fullscreenTopHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+  },
+  fullscreenTopHeaderContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  fullscreenBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  fullscreenTypeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(30, 58, 138, 0.8)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+  },
+  fullscreenTypeBadgeText: {
+    color: '#93C5FD',
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  fullscreenCounterText: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Medium',
+    fontWeight: '600',
+  },
+  fullscreenCloseBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullscreenNavBtn: {
+    position: 'absolute',
+    top: '50%',
+    marginTop: -22,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 15,
+  },
+  fullscreenNavLeft: {
+    left: 12,
+  },
+  fullscreenNavRight: {
+    right: 12,
+  },
+  fullscreenBottomOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+  },
+  fullscreenBottomGradient: {
+    paddingHorizontal: 24,
+    paddingTop: 36,
+    paddingBottom: 24,
+  },
+  fullscreenTitleText: {
+    fontSize: 20,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: 4,
+  },
+  fullscreenSubtitleText: {
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Book',
+    color: 'rgba(255, 255, 255, 0.65)',
+  },
+
+  /* Gallery Grid Manager Styles */
+  gridManagerWrapper: {
+    paddingVertical: 4,
+  },
+  gridSectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  gridSectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  gridSectionTitle: {
     color: '#60A5FA',
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  gridStrictBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+  },
+  gridStrictBadgeText: {
+    fontSize: 9,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+  gridSectionSubtext: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Book',
+    color: 'rgba(255, 255, 255, 0.55)',
+    marginBottom: 10,
+  },
+  photoGridRow: {
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
+  },
+  gridCardSlot: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 6,
+    alignItems: 'center',
+  },
+  gridSlotHeader: {
+    marginBottom: 6,
+    alignItems: 'center',
+  },
+  gridSlotTitleText: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  gridCardPreviewBox: {
+    width: '100%',
+    height: 118,
+    borderRadius: 10,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  gridCardImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  gridCardActionOverlay: {
+    position: 'absolute',
+    bottom: 4,
+    left: 4,
+    right: 4,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  gridActionIconBtn: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gridDeleteBtn: {
+    backgroundColor: 'rgba(60, 0, 0, 0.8)',
+    borderColor: 'rgba(239, 68, 68, 0.4)',
+  },
+  gridEmptyCardBox: {
+    width: '100%',
+    height: 118,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
+  },
+  gridEmptyAddText: {
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#93C5FD',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  videoGridRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  videoCardSlot: {
+    width: '31.5%',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 6,
+    alignItems: 'center',
+  },
+  videoSlotHeaderRow: {
+    width: '100%',
+    marginBottom: 6,
+    minHeight: 22,
+    justifyContent: 'center',
+  },
+  videoTitleDisplayRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 2,
+  },
+  videoTitleText: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#ffffff',
+    flex: 1,
+  },
+  videoEditPencilBtn: {
+    padding: 2,
+    marginLeft: 2,
+  },
+  videoRenameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  videoRenameInput: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 6,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    fontSize: 10,
+    color: '#ffffff',
+    fontFamily: 'AirbnbCereal-Book',
+    borderWidth: 1,
+    borderColor: '#3B82F6',
+  },
+  videoRenameDoneBtn: {
+    backgroundColor: '#1D4ED8',
+    borderRadius: 6,
+    padding: 3,
+    marginLeft: 3,
+  },
+  videoCenterPlayIndicator: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 1.5,
+  },
+  gridEmptyVideoCardBox: {
+    width: '31.5%',
+    height: 154,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 6,
+  },
+  gridAddVideoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1D4ED8',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  gridAddVideoBtnText: {
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Bold',
+    color: '#ffffff',
+    fontWeight: '700',
+  },
+
+  /* Socials Component Styles (Google Creator Profiles Inspired) */
+  socialsHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  creatorVerifiedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(30, 58, 138, 0.6)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(96, 165, 250, 0.3)',
+  },
+  creatorVerifiedText: {
+    fontSize: 9,
+    color: '#93C5FD',
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  socialsPillContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 16,
+    width: '100%',
+  },
+  platformPill: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  platformPillActive: {
+    borderColor: '#1D4ED8',
+    backgroundColor: 'rgba(29, 78, 216, 0.15)',
+  },
+  platformIconCircleInstaGradient: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    padding: 1.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  platformIconCircleInstaInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+    backgroundColor: '#090A0F',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  platformIconCircleYoutubeGradient: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    padding: 1.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  platformIconCircleYoutubeInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+    backgroundColor: '#090A0F',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  platformPillTextStack: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  platformNameText: {
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  platformStatText: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Book',
+    color: '#929292',
+    marginTop: 1,
+  },
+  activeDotIndicator: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#60A5FA',
+  },
+  socialsExpandedContent: {
+    width: '100%',
+  },
+  insightsSectionHeadingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    marginTop: 4,
+  },
+  insightsSectionTitle: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#60A5FA',
+    letterSpacing: 0.6,
+  },
+  insightsLiveDot: {
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#10B981',
+  },
+  socialEmbedCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.09)',
+    borderRadius: 20,
+    padding: 16,
+    marginTop: 4,
+  },
+  embedHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  embedProfileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  embedAvatarInstaGradient: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    padding: 1.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  embedAvatarInstaInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 17,
+    backgroundColor: '#090A0F',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  embedAvatarYoutube: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FF0000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  embedAvatarText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+  },
+  embedNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  embedHandleText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+  },
+  embedSubtext: {
+    color: 'rgba(255, 255, 255, 0.55)',
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Book',
+    marginTop: 1,
+  },
+  embedVisitBtnGradientWrapper: {
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  embedVisitBtnGradientBorder: {
+    padding: 1,
+    borderRadius: 12,
+  },
+  embedVisitBtnInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#090A0F',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 11,
+  },
+  embedVisitBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+  },
+  embedVisitBtnText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontFamily: 'AirbnbCereal-Medium',
+  },
+  embedFeedGrid: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  embedPostItem: {
+    flex: 1,
+    height: 110,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  embedPostImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  embedPostReelBadge: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  embedPostOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 6,
+    alignItems: 'center',
+  },
+  embedPostStatText: {
+    color: '#ffffff',
+    fontSize: 10,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+  },
+  embedFooterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  embedFooterText: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: 11,
+    fontFamily: 'AirbnbCereal-Book',
+  },
+  youtubeFeaturedEmbed: {
+    width: '100%',
+    height: 140,
+    borderRadius: 14,
+    overflow: 'hidden',
+    position: 'relative',
+    marginBottom: 8,
+  },
+  youtubeFeaturedThumb: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  youtubeCenterPlayBtn: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -22,
+    marginLeft: -22,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  youtubeDurationBadge: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  youtubeDurationText: {
+    color: '#ffffff',
     fontSize: 10,
     fontFamily: 'AirbnbCereal-Bold',
   },
-  socialDivider: {
-    height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    marginVertical: 12,
+  youtubeVideoTitleText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    marginBottom: 10,
   },
 });
