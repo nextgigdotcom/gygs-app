@@ -822,10 +822,10 @@ export default function ProfileScreen({ onBackHome }) {
         showsVerticalScrollIndicator={false}
       >
         
-        {/* 1. Dashboard Theme Liquid Glass Airbnb Hero Profile Card */}
+        {/* 1. Master Profile Hero Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
@@ -843,9 +843,9 @@ export default function ProfileScreen({ onBackHome }) {
                       </Text>
                     </View>
                     
-                    {/* Royal Blue Verification Badge */}
+                    {/* Royal Blue Verification Shield Badge */}
                     <View style={styles.shieldBadge}>
-                      <Ionicons name="checkmark" size={12} color="#ffffff" />
+                      <Ionicons name="checkmark-sharp" size={12} color="#ffffff" />
                     </View>
                   </TouchableOpacity>
 
@@ -853,7 +853,7 @@ export default function ProfileScreen({ onBackHome }) {
 
                   {/* Location with Globe Icon directly below Name */}
                   <View style={styles.locationBelowNameRow}>
-                    <Ionicons name="globe-outline" size={13} color="#8E8E93" style={{ marginRight: 4 }} />
+                    <Ionicons name="globe-outline" size={13} color="#888888" style={{ marginRight: 4 }} />
                     <Text style={styles.locationBelowNameText}>{profile.location}</Text>
                   </View>
                 </View>
@@ -861,38 +861,71 @@ export default function ProfileScreen({ onBackHome }) {
                 {/* Vertical Divider Line */}
                 <View style={styles.columnDivider} />
 
-                {/* Right Column: 3 Stacked Metrics */}
-                <View style={styles.airbnbRightCol}>
-                  
-                  {/* Metric 1: Reviews */}
-                  <View style={styles.metricBlock}>
-                    <View style={styles.metricRowWithHint}>
-                      <Text style={styles.metricBigNumber}>{metrics.reviews}</Text>
-                      <Ionicons name="swap-horizontal" size={12} color="#60A5FA" style={{ marginLeft: 5 }} />
+                {/* Right Column: 3 Stacked Metrics with 3D Flip to Client Reviews */}
+                <TouchableOpacity 
+                  activeOpacity={0.88} 
+                  onPress={handleFlipMetrics} 
+                  style={styles.airbnbRightCol}
+                >
+                  {/* Front: 3 Stacked Metrics */}
+                  <Animated.View style={[styles.flipCardFront, frontAnimatedStyle]} pointerEvents={isMetricsFlipped ? 'none' : 'auto'}>
+                    
+                    {/* Metric 1: Reviews */}
+                    <View style={styles.metricBlock}>
+                      <View style={styles.metricRowWithHint}>
+                        <Text style={styles.metricBigNumber}>{metrics.reviews}</Text>
+                        <Ionicons name="swap-horizontal" size={11} color="rgba(96, 165, 250, 0.7)" style={{ marginLeft: 5 }} />
+                      </View>
+                      <Text style={styles.metricLabelText}>Reviews</Text>
                     </View>
-                    <Text style={styles.metricLabelText}>Reviews</Text>
-                  </View>
 
-                  <View style={styles.horizontalDivider} />
+                    <View style={styles.horizontalDivider} />
 
-                  {/* Metric 2: Rating */}
-                  <View style={styles.metricBlock}>
-                    <View style={styles.ratingValRow}>
-                      <Text style={styles.metricBigNumber}>{metrics.rating}</Text>
-                      <Ionicons name="star" size={12} color="#ffffff" style={{ marginLeft: 3 }} />
+                    {/* Metric 2: Rating */}
+                    <View style={styles.metricBlock}>
+                      <View style={styles.ratingValRow}>
+                        <Text style={styles.metricBigNumber}>{metrics.rating}</Text>
+                        <Ionicons name="star" size={13} color="#ffffff" style={{ marginLeft: 3 }} />
+                      </View>
+                      <Text style={styles.metricLabelText}>Rating</Text>
                     </View>
-                    <Text style={styles.metricLabelText}>Rating</Text>
-                  </View>
 
-                  <View style={styles.horizontalDivider} />
+                    <View style={styles.horizontalDivider} />
 
-                  {/* Metric 3: Total Gygs */}
-                  <View style={styles.metricBlock}>
-                    <Text style={styles.metricBigNumber}>{metrics.totalGygs}</Text>
-                    <Text style={styles.metricLabelText}>Total Gygs</Text>
-                  </View>
+                    {/* Metric 3: Total Gygs */}
+                    <View style={styles.metricBlock}>
+                      <Text style={styles.metricBigNumber}>{metrics.totalGygs}</Text>
+                      <Text style={styles.metricLabelText}>Total Gygs</Text>
+                    </View>
 
-                </View>
+                  </Animated.View>
+
+                  {/* Back: Verified Client Reviews Given to Artist */}
+                  <Animated.View style={[styles.flipCardBack, backAnimatedStyle]} pointerEvents={isMetricsFlipped ? 'auto' : 'none'}>
+                    <View style={styles.reviewsBackHeader}>
+                      <Ionicons name="sparkles" size={11} color="#FBBF24" style={{ marginRight: 4 }} />
+                      <Text style={styles.reviewsBackTitle}>CLIENT REVIEWS</Text>
+                      <Ionicons name="sync-outline" size={11} color="#60A5FA" style={{ marginLeft: 'auto' }} />
+                    </View>
+
+                    <View style={styles.reviewTagsContainer}>
+                      <View style={styles.reviewTagItem}>
+                        <Ionicons name="shield-checkmark" size={11} color="#60A5FA" />
+                        <Text style={styles.reviewTagText} numberOfLines={1}>Professional Behaviour</Text>
+                      </View>
+
+                      <View style={styles.reviewTagItem}>
+                        <Ionicons name="time" size={11} color="#34D399" />
+                        <Text style={styles.reviewTagText} numberOfLines={1}>Punctual & Reliable</Text>
+                      </View>
+
+                      <View style={styles.reviewTagItem}>
+                        <Ionicons name="flash" size={11} color="#FBBF24" />
+                        <Text style={styles.reviewTagText} numberOfLines={1}>High Stage Energy</Text>
+                      </View>
+                    </View>
+                  </Animated.View>
+                </TouchableOpacity>
 
               </View>
 
@@ -906,7 +939,7 @@ export default function ProfileScreen({ onBackHome }) {
                 <Ionicons name="open-outline" size={14} color="#ffffff" style={{ marginLeft: 6 }} />
               </TouchableOpacity>
 
-            </View>
+            </BlurView>
           </LinearGradient>
         </View>
 
@@ -916,16 +949,16 @@ export default function ProfileScreen({ onBackHome }) {
           {/* Card A: Artist Type */}
           <View style={styles.halfCardWrapper}>
             <LinearGradient
-              colors={['#1C1C1F', '#161618']}
+              colors={['#161618', '#161618']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
             >
-              <View style={styles.cardBlurContentCompact}>
+              <View style={styles.cardBlurContent}>
                 <View style={styles.cardHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>ARTIST TYPE</Text>
                   <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('artistType')}>
-                    <Ionicons name="create-outline" size={14} color="#636366" />
+                    <Ionicons name="create-outline" size={15} color="#8E8E93" />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.tagContainer}>
@@ -942,16 +975,16 @@ export default function ProfileScreen({ onBackHome }) {
           {/* Card B: Categories */}
           <View style={styles.halfCardWrapper}>
             <LinearGradient
-              colors={['#1C1C1F', '#161618']}
+              colors={['#161618', '#161618']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
             >
-              <View style={styles.cardBlurContentCompact}>
+              <View style={styles.cardBlurContent}>
                 <View style={styles.cardHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>CATEGORIES</Text>
                   <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('categories')}>
-                    <Ionicons name="create-outline" size={14} color="#636366" />
+                    <Ionicons name="create-outline" size={15} color="#8E8E93" />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.tagContainer}>
@@ -970,16 +1003,16 @@ export default function ProfileScreen({ onBackHome }) {
         {/* 3. Skills Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
           >
-            <View style={styles.cardBlurContentCompact}>
+            <View style={styles.cardBlurContent}>
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>SKILLS</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('skills')}>
-                  <Ionicons name="create-outline" size={14} color="#636366" />
+                  <Ionicons name="create-outline" size={15} color="#8E8E93" />
                 </TouchableOpacity>
               </View>
 
@@ -994,7 +1027,7 @@ export default function ProfileScreen({ onBackHome }) {
           </LinearGradient>
         </View>
 
-        {/* 4. Demographics Row (AGE, HEIGHT, GENDER Side-by-Side) */}
+        {/* 4. Demographics Row (AGE, HEIGHT, GENDER) */}
         <View style={styles.demographicsRow}>
           
           {/* Age Card */}
@@ -1004,7 +1037,7 @@ export default function ProfileScreen({ onBackHome }) {
             style={styles.tripletCardWrapper}
           >
             <LinearGradient
-              colors={['#1C1C1F', '#161618']}
+              colors={['#161618', '#161618']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -1013,7 +1046,7 @@ export default function ProfileScreen({ onBackHome }) {
                 <View style={styles.demoHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>AGE</Text>
                   <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('age')}>
-                    <Ionicons name="create-outline" size={12} color="#636366" />
+                    <Ionicons name="create-outline" size={13} color="#8E8E93" />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.demoValueSmall}>{profile.age}</Text>
@@ -1028,7 +1061,7 @@ export default function ProfileScreen({ onBackHome }) {
             style={styles.tripletCardWrapper}
           >
             <LinearGradient
-              colors={['#1C1C1F', '#161618']}
+              colors={['#161618', '#161618']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -1037,7 +1070,7 @@ export default function ProfileScreen({ onBackHome }) {
                 <View style={styles.demoHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>HEIGHT</Text>
                   <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('height')}>
-                    <Ionicons name="create-outline" size={12} color="#636366" />
+                    <Ionicons name="create-outline" size={13} color="#8E8E93" />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.demoValueSmall}>{profile.height}</Text>
@@ -1052,7 +1085,7 @@ export default function ProfileScreen({ onBackHome }) {
             style={styles.tripletCardWrapper}
           >
             <LinearGradient
-              colors={['#1C1C1F', '#161618']}
+              colors={['#161618', '#161618']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.cardGradient}
@@ -1061,7 +1094,7 @@ export default function ProfileScreen({ onBackHome }) {
                 <View style={styles.demoHeaderRow}>
                   <Text style={styles.cardHeaderLabel}>GENDER</Text>
                   <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('gender')}>
-                    <Ionicons name="create-outline" size={12} color="#636366" />
+                    <Ionicons name="create-outline" size={13} color="#8E8E93" />
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.demoValueSmall}>{profile.gender}</Text>
@@ -1074,7 +1107,7 @@ export default function ProfileScreen({ onBackHome }) {
         {/* 5. Editorial Gallery */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
@@ -1085,10 +1118,7 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>GALLERY</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('gallery')}>
-                  <Ionicons name="create-outline" size={14} color="#636366" />
-                </TouchableOpacity>
-              </View>
-                  <Ionicons name="create-outline" size={14} color="#888888" />
+                  <Ionicons name="create-outline" size={15} color="#8E8E93" />
                 </TouchableOpacity>
               </View>
 
@@ -1160,14 +1190,14 @@ export default function ProfileScreen({ onBackHome }) {
                 <View style={[styles.dot, galleryPage === 1 ? styles.activeDot : styles.inactiveDot]} />
               </View>
 
-            </BlurView>
+            </View>
           </LinearGradient>
         </View>
 
         {/* 6. Work Experience Card 1: Performer */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
@@ -1176,7 +1206,7 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>PERFORMER</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('performer')}>
-                  <Ionicons name="create-outline" size={14} color="#636366" />
+                  <Ionicons name="create-outline" size={15} color="#8E8E93" />
                 </TouchableOpacity>
               </View>
 
@@ -1231,7 +1261,7 @@ export default function ProfileScreen({ onBackHome }) {
         {/* 7. Work Experience Card 2: Choreographer */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
@@ -1240,7 +1270,7 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>CHOREOGRAPHER</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('choreographer')}>
-                  <Ionicons name="create-outline" size={14} color="#636366" />
+                  <Ionicons name="create-outline" size={15} color="#8E8E93" />
                 </TouchableOpacity>
               </View>
 
@@ -1295,7 +1325,7 @@ export default function ProfileScreen({ onBackHome }) {
         {/* 8. Training & Education Card */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
@@ -1304,7 +1334,7 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>TRAINING & EDUCATION</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('training')}>
-                  <Ionicons name="create-outline" size={14} color="#636366" />
+                  <Ionicons name="create-outline" size={15} color="#8E8E93" />
                 </TouchableOpacity>
               </View>
 
@@ -1326,7 +1356,7 @@ export default function ProfileScreen({ onBackHome }) {
         {/* 9. Interactive Socials Component */}
         <View style={styles.cardWrapper}>
           <LinearGradient
-            colors={['#1C1C1F', '#161618']}
+            colors={['#161618', '#161618']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.cardGradient}
@@ -1337,7 +1367,7 @@ export default function ProfileScreen({ onBackHome }) {
               <View style={styles.cardHeaderRow}>
                 <Text style={styles.cardHeaderLabel}>SOCIALS</Text>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => openModal('socials')}>
-                  <Ionicons name="create-outline" size={14} color="#636366" />
+                  <Ionicons name="create-outline" size={15} color="#8E8E93" />
                 </TouchableOpacity>
               </View>
 
@@ -2580,90 +2610,90 @@ const bulletDot = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#050505',
+    backgroundColor: '#000000',
   },
   navHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingTop: 12,
-    paddingBottom: 12,
+    paddingBottom: 10,
+    backgroundColor: '#000000',
   },
   navIconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    backgroundColor: '#161618',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: '#262628',
     justifyContent: 'center',
     alignItems: 'center',
   },
   navTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
     color: '#ffffff',
   },
   canvasScrollView: {
     flex: 1,
-    backgroundColor: '#050505',
+    backgroundColor: '#000000',
   },
   canvasContent: {
-    paddingHorizontal: 20,
-    paddingTop: 12,
+    paddingHorizontal: 16,
+    paddingTop: 8,
     paddingBottom: 50,
   },
 
-  /* Master Card Architecture */
+  /* Master Card Architecture with Solid Matte #161618 and #262628 border */
   cardWrapper: {
     borderRadius: 24,
-    overflow: 'hidden',
-    marginBottom: 12,
-    backgroundColor: '#18181A',
+    backgroundColor: '#161618',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: '#262628',
+    overflow: 'hidden',
+    marginBottom: 14,
   },
   cardGradient: {
     flex: 1,
     borderRadius: 24,
+    backgroundColor: '#161618',
   },
   cardBlurContent: {
     padding: 18,
-  },
-  cardBlurContentCompact: {
-    padding: 16,
+    backgroundColor: 'transparent',
   },
   cardHeaderLabel: {
     color: '#8E8E93',
-    fontSize: 11,
+    fontSize: 11.5,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
     textTransform: 'uppercase',
     includeFontPadding: false,
   },
 
-  /* Hero Split Card Specifics */
+  /* Airbnb Hero Split Card Specifics */
   airbnbSplitRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   airbnbLeftCol: {
-    flex: 1.1,
+    flex: 1,
     alignItems: 'center',
-    paddingRight: 6,
+    paddingRight: 10,
   },
   avatarWrapper: {
     position: 'relative',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   avatarCircleBlue: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     backgroundColor: '#2563EB',
     justifyContent: 'center',
     alignItems: 'center',
@@ -2678,28 +2708,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#1D4ED8',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#2563EB',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#18181A',
+    borderColor: '#161618',
   },
   airbnbNameText: {
-    fontSize: 18,
+    fontSize: 19,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 10,
   },
   locationBelowNameRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 3,
+    marginTop: 4,
   },
   locationBelowNameText: {
     fontSize: 12,
@@ -2710,23 +2740,75 @@ const styles = StyleSheet.create({
   columnDivider: {
     width: 1,
     height: 110,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: '#262628',
     marginHorizontal: 12,
   },
   airbnbRightCol: {
-    flex: 0.9,
+    flex: 1,
     paddingLeft: 4,
     justifyContent: 'center',
+    minHeight: 124,
+    position: 'relative',
+  },
+  flipCardFront: {
+    width: '100%',
+    justifyContent: 'center',
+    backfaceVisibility: 'hidden',
+  },
+  flipCardBack: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 4,
+    right: 0,
+    justifyContent: 'center',
+    backfaceVisibility: 'hidden',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 14,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  reviewsBackHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  reviewsBackTitle: {
+    fontSize: 9.5,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#FBBF24',
+    letterSpacing: 0.5,
+  },
+  reviewTagsContainer: {
+    gap: 5,
+  },
+  reviewTagItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 7,
+    paddingVertical: 4.5,
+    borderRadius: 6,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  reviewTagText: {
+    fontSize: 9.5,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#ffffff',
+    marginLeft: 4,
   },
   metricRowWithHint: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   metricBlock: {
-    paddingVertical: 1,
+    paddingVertical: 2,
   },
   metricBigNumber: {
-    fontSize: 19,
+    fontSize: 18,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
@@ -2743,13 +2825,13 @@ const styles = StyleSheet.create({
   },
   horizontalDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    marginVertical: 7,
+    backgroundColor: '#262628',
+    marginVertical: 8,
   },
   shareProfileButton: {
     backgroundColor: '#2563EB',
-    borderRadius: 14,
-    paddingVertical: 13,
+    borderRadius: 16,
+    paddingVertical: 14,
     marginTop: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -2758,7 +2840,7 @@ const styles = StyleSheet.create({
   },
   shareProfileButtonText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 14.5,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
   },
@@ -2767,15 +2849,15 @@ const styles = StyleSheet.create({
   doubleCardRow: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   halfCardWrapper: {
     flex: 1,
-    borderRadius: 20,
-    overflow: 'hidden',
-    backgroundColor: '#18181A',
+    borderRadius: 24,
+    backgroundColor: '#161618',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: '#262628',
+    overflow: 'hidden',
   },
   cardHeaderRow: {
     flexDirection: 'row',
@@ -2788,39 +2870,40 @@ const styles = StyleSheet.create({
   tagContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 8,
   },
   tagPill: {
     backgroundColor: 'rgba(37, 99, 235, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(37, 99, 235, 0.35)',
+    borderColor: 'rgba(37, 99, 235, 0.45)',
     borderRadius: 9999,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
   },
   tagPillText: {
     color: '#60A5FA',
-    fontSize: 12,
+    fontSize: 12.5,
     fontFamily: 'AirbnbCereal-Medium',
-    fontWeight: '600',
+    fontWeight: '500',
   },
 
   /* Demographics 3-Column Side-by-Side Row Layout */
   demographicsRow: {
     flexDirection: 'row',
     gap: 10,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   tripletCardWrapper: {
     flex: 1,
-    borderRadius: 18,
-    overflow: 'hidden',
-    backgroundColor: '#18181A',
+    borderRadius: 20,
+    backgroundColor: '#161618',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: '#262628',
+    overflow: 'hidden',
   },
   cardBlurContentSmall: {
     padding: 14,
+    backgroundColor: 'transparent',
   },
   demoHeaderRow: {
     flexDirection: 'row',
@@ -2828,7 +2911,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   demoValueSmall: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: 'AirbnbCereal-Bold',
     fontWeight: 'bold',
     color: '#ffffff',
@@ -2947,30 +3030,28 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   activePillBlue: {
-    backgroundColor: 'rgba(29, 78, 216, 0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(96, 165, 250, 0.4)',
+    backgroundColor: '#2563EB',
     borderRadius: 9999,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
   },
   activePillText: {
-    color: '#60A5FA',
-    fontSize: 12,
-    fontFamily: 'AirbnbCereal-Medium',
-    fontWeight: '600',
+    color: '#ffffff',
+    fontSize: 12.5,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: 'bold',
   },
   inactivePillBorder: {
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: '#1C1C1E',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: '#262628',
     borderRadius: 9999,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
   },
   inactivePillText: {
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 12,
+    color: '#8E8E93',
+    fontSize: 12.5,
     fontFamily: 'AirbnbCereal-Book',
   },
   expEmptySubCatBlock: {
@@ -2979,13 +3060,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   expEmptySubCatText: {
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: '#8E8E93',
     fontSize: 13,
     fontFamily: 'AirbnbCereal-Book',
     fontStyle: 'italic',
   },
   expProjectBlock: {
-    marginBottom: 16,
+    marginBottom: 14,
   },
   expProjectHeaderRow: {
     flexDirection: 'row',
@@ -3002,15 +3083,18 @@ const styles = StyleSheet.create({
   expSubEntryBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 4,
-    paddingLeft: 8,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#262628',
+    padding: 12,
   },
   expLeftAccentLine: {
-    width: 2,
+    width: 3,
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#2563EB',
     marginRight: 10,
-    borderRadius: 1,
+    borderRadius: 2,
   },
   expSubEntryText: {
     flex: 1,
@@ -3018,7 +3102,6 @@ const styles = StyleSheet.create({
     fontFamily: 'AirbnbCereal-Book',
     color: 'rgba(255, 255, 255, 0.8)',
     lineHeight: 19,
-    marginRight: 8,
     letterSpacing: 0.2,
   },
 
@@ -3142,15 +3225,17 @@ const styles = StyleSheet.create({
   /* Floating Centered Dialog Edit Modal Styles */
   sheetOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   sheetContainer: {
     width: '90%',
     maxWidth: 400,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: '#161618',
     borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#262628',
     padding: 24,
     maxHeight: '85%',
     shadowColor: '#000',
