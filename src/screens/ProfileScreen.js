@@ -13,7 +13,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  FlatList
+  FlatList,
+  Animated
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
@@ -459,6 +460,56 @@ export default function ProfileScreen({ onBackHome }) {
   const [galleryPage, setGalleryPage] = useState(0);
   const galleryScrollRef = useRef(null);
 
+  // Metrics Card 3D Flip State & Animations
+  const [isMetricsFlipped, setIsMetricsFlipped] = useState(false);
+  const flipAnim = useRef(new Animated.Value(0)).current;
+
+  const handleFlipMetrics = () => {
+    if (isMetricsFlipped) {
+      Animated.spring(flipAnim, {
+        toValue: 0,
+        friction: 8,
+        tension: 10,
+        useNativeDriver: true,
+      }).start();
+      setIsMetricsFlipped(false);
+    } else {
+      Animated.spring(flipAnim, {
+        toValue: 180,
+        friction: 8,
+        tension: 10,
+        useNativeDriver: true,
+      }).start();
+      setIsMetricsFlipped(true);
+    }
+  };
+
+  const frontInterpolate = flipAnim.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg'],
+  });
+  const backInterpolate = flipAnim.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['180deg', '360deg'],
+  });
+  const frontOpacity = flipAnim.interpolate({
+    inputRange: [89, 90],
+    outputRange: [1, 0],
+  });
+  const backOpacity = flipAnim.interpolate({
+    inputRange: [89, 90],
+    outputRange: [0, 1],
+  });
+
+  const frontAnimatedStyle = {
+    transform: [{ perspective: 1000 }, { rotateY: frontInterpolate }],
+    opacity: frontOpacity,
+  };
+  const backAnimatedStyle = {
+    transform: [{ perspective: 1000 }, { rotateY: backInterpolate }],
+    opacity: backOpacity,
+  };
+
   // Contextual Bottom Sheet Edit States
   const [activeModal, setActiveModal] = useState(null);
   const [tempHeightFeet, setTempHeightFeet] = useState('5');
@@ -810,35 +861,71 @@ export default function ProfileScreen({ onBackHome }) {
                 {/* Vertical Divider Line */}
                 <View style={styles.columnDivider} />
 
-                {/* Right Column: 3 Stacked Metrics (READ ONLY - NOT EDITABLE) */}
-                <View style={styles.airbnbRightCol}>
-                  
-                  {/* Metric 1: Reviews */}
-                  <View style={styles.metricBlock}>
-                    <Text style={styles.metricBigNumber}>{metrics.reviews}</Text>
-                    <Text style={styles.metricLabelText}>Reviews</Text>
-                  </View>
-
-                  <View style={styles.horizontalDivider} />
-
-                  {/* Metric 2: Rating */}
-                  <View style={styles.metricBlock}>
-                    <View style={styles.ratingValRow}>
-                      <Text style={styles.metricBigNumber}>{metrics.rating}</Text>
-                      <Ionicons name="star" size={13} color="#ffffff" style={{ marginLeft: 3 }} />
+                {/* Right Column: 3 Stacked Metrics with 3D Flip to Client Reviews */}
+                <TouchableOpacity 
+                  activeOpacity={0.88} 
+                  onPress={handleFlipMetrics} 
+                  style={styles.airbnbRightCol}
+                >
+                  {/* Front: 3 Stacked Metrics */}
+                  <Animated.View style={[styles.flipCardFront, frontAnimatedStyle]} pointerEvents={isMetricsFlipped ? 'none' : 'auto'}>
+                    
+                    {/* Metric 1: Reviews */}
+                    <View style={styles.metricBlock}>
+                      <View style={styles.metricRowWithHint}>
+                        <Text style={styles.metricBigNumber}>{metrics.reviews}</Text>
+                        <Ionicons name="swap-horizontal" size={11} color="rgba(96, 165, 250, 0.7)" style={{ marginLeft: 5 }} />
+                      </View>
+                      <Text style={styles.metricLabelText}>Reviews</Text>
                     </View>
-                    <Text style={styles.metricLabelText}>Rating</Text>
-                  </View>
 
-                  <View style={styles.horizontalDivider} />
+                    <View style={styles.horizontalDivider} />
 
-                  {/* Metric 3: Total Gygs */}
-                  <View style={styles.metricBlock}>
-                    <Text style={styles.metricBigNumber}>{metrics.totalGygs}</Text>
-                    <Text style={styles.metricLabelText}>Total Gygs</Text>
-                  </View>
+                    {/* Metric 2: Rating */}
+                    <View style={styles.metricBlock}>
+                      <View style={styles.ratingValRow}>
+                        <Text style={styles.metricBigNumber}>{metrics.rating}</Text>
+                        <Ionicons name="star" size={13} color="#ffffff" style={{ marginLeft: 3 }} />
+                      </View>
+                      <Text style={styles.metricLabelText}>Rating</Text>
+                    </View>
 
-                </View>
+                    <View style={styles.horizontalDivider} />
+
+                    {/* Metric 3: Total Gygs */}
+                    <View style={styles.metricBlock}>
+                      <Text style={styles.metricBigNumber}>{metrics.totalGygs}</Text>
+                      <Text style={styles.metricLabelText}>Total Gygs</Text>
+                    </View>
+
+                  </Animated.View>
+
+                  {/* Back: Verified Client Reviews Given to Artist */}
+                  <Animated.View style={[styles.flipCardBack, backAnimatedStyle]} pointerEvents={isMetricsFlipped ? 'auto' : 'none'}>
+                    <View style={styles.reviewsBackHeader}>
+                      <Ionicons name="sparkles" size={11} color="#FBBF24" style={{ marginRight: 4 }} />
+                      <Text style={styles.reviewsBackTitle}>CLIENT REVIEWS</Text>
+                      <Ionicons name="sync-outline" size={11} color="#60A5FA" style={{ marginLeft: 'auto' }} />
+                    </View>
+
+                    <View style={styles.reviewTagsContainer}>
+                      <View style={styles.reviewTagItem}>
+                        <Ionicons name="shield-checkmark" size={11} color="#60A5FA" />
+                        <Text style={styles.reviewTagText} numberOfLines={1}>Professional Behaviour</Text>
+                      </View>
+
+                      <View style={styles.reviewTagItem}>
+                        <Ionicons name="time" size={11} color="#34D399" />
+                        <Text style={styles.reviewTagText} numberOfLines={1}>Punctual & Reliable</Text>
+                      </View>
+
+                      <View style={styles.reviewTagItem}>
+                        <Ionicons name="flash" size={11} color="#FBBF24" />
+                        <Text style={styles.reviewTagText} numberOfLines={1}>High Stage Energy</Text>
+                      </View>
+                    </View>
+                  </Animated.View>
+                </TouchableOpacity>
 
               </View>
 
@@ -1600,8 +1687,12 @@ export default function ProfileScreen({ onBackHome }) {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
           style={styles.sheetOverlay}
         >
-          <View style={styles.sheetContainer}>
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.sheetScrollBody}>
+          <View style={[styles.sheetContainer, activeModal === 'gallery' && styles.gallerySheetContainer]}>
+            <ScrollView 
+              showsVerticalScrollIndicator={false} 
+              style={[styles.sheetScrollBody, activeModal === 'gallery' && styles.gallerySheetScrollBody]}
+              bounces={false}
+            >
               
               {/* 1. Edit Height Modal */}
               {activeModal === 'height' && (
@@ -1909,15 +2000,11 @@ export default function ProfileScreen({ onBackHome }) {
               {/* 7. Gallery Grid Manager */}
               {activeModal === 'gallery' && tempData.items && (
                 <View style={styles.gridManagerWrapper}>
-                  <Text style={styles.sheetTitle}>Manage Gallery Grid</Text>
+                  <Text style={styles.sheetTitle}>Gallery</Text>
                   <View style={styles.gridSectionHeaderRow}>
                     <View style={styles.gridSectionTitleRow}>
                       <Ionicons name="images-outline" size={15} color="#60A5FA" style={{ marginRight: 6 }} />
-                      <Text style={styles.gridSectionTitle}>REQUIRED PHOTOS</Text>
-                    </View>
-                    <View style={styles.gridStrictBadge}>
-                      <Ionicons name="lock-closed" size={10} color="#93C5FD" style={{ marginRight: 3 }} />
-                      <Text style={styles.gridStrictBadgeText}>Strict Titles</Text>
+                      <Text style={styles.gridSectionTitle}>Photos</Text>
                     </View>
                   </View>
 
@@ -1967,10 +2054,10 @@ export default function ProfileScreen({ onBackHome }) {
                   </View>
 
                   {/* Section 2: Performance Videos */}
-                  <View style={[styles.gridSectionHeaderRow, { marginTop: 22 }]}>
+                  <View style={[styles.gridSectionHeaderRow, { marginTop: 14 }]}>
                     <View style={styles.gridSectionTitleRow}>
                       <Ionicons name="videocam-outline" size={16} color="#60A5FA" style={{ marginRight: 6 }} />
-                      <Text style={styles.gridSectionTitle}>PERFORMANCE VIDEOS</Text>
+                      <Text style={styles.gridSectionTitle}>Videos</Text>
                     </View>
                     {tempData.items.filter(it => it.isVideo).length < 3 && (
                       <TouchableOpacity 
@@ -2328,7 +2415,7 @@ export default function ProfileScreen({ onBackHome }) {
             </ScrollView>
 
             {/* 4. Save/Cancel Actions */}
-            <View style={styles.sheetActionsRow}>
+            <View style={[styles.sheetActionsRow, activeModal === 'gallery' && styles.gallerySheetActionsRow]}>
               <TouchableOpacity 
                 activeOpacity={0.7} 
                 onPress={() => setActiveModal(null)} 
@@ -2650,14 +2737,70 @@ const styles = StyleSheet.create({
   },
   columnDivider: {
     width: 1,
-    height: 110,
+    height: 120,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginHorizontal: 12,
   },
   airbnbRightCol: {
     flex: 1,
-    paddingLeft: 6,
+    paddingLeft: 4,
     justifyContent: 'center',
+    minHeight: 124,
+    position: 'relative',
+  },
+  flipCardFront: {
+    width: '100%',
+    justifyContent: 'center',
+    backfaceVisibility: 'hidden',
+  },
+  flipCardBack: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 4,
+    right: 0,
+    justifyContent: 'center',
+    backfaceVisibility: 'hidden',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 14,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  reviewsBackHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  reviewsBackTitle: {
+    fontSize: 9.5,
+    fontFamily: 'AirbnbCereal-Bold',
+    fontWeight: '700',
+    color: '#FBBF24',
+    letterSpacing: 0.5,
+  },
+  reviewTagsContainer: {
+    gap: 5,
+  },
+  reviewTagItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 7,
+    paddingVertical: 4.5,
+    borderRadius: 6,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  reviewTagText: {
+    fontSize: 9.5,
+    fontFamily: 'AirbnbCereal-Medium',
+    color: '#ffffff',
+    marginLeft: 4,
+  },
+  metricRowWithHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   metricBlock: {
     paddingVertical: 2,
@@ -3091,6 +3234,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 20,
     elevation: 24,
+  },
+  gallerySheetContainer: {
+    width: '95%',
+    maxWidth: 450,
+    maxHeight: '94%',
+    paddingHorizontal: 16,
+    paddingTop: 18,
+    paddingBottom: 16,
+  },
+  gallerySheetScrollBody: {
+    maxHeight: undefined,
+  },
+  gallerySheetActionsRow: {
+    marginTop: 14,
   },
   birthdayTitle: {
     fontSize: 18,
@@ -3699,7 +3856,7 @@ const styles = StyleSheet.create({
   },
   gridCardPreviewBox: {
     width: '100%',
-    height: 118,
+    height: 142,
     borderRadius: 10,
     overflow: 'hidden',
     position: 'relative',
@@ -3711,17 +3868,17 @@ const styles = StyleSheet.create({
   },
   gridCardActionOverlay: {
     position: 'absolute',
-    bottom: 4,
-    left: 4,
-    right: 4,
+    bottom: 5,
+    left: 5,
+    right: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   gridActionIconBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.25)',
@@ -3734,7 +3891,7 @@ const styles = StyleSheet.create({
   },
   gridEmptyCardBox: {
     width: '100%',
-    height: 118,
+    height: 142,
     borderRadius: 10,
     borderWidth: 1.5,
     borderStyle: 'dashed',
@@ -3816,21 +3973,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    marginTop: -14,
+    marginLeft: -14,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: 'rgba(0, 0, 0, 0.65)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 1.5,
+    paddingLeft: 2,
   },
   gridEmptyVideoCardBox: {
     width: '31.5%',
-    height: 154,
+    height: 180,
     borderRadius: 14,
     borderWidth: 1.5,
     borderStyle: 'dashed',
